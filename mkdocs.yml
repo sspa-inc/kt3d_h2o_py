@@ -1,0 +1,53 @@
+site_name: UK_SSPA v2 Documentation
+repo_url: https://github.com/sspa-inc/kt3d_h2o_py
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+  palette:
+    scheme: default
+    primary: indigo
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [.]
+
+markdown_extensions:
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Quick Start: quickstart.md
+  - Configuration: configuration.md
+  - Workflow: workflow.md
+  - Data Contracts: data-contracts.md
+  - Glossary: glossary.md
+  - Theory:
+      - Variogram Models: theory/variogram-models.md
+      - Anisotropy: theory/anisotropy.md
+      - Polynomial Drift: theory/polynomial-drift.md
+      - AEM Linesink Drift: theory/aem-linesink.md
+  - API Reference:
+      - data.py: api/data.md
+      - variogram.py: api/variogram.md
+      - transform.py: api/transform.md
+      - drift.py: api/drift.md
+      - AEM_drift.py: api/aem_drift.md
+      - kriging.py: api/kriging.md
+  - Examples:
+      - Ordinary Kriging: examples/ex_ordinary_kriging.md
+      - Linear Drift: examples/ex_linear_drift.md
+      - Linesink Drift: examples/ex_linesink_drift.md
+      - Anisotropy: examples/ex_anisotropy.md
+  - Validation:
+      - Tested Behaviors: validation/tested-behaviors.md

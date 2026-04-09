@@ -1,0 +1,63 @@
+{
+  "data_sources": {
+    "observation_wells": {
+      "path": "data/points.shp",
+      "water_level_col": "Wet_WLs_Ma"
+    },
+    "linesink_river": {
+      "path": "data/linesink.shp",
+      "group_column": "DriftTerm",
+      "strength_col": "resistance",
+      "control_points": {
+        "enabled": false,
+        "spacing": 300.0,
+        "z_start_col": "UpElev",
+        "z_end_col": "DNElev",
+        "nugget_override": 0.5,
+        "avoid_vertices": true,
+        "perpendicular_offset": 50.0
+      },
+      "rescaling_method": "adaptive"
+    }
+  },
+  "variogram": {
+    "model": "spherical",
+    "sill": 1.0,
+    "range": 5000.0,
+    "nugget": 0.0,
+    "anisotropy": {
+      "enabled":true,
+      "ratio": 0.5,
+      "angle_major": 80.0
+    },
+    "advanced": {
+      "search_radius": null,
+      "max_neighbors": null,
+      "min_neighbors": null
+    }
+  },
+  "drift_terms": {
+    "linear_x": false,
+    "linear_y": false,
+    "quadratic_x": false,
+    "quadratic_y": true,
+    "linesink_river": {
+      "use": true,
+      "apply_anisotropy": true
+    }
+  },
+  "grid": {
+    "x_min": -20000.0,
+    "x_max": 5000.0,
+    "y_min": -20000.0,
+    "y_max": 5000.0,
+    "resolution": 50.0
+  },
+  "min_separation_distance": 10.0,
+  "output": {
+    "generate_map": false,
+    "export_contours": true,
+    "contour_interval": 10.0,
+    "contour_output_path": "output/contours.shp"
+  }
+}

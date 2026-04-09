@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# pytest
+.pytest_cache/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Logs
+output.log
+*.log
+
+# Confidential test data — NEVER COMMIT
+Test/
+
+# Generated outputs (uncomment if you decide NOT to commit SVGs)
+# docs/examples/output/*.svg
+# docs/validation/output/*.svg
+site/  
