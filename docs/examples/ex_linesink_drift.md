@@ -131,7 +131,7 @@ The transformation:
 
 ### Step 3 — AEM drift matrix (training)
 
-[`compute_linesink_drift_matrix()`](../../AEM_drift.py:53) is called with
+[`compute_linesink_drift_matrix()`](../AEM_drift.py:53) is called with
 `input_scaling_factors=None` (training phase):
 
 ```python
@@ -192,7 +192,7 @@ This order must be reproduced identically at prediction time.
 uk_model = build_uk_model(x_model, y_model, z_obs, combined_matrix_train, vario)
 ```
 
-[`build_uk_model()`](../../kriging.py:46) passes the drift columns to PyKrige as
+[`build_uk_model()`](../kriging.py:46) passes the drift columns to PyKrige as
 `drift_terms=["specified"]` with `specified_drift` containing each column as a
 1-D array. PyKrige solves the Universal Kriging system and stores the drift
 coefficients internally.

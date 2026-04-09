@@ -6,7 +6,7 @@ Provides the Universal Kriging model wrapper, grid and point prediction, OLS dri
 
 ## `build_uk_model(all_x, all_y, all_h, drift_matrix, variogram)`
 
-**Source:** [`kriging.py:46`](../../kriging.py:46)
+**Source:** [`kriging.py:46`](../kriging.py:46)
 
 Constructs and initialises a `pykrige.uk.UniversalKriging` model. This is the central training function of the pipeline.
 
@@ -90,7 +90,7 @@ uk_model = build_uk_model(x, y, h, drift_matrix, vario)
 
 ## `predict_at_points(uk_model, x, y, drift_matrix_pred=None)`
 
-**Source:** [`kriging.py:138`](../../kriging.py:138)
+**Source:** [`kriging.py:138`](../kriging.py:138)
 
 Predicts values and kriging variances at arbitrary point locations using a trained `UniversalKriging` model.
 
@@ -148,7 +148,7 @@ uk_model.execute("points", x, y, specified_drift=specified_drift_arrays)
 
 ## `predict_on_grid(uk_model, config, term_names, resc, transform_params=None, scaling_factors=None)`
 
-**Source:** [`kriging.py:260`](../../kriging.py:260)
+**Source:** [`kriging.py:260`](../kriging.py:260)
 
 Predicts on a regular grid defined by `config["grid"]`. Handles coordinate transformation, drift reconstruction (both polynomial and AEM), and calls [`predict_at_points()`](#predict_at_points).
 
@@ -229,7 +229,7 @@ col_data, _, _ = compute_linesink_drift_matrix(
 
 ## `output_drift_coefficients(all_h, drift_matrix, term_names)`
 
-**Source:** [`kriging.py:436`](../../kriging.py:436)
+**Source:** [`kriging.py:436`](../kriging.py:436)
 
 Computes OLS (Ordinary Least Squares) estimates of drift coefficients for diagnostic purposes. **Non-intrusive:** results are logged and returned but do not affect the kriging model state.
 
@@ -267,7 +267,7 @@ using `np.linalg.lstsq`. Each coefficient is logged with its corresponding term 
 
 ## `cross_validate(all_x, all_y, all_h, config, variogram)`
 
-**Source:** [`kriging.py:489`](../../kriging.py:489)
+**Source:** [`kriging.py:489`](../kriging.py:489)
 
 Leave-One-Out Cross Validation (LOOCV) for Universal Kriging. For each point `i`, trains a model on the remaining `n-1` points and predicts at point `i`.
 

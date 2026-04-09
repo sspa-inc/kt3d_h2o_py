@@ -6,7 +6,7 @@ Provides Analytic Element Method (AEM) linesink potential computation and drift 
 
 ## `compute_linesink_potential(x, y, x1, y1, x2, y2, strength=1.0)`
 
-**Source:** [`AEM_drift.py:7`](../../AEM_drift.py:7)
+**Source:** [`AEM_drift.py:7`](../AEM_drift.py:7)
 
 Computes the real-valued hydraulic potential at evaluation points `(x, y)` due to a single linesink segment from `(x1, y1)` to `(x2, y2)`. Based on the analytic element formulation from Strack (1989).
 
@@ -74,7 +74,7 @@ Strack, O. D. L. (1989). *Groundwater Mechanics*. Prentice Hall.
 
 ## `compute_linesink_drift_matrix(x_model, y_model, linesinks_gdf, group_col, transform_params, sill, strength_col='lval', rescaling_method='adaptive', apply_anisotropy=True, input_scaling_factors=None)`
 
-**Source:** [`AEM_drift.py:53`](../../AEM_drift.py:53)
+**Source:** [`AEM_drift.py:53`](../AEM_drift.py:53)
 
 Constructs the AEM drift matrix for a set of evaluation points. Segments are grouped by `group_col`; each unique group value becomes one drift column (the sum of potentials from all segments in that group). Scaling factors are computed or reused to normalise each column relative to the variogram sill.
 

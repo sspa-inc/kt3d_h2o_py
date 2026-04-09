@@ -12,98 +12,98 @@ This document maps every documented behavioral claim to the test file and functi
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| Variogram validates `sill > 0` | [`test_variogram_v2_integration.py`](../../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
-| Variogram loads from config file and exposes `sill`, `range_`, `nugget` | [`test_variogram_v2_integration.py`](../../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
-| Variogram integrates with `compute_resc` and `compute_polynomial_drift` | [`test_variogram_v2_integration.py`](../../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
+| Variogram validates `sill > 0` | [`test_variogram_v2_integration.py`](../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
+| Variogram loads from config file and exposes `sill`, `range_`, `nugget` | [`test_variogram_v2_integration.py`](../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
+| Variogram integrates with `compute_resc` and `compute_polynomial_drift` | [`test_variogram_v2_integration.py`](../test_variogram_v2_integration.py) | `test_variogram_integration` | ✅ Covered |
 
 ### 1.2 Coordinate Transformation (`transform.py`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| `apply_transform` → `invert_transform_coords` roundtrip recovers original coordinates | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
-| `get_transform_params` returns `center`, `R`, `S` keys | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
-| `center` is computed as the centroid of input points | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
-| `angle_major=0` (azimuth North) maps the North direction (+Y) onto the X-axis | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_azimuth_convention_major_axis_alignment` | ✅ Covered |
-| Azimuth convention: `angle_major` is CW from North; internally converted to arithmetic (CCW from East) | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_azimuth_convention_major_axis_alignment` | ✅ Covered |
+| `apply_transform` → `invert_transform_coords` roundtrip recovers original coordinates | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
+| `get_transform_params` returns `center`, `R`, `S` keys | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
+| `center` is computed as the centroid of input points | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_coordinate_transformation_logic` | ✅ Covered |
+| `angle_major=0` (azimuth North) maps the North direction (+Y) onto the X-axis | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_azimuth_convention_major_axis_alignment` | ✅ Covered |
+| Azimuth convention: `angle_major` is CW from North; internally converted to arithmetic (CCW from East) | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_azimuth_convention_major_axis_alignment` | ✅ Covered |
 
 ### 1.3 Rescaling Factor (`drift.py` — `compute_resc`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| `compute_resc` returns `sqrt(sill / radsqd)` in the normal case | [`test_drift.py`](../../test_drift.py) | `test_compute_resc_standard` | ✅ Covered |
-| Safety floor activates when `radsqd < range²` (small domain relative to range) | [`test_drift.py`](../../test_drift.py) | `test_compute_resc_safety_floor` | ✅ Covered |
-| Safety floor activates for a single point (radsqd = 0) | [`test_drift.py`](../../test_drift.py) | `test_compute_resc_single_point` | ✅ Covered |
-| Safety floor does NOT activate when domain extent > range | [`test_drift.py`](../../test_drift.py) | `test_compute_resc_small_extent` | ✅ Covered |
-| `compute_resc` returns a value < 1 for large domains | [`test_drift.py`](../../test_drift.py) | `test_compute_resc_inversion` | ✅ Covered |
-| Safety floor activates (duplicate test in anisotropy file) | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_compute_resc_safety_floor` | ✅ Covered |
-| `compute_resc` with known corner-point inputs produces exact expected value | [`test_drift.py`](../../test_drift.py) | `test_drift_known_values` | ✅ Covered |
+| `compute_resc` returns `sqrt(sill / radsqd)` in the normal case | [`test_drift.py`](../test_drift.py) | `test_compute_resc_standard` | ✅ Covered |
+| Safety floor activates when `radsqd < range²` (small domain relative to range) | [`test_drift.py`](../test_drift.py) | `test_compute_resc_safety_floor` | ✅ Covered |
+| Safety floor activates for a single point (radsqd = 0) | [`test_drift.py`](../test_drift.py) | `test_compute_resc_single_point` | ✅ Covered |
+| Safety floor does NOT activate when domain extent > range | [`test_drift.py`](../test_drift.py) | `test_compute_resc_small_extent` | ✅ Covered |
+| `compute_resc` returns a value < 1 for large domains | [`test_drift.py`](../test_drift.py) | `test_compute_resc_inversion` | ✅ Covered |
+| Safety floor activates (duplicate test in anisotropy file) | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_compute_resc_safety_floor` | ✅ Covered |
+| `compute_resc` with known corner-point inputs produces exact expected value | [`test_drift.py`](../test_drift.py) | `test_drift_known_values` | ✅ Covered |
 
 ### 1.4 Polynomial Drift (`drift.py` — `compute_polynomial_drift`, `compute_drift_at_points`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| Drift term ordering is deterministic regardless of config dict key order | [`test_drift.py`](../../test_drift.py) | `test_deterministic_ordering` | ✅ Covered |
-| Training drift matrix and prediction drift matrix are identical for same points | [`test_drift.py`](../../test_drift.py) | `test_consistency_training_prediction` | ✅ Covered |
-| Partial drift config (only some terms enabled) produces correct column count | [`test_drift.py`](../../test_drift.py) | `test_partial_drift_terms` | ✅ Covered |
-| `compute_drift_at_points` filters to only the requested term names | [`test_drift.py`](../../test_drift.py) | `test_prediction_term_filtering` | ✅ Covered |
-| Unknown term names in `compute_drift_at_points` produce empty matrix (not error) | [`test_drift.py`](../../test_drift.py) | `test_unknown_term_error` | ✅ Covered |
-| Empty drift config produces zero-column matrix | [`test_drift.py`](../../test_drift.py) | `test_empty_drift` | ✅ Covered |
-| `linear_x` column = `resc * x`; `quadratic_y` column = `resc * y²` | [`test_drift.py`](../../test_drift.py) | `test_drift_values` | ✅ Covered |
-| Known-value integration: resc + drift matrix with corner points | [`test_drift.py`](../../test_drift.py) | `test_drift_known_values` | ✅ Covered |
-| Drift integrates with variogram class (end-to-end resc + drift) | [`test_drift.py`](../../test_drift.py) | `test_drift_with_variogram_integration` | ✅ Covered |
+| Drift term ordering is deterministic regardless of config dict key order | [`test_drift.py`](../test_drift.py) | `test_deterministic_ordering` | ✅ Covered |
+| Training drift matrix and prediction drift matrix are identical for same points | [`test_drift.py`](../test_drift.py) | `test_consistency_training_prediction` | ✅ Covered |
+| Partial drift config (only some terms enabled) produces correct column count | [`test_drift.py`](../test_drift.py) | `test_partial_drift_terms` | ✅ Covered |
+| `compute_drift_at_points` filters to only the requested term names | [`test_drift.py`](../test_drift.py) | `test_prediction_term_filtering` | ✅ Covered |
+| Unknown term names in `compute_drift_at_points` produce empty matrix (not error) | [`test_drift.py`](../test_drift.py) | `test_unknown_term_error` | ✅ Covered |
+| Empty drift config produces zero-column matrix | [`test_drift.py`](../test_drift.py) | `test_empty_drift` | ✅ Covered |
+| `linear_x` column = `resc * x`; `quadratic_y` column = `resc * y²` | [`test_drift.py`](../test_drift.py) | `test_drift_values` | ✅ Covered |
+| Known-value integration: resc + drift matrix with corner points | [`test_drift.py`](../test_drift.py) | `test_drift_known_values` | ✅ Covered |
+| Drift integrates with variogram class (end-to-end resc + drift) | [`test_drift.py`](../test_drift.py) | `test_drift_with_variogram_integration` | ✅ Covered |
 
 ### 1.5 Drift Diagnostics (`drift.py` — `drift_diagnostics`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| Single-term drift matrix does not log a correlation matrix | [`test_drift.py`](../../test_drift.py) | `test_diagnostics_single_term` | ✅ Covered |
-| Highly correlated drift columns trigger a "Drift Magnitude Check" log | [`test_drift.py`](../../test_drift.py) | `test_diagnostics_high_correlation` | ✅ Covered |
-| Empty drift matrix logs "Drift Magnitude Check skipped" | [`test_drift.py`](../../test_drift.py) | `test_diagnostics_empty` | ✅ Covered |
+| Single-term drift matrix does not log a correlation matrix | [`test_drift.py`](../test_drift.py) | `test_diagnostics_single_term` | ✅ Covered |
+| Highly correlated drift columns trigger a "Drift Magnitude Check" log | [`test_drift.py`](../test_drift.py) | `test_diagnostics_high_correlation` | ✅ Covered |
+| Empty drift matrix logs "Drift Magnitude Check skipped" | [`test_drift.py`](../test_drift.py) | `test_diagnostics_empty` | ✅ Covered |
 
 ### 1.6 Kriging Model (`kriging.py`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| `build_uk_model` with drift passes `drift_terms=['specified']` to PyKrige | [`test_kriging.py`](../../test_kriging.py) | `test_build_uk_model_with_drift` | ✅ Covered |
-| `build_uk_model` with drift passes `specified_drift` list to PyKrige | [`test_kriging.py`](../../test_kriging.py) | `test_build_uk_model_with_drift` | ✅ Covered |
-| `build_uk_model` with no drift does NOT pass `drift_terms` to PyKrige | [`test_kriging.py`](../../test_kriging.py) | `test_build_uk_model_no_drift` | ✅ Covered |
-| `predict_at_points` raises `ValueError` when drift column count mismatches training | [`test_kriging.py`](../../test_kriging.py) | `test_predict_at_points_column_mismatch` | ✅ Covered |
-| `output_drift_coefficients` returns OLS coefficient array of correct shape | [`test_kriging.py`](../../test_kriging.py) | `test_output_ols_coeffs` | ✅ Covered |
-| `predict_on_grid` output arrays match meshgrid shape | [`test_kriging.py`](../../test_kriging.py) | `test_predict_on_grid_shapes` | ✅ Covered |
-| `cross_validate` returns dict with `rmse`, `mae`, and `predictions` keys | [`test_kriging.py`](../../test_kriging.py) | `test_cross_validate_small` | ✅ Covered |
-| PyKrige anisotropy is disabled (`anisotropy_scaling=1.0`, `anisotropy_angle=0.0`) after pre-transformation | [`test_anisotropy_transformation.py`](../../test_anisotropy_transformation.py) | `test_anisotropy_disabled_in_pykrige` | ✅ Covered |
+| `build_uk_model` with drift passes `drift_terms=['specified']` to PyKrige | [`test_kriging.py`](../test_kriging.py) | `test_build_uk_model_with_drift` | ✅ Covered |
+| `build_uk_model` with drift passes `specified_drift` list to PyKrige | [`test_kriging.py`](../test_kriging.py) | `test_build_uk_model_with_drift` | ✅ Covered |
+| `build_uk_model` with no drift does NOT pass `drift_terms` to PyKrige | [`test_kriging.py`](../test_kriging.py) | `test_build_uk_model_no_drift` | ✅ Covered |
+| `predict_at_points` raises `ValueError` when drift column count mismatches training | [`test_kriging.py`](../test_kriging.py) | `test_predict_at_points_column_mismatch` | ✅ Covered |
+| `output_drift_coefficients` returns OLS coefficient array of correct shape | [`test_kriging.py`](../test_kriging.py) | `test_output_ols_coeffs` | ✅ Covered |
+| `predict_on_grid` output arrays match meshgrid shape | [`test_kriging.py`](../test_kriging.py) | `test_predict_on_grid_shapes` | ✅ Covered |
+| `cross_validate` returns dict with `rmse`, `mae`, and `predictions` keys | [`test_kriging.py`](../test_kriging.py) | `test_cross_validate_small` | ✅ Covered |
+| PyKrige anisotropy is disabled (`anisotropy_scaling=1.0`, `anisotropy_angle=0.0`) after pre-transformation | [`test_anisotropy_transformation.py`](../test_anisotropy_transformation.py) | `test_anisotropy_disabled_in_pykrige` | ✅ Covered |
 
 ### 1.7 End-to-End Integration (`test_kriging_integration.py`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| Full pipeline: resc → drift matrix → UK model → grid prediction → LOOCV → OLS | [`test_kriging_integration.py`](../../test_kriging_integration.py) | `test_kriging_integration_e2e` | ✅ Covered |
-| Full pipeline with no drift (ordinary kriging path) | [`test_kriging_integration.py`](../../test_kriging_integration.py) | `test_kriging_integration_no_drift` | ✅ Covered |
+| Full pipeline: resc → drift matrix → UK model → grid prediction → LOOCV → OLS | [`test_kriging_integration.py`](../test_kriging_integration.py) | `test_kriging_integration_e2e` | ✅ Covered |
+| Full pipeline with no drift (ordinary kriging path) | [`test_kriging_integration.py`](../test_kriging_integration.py) | `test_kriging_integration_no_drift` | ✅ Covered |
 
 ### 1.8 Output Functions (`main.py`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| `export_contours` writes a shapefile with `elevation` column | [`test_main.py`](../../test_main.py) | `test_export_contours_valid` | ✅ Covered |
-| `export_contours` raises `ValueError` for interval ≤ 0 | [`test_main.py`](../../test_main.py) | `test_export_contours_invalid_interval` | ✅ Covered |
-| `export_contours` logs warning when Z grid is all NaN | [`test_main.py`](../../test_main.py) | `test_export_contours_no_levels` | ✅ Covered |
-| `export_contours` creates output directory if it does not exist | [`test_main.py`](../../test_main.py) | `test_export_contours_creates_dir` | ✅ Covered |
-| `export_aux_points` writes shapefile with `head` column and correct geometry | [`test_main.py`](../../test_main.py) | `test_export_aux_points_valid` | ✅ Covered |
-| `export_aux_points` handles empty arrays gracefully | [`test_main.py`](../../test_main.py) | `test_export_aux_points_empty` | ✅ Covered |
-| `generate_map` calls `savefig` with the configured output path | [`test_main.py`](../../test_main.py) | `test_generate_map_save` | ✅ Covered |
-| `diagnose_kriging_system` logs exact interpolation test result | [`test_main.py`](../../test_main.py) | `test_diagnose_kriging_system_logging` | ✅ Covered |
-| `diagnose_kriging_system` logs warning when drift magnitude ratio > 1000 | [`test_main.py`](../../test_main.py) | `test_diagnose_kriging_system_warning` | ✅ Covered |
+| `export_contours` writes a shapefile with `elevation` column | [`test_main.py`](../test_main.py) | `test_export_contours_valid` | ✅ Covered |
+| `export_contours` raises `ValueError` for interval ≤ 0 | [`test_main.py`](../test_main.py) | `test_export_contours_invalid_interval` | ✅ Covered |
+| `export_contours` logs warning when Z grid is all NaN | [`test_main.py`](../test_main.py) | `test_export_contours_no_levels` | ✅ Covered |
+| `export_contours` creates output directory if it does not exist | [`test_main.py`](../test_main.py) | `test_export_contours_creates_dir` | ✅ Covered |
+| `export_aux_points` writes shapefile with `head` column and correct geometry | [`test_main.py`](../test_main.py) | `test_export_aux_points_valid` | ✅ Covered |
+| `export_aux_points` handles empty arrays gracefully | [`test_main.py`](../test_main.py) | `test_export_aux_points_empty` | ✅ Covered |
+| `generate_map` calls `savefig` with the configured output path | [`test_main.py`](../test_main.py) | `test_generate_map_save` | ✅ Covered |
+| `diagnose_kriging_system` logs exact interpolation test result | [`test_main.py`](../test_main.py) | `test_diagnose_kriging_system_logging` | ✅ Covered |
+| `diagnose_kriging_system` logs warning when drift magnitude ratio > 1000 | [`test_main.py`](../test_main.py) | `test_diagnose_kriging_system_warning` | ✅ Covered |
 
 ### 1.9 Data Loading (`data.py`)
 
 | Claim | Test File | Test Function | Status |
 |---|---|---|---|
-| `load_line_features` handles `LineString` geometry | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
-| `load_line_features` handles `MultiLineString` geometry | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
-| `load_line_features` handles missing stage columns | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
-| `load_line_features` handles empty shapefile | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
-| `load_observation_wells` loads point shapefile | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
-| `prepare_data` merges observation wells and control points | [`test_data.py`](../../test_data.py) | Multiple tests | ✅ Covered |
+| `load_line_features` handles `LineString` geometry | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
+| `load_line_features` handles `MultiLineString` geometry | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
+| `load_line_features` handles missing stage columns | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
+| `load_line_features` handles empty shapefile | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
+| `load_observation_wells` loads point shapefile | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
+| `prepare_data` merges observation wells and control points | [`test_data.py`](../test_data.py) | Multiple tests | ✅ Covered |
 
 ---
 
