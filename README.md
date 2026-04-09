@@ -127,6 +127,11 @@ python main.py --config path/to/my_config.json
 - [Tested Behaviors](docs/validation/tested-behaviors.md)
 - V&V scripts in `docs/validation/`
 
+### Verification & Validation Report
+A formal V&V report (PDF) is generated on each release and attached to the
+[GitHub Releases](https://github.com/sspa-inc/kt3d_h2o_py/releases) page.
+The report covers 10 validation scripts across all core modules.
+
 ## Dependencies
 - numpy
 - pandas

@@ -1,0 +1,51 @@
+name: Build V&V Report
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+
+jobs:
+  build-vv-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y libgdal-dev gdal-bin
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install jupyter
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          tinytex: true
+
+      - name: Render V&V Report PDF
+        run: |
+          cd docs/validation/vv_report
+          quarto render vv_report.qmd --to pdf
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VV_Report_UK_SSPA_v2
+          path: docs/validation/vv_report/_output/vv_report.pdf
+
+      - name: Attach PDF to GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: docs/validation/vv_report/_output/vv_report.pdf

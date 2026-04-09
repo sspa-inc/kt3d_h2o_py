@@ -415,5 +415,11 @@ ax9.set_title(f"TC6: angle=0° azimuth (North), ratio=0.5\nmax|diff|={max_a90:.2
 
 svg_path = os.path.join(OUTPUT_DIR, "vv_anisotropy_consistency.svg")
 fig.savefig(svg_path, format="svg", bbox_inches="tight")
+png_path = os.path.join(OUTPUT_DIR, "vv_anisotropy_consistency.png")
+fig.savefig(png_path, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print(f"SVG saved to: {svg_path}")
+
+n_fail = sum(1 for *_, s in results if s == FAIL)
+if n_fail > 0:
+    sys.exit(1)

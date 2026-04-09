@@ -343,5 +343,10 @@ for (tc, desc, tol, val, status), lines, rh in zip(results, wrapped_descs, row_h
 
 svg_path = os.path.join(OUTPUT_DIR, "vv_loocv.svg")
 fig.savefig(svg_path, format="svg", bbox_inches="tight")
+png_path = os.path.join(OUTPUT_DIR, "vv_loocv.png")
+fig.savefig(png_path, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print(f"\nSVG saved -> {svg_path}")
+
+if n_fail > 0:
+    sys.exit(1)

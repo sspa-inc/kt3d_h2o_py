@@ -36,4 +36,8 @@ Test/
 # Generated outputs (uncomment if you decide NOT to commit SVGs)
 # docs/examples/output/*.svg
 # docs/validation/output/*.svg
-site/  
+site/
+
+# Quarto build artifacts
+docs/validation/vv_report/_output/
+docs/validation/vv_report/.quarto/
