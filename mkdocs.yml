@@ -53,3 +53,4 @@ nav:
   - Validation:
       - V&V Report: validation/vv_report.md
       - Tested Behaviors: validation/tested-behaviors.md
+      - Download PDF: validation/vv_report_download.md
