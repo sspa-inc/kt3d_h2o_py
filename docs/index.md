@@ -8,7 +8,7 @@
 
 **This software has been formally validated and verified.** The complete V&V report documents 10 validation tests covering all core modules including variogram models, drift terms, anisotropy transformations, and kriging accuracy. **Includes direct comparison against PyKrige** to verify wrapper equivalence and anisotropy consistency.
 
-📥 **[Download V&V Report (PDF)](validation/vv_report/_output/vv_report.pdf)**
+📥 **[Download V&V Report (PDF)](assets/vv_report.pdf)**
 🔍 **[Browse V&V Scripts & Results](validation/)**
 
 ---
@@ -89,7 +89,7 @@ The pipeline is a linear sequence of stages: load → transform → build drift 
 | **[Workflow Reference](workflow.md)** | Complete pipeline stage-by-stage |
 | **[Data Contracts](data-contracts.md)** | Input shapefile requirements, null handling |
 | **[Glossary](glossary.md)** | All domain terms and angle/coordinate conventions |
-| **[📥 V&V Report (PDF)](validation/vv_report/_output/vv_report.pdf)** | **Formal validation report — 10 tests, PyKrige comparison** |
+| **[📥 V&V Report (PDF)](assets/vv_report.pdf)** | **Formal validation report — 10 tests, PyKrige comparison** |
 | **[V&V: Tested Behaviors](validation/tested-behaviors.md)** | Summary of all validation test cases |
 | **[V&V: Scripts & Results](validation/)** | Browse validation scripts and output |
 | **[Theory: Variogram Models](theory/variogram-models.md)** | Model equations and parameter effects |

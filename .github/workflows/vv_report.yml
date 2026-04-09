@@ -38,6 +38,19 @@ jobs:
           cd docs/validation/vv_report
           quarto render vv_report.qmd --to pdf
 
+      - name: Copy PDF to docs/assets for GitHub Pages
+        run: |
+          mkdir -p docs/assets
+          cp docs/validation/vv_report/_output/vv_report.pdf docs/assets/vv_report.pdf
+
+      - name: Commit and push PDF to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/assets/vv_report.pdf
+          git diff --staged --quiet || git commit -m "Update V&V Report PDF [skip ci]"
+          git push
+
       - name: Upload PDF artifact
         uses: actions/upload-artifact@v4
         with:

@@ -2,7 +2,7 @@
 
 ## 📥 Direct Download
 
-**[Download V&V Report (PDF)](vv_report/_output/vv_report.pdf)**
+**[Download V&V Report (PDF)](../assets/vv_report.pdf)**
 
 ---
 

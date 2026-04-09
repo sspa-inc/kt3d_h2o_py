@@ -10,7 +10,7 @@
 
 **This software has been formally validated and verified.** The complete V&V report documents 10 validation tests covering all core modules including variogram models, drift terms, anisotropy transformations, and kriging accuracy. **Includes direct comparison against PyKrige** to verify wrapper equivalence and anisotropy consistency.
 
-📥 **[Download V&V Report (PDF)](docs/validation/vv_report/_output/vv_report.pdf)**
+📥 **[Download V&V Report (PDF)](docs/assets/vv_report.pdf)**
 🔍 **[Browse V&V Scripts & Results](docs/validation/)**
 
 ---
@@ -116,7 +116,7 @@ python main.py --config path/to/my_config.json
 - [Glossary](docs/glossary.md)
 
 ### Verification & Validation
-- 📥 **[Download V&V Report (PDF)](docs/validation/vv_report/_output/vv_report.pdf)** — Formal validation report covering 10 tests
+- 📥 **[Download V&V Report (PDF)](docs/assets/vv_report.pdf)** — Formal validation report covering 10 tests
 - [Tested Behaviors](docs/validation/tested-behaviors.md) — Summary of validation test cases
 - [V&V Scripts](docs/validation/) — Browse all validation scripts and results
 
