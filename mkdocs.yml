@@ -1,4 +1,5 @@
 site_name: UK_SSPA v2 Documentation
+site_description: Universal Kriging with specified drift for spatial water level mapping
 repo_url: https://github.com/sspa-inc/kt3d_h2o_py
 theme:
   name: material
