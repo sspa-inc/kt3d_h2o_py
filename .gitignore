@@ -41,3 +41,6 @@ site/
 # Quarto build artifacts
 docs/validation/vv_report/_output/
 docs/validation/vv_report/.quarto/
+
+# Plans
+plans/
