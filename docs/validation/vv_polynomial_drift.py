@@ -288,6 +288,8 @@ for ax, (name, formula, coord, values, xlabel, color) in zip(axes.flat, plot_spe
 
 plt.tight_layout()
 fig.savefig(SVG_PATH, format="svg")
+PNG_PATH = os.path.join(OUT_DIR, "vv_polynomial_drift.png")
+fig.savefig(PNG_PATH, format="png", dpi=150)
 plt.close(fig)
 print(f"SVG saved -> {SVG_PATH}")
 
@@ -327,6 +329,8 @@ ax2.legend(fontsize=9)
 ax2.grid(True, which="both", alpha=0.3)
 plt.tight_layout()
 fig2.savefig(SVG_PATH2, format="svg")
+PNG_PATH2 = os.path.join(OUT_DIR, "vv_polynomial_drift_resc.png")
+fig2.savefig(PNG_PATH2, format="png", dpi=150)
 plt.close(fig2)
 print(f"SVG saved -> {SVG_PATH2}")
 

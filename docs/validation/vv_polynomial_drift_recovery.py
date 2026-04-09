@@ -320,5 +320,7 @@ fig.suptitle(
 
 svg_path = os.path.join(OUTPUT_DIR, "vv_polynomial_drift_recovery.svg")
 fig.savefig(svg_path, format="svg", bbox_inches="tight", dpi=150)
+png_path = os.path.join(OUTPUT_DIR, "vv_polynomial_drift_recovery.png")
+fig.savefig(png_path, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print(f"\nSVG saved -> {svg_path}")

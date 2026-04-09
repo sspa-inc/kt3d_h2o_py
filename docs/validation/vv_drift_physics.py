@@ -235,6 +235,8 @@ ax.set_title("Summary", fontweight="bold")
 
 plt.tight_layout()
 fig.savefig(SVG_PATH, format="svg", bbox_inches="tight")
+PNG_PATH = os.path.join(OUTPUT_DIR, "vv_drift_physics.png")
+fig.savefig(PNG_PATH, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print("\nSVG saved -> %s" % SVG_PATH)
 

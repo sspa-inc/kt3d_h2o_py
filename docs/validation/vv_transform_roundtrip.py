@@ -281,6 +281,8 @@ try:
     plt.tight_layout(rect=[0, 0.04, 1, 1])
     svg_path = os.path.join(OUTPUT_DIR, "vv_transform_roundtrip.svg")
     fig.savefig(svg_path, format="svg", bbox_inches="tight")
+    png_path = os.path.join(OUTPUT_DIR, "vv_transform_roundtrip.png")
+    fig.savefig(png_path, format="png", bbox_inches="tight", dpi=150)
     plt.close(fig)
     print("\nSVG saved -> %s" % svg_path)
 

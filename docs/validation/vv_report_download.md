@@ -1,4 +1,10 @@
-# V&V Report
+# V&V Report — Download
+
+## 📥 Direct Download
+
+**[Download V&V Report (PDF)](vv_report/_output/vv_report.pdf)**
+
+---
 
 ## Formal Verification & Validation Report
 
@@ -11,16 +17,16 @@ covering all 10 validation scripts across the core modules:
 - Drift physics verification
 - AEM linesink potential properties
 - AEM drift scaling consistency
-- Wrapper equivalence to PyKrige
-- Anisotropy pre-transform consistency
+- **Wrapper equivalence to PyKrige** (direct comparison)
+- **Anisotropy pre-transform consistency** (PyKrige comparison)
 - LOOCV diagnostic metrics
 
 The report includes test case tables, PASS/FAIL results, and diagnostic figures
 for each validation script.
 
-## Download
+## Alternative Download
 
-The latest V&V Report PDF is available from the
+The latest V&V Report PDF is also available from the
 [GitHub Releases](https://github.com/sspa-inc/kt3d_h2o_py/releases) page.
 
 Each tagged release automatically generates and attaches the report.

@@ -326,6 +326,8 @@ ax.text(0.5, 0.02, summary_text, ha="center", va="bottom",
 plt.tight_layout()
 svg_path = os.path.join(OUTPUT_DIR, "vv_aem_scaling_consistency.svg")
 fig.savefig(svg_path, format="svg", bbox_inches="tight")
+png_path_sc = os.path.join(OUTPUT_DIR, "vv_aem_scaling_consistency.png")
+fig.savefig(png_path_sc, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print(f"\nSVG saved -> {svg_path}")
 

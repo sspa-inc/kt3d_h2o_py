@@ -1,7 +1,19 @@
 # UK_SSPA v2 — Universal Kriging for Water Level Mapping
 
 ![Tests](https://github.com/sspa-inc/kt3d_h2o_py/actions/workflows/tests.yml/badge.svg)
+
 📖 **[Full Documentation](https://sspa-inc.github.io/kt3d_h2o_py/)**
+
+---
+
+## 🔬 Validation & Verification
+
+**This software has been formally validated and verified.** The complete V&V report documents 10 validation tests covering all core modules including variogram models, drift terms, anisotropy transformations, and kriging accuracy. **Includes direct comparison against PyKrige** to verify wrapper equivalence and anisotropy consistency.
+
+📥 **[Download V&V Report (PDF)](docs/validation/vv_report/_output/vv_report.pdf)**
+🔍 **[Browse V&V Scripts & Results](docs/validation/)**
+
+---
 
 ## What It Does
 UK_SSPA v2 (Universal Kriging with Specified Spatial Polynomial and AEM drift) is a Python program for producing spatially interpolated groundwater level maps from point observation data. It implements Universal Kriging with user-specified drift terms, including polynomial trend functions and Analytic Element Method (AEM) linesink potentials derived from river geometry.
@@ -103,6 +115,11 @@ python main.py --config path/to/my_config.json
 - [Data Contracts](docs/data-contracts.md)
 - [Glossary](docs/glossary.md)
 
+### Verification & Validation
+- 📥 **[Download V&V Report (PDF)](docs/validation/vv_report/_output/vv_report.pdf)** — Formal validation report covering 10 tests
+- [Tested Behaviors](docs/validation/tested-behaviors.md) — Summary of validation test cases
+- [V&V Scripts](docs/validation/) — Browse all validation scripts and results
+
 ### Theory
 - [Variogram Models](docs/theory/variogram-models.md)
 - [Anisotropy](docs/theory/anisotropy.md)
@@ -122,15 +139,6 @@ python main.py --config path/to/my_config.json
 - [Linear Drift](docs/examples/ex_linear_drift.md)
 - [Linesink Drift](docs/examples/ex_linesink_drift.md)
 - [Anisotropy](docs/examples/ex_anisotropy.md)
-
-### Verification & Validation
-- [Tested Behaviors](docs/validation/tested-behaviors.md)
-- V&V scripts in `docs/validation/`
-
-### Verification & Validation Report
-A formal V&V report (PDF) is generated on each release and attached to the
-[GitHub Releases](https://github.com/sspa-inc/kt3d_h2o_py/releases) page.
-The report covers 10 validation scripts across all core modules.
 
 ## Dependencies
 - numpy

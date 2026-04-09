@@ -1,7 +1,7 @@
 # Active Context
 
 ## Last completed task
-Task 7.1: Wrote `docs/validation/tested-behaviors.md` — complete claim-to-test mapping table covering all 41 unit/integration test functions across 7 test files, plus a gap analysis identifying 30+ behaviors covered only by Phase 3 V&V scripts (variogram equations, AEM potential, scaling persistence, LOOCV metric formulas, PyKrige equivalence, anisotropy equivalence). Includes recommended unit test additions.
+Quarto V&V Report — Phase 4 styling overhaul **DONE** (Modernized `_quarto.yml` with KOMA-Script `scrreprt`, Latin Modern fonts, colored section headings, custom title page, `\tiny` code output blocks, wider margins; rewrote `vv_report.qmd` with detailed Purpose/Test Design/Results sub-sections for each V&V module explaining *why* each test is an appropriate V&V check; executive summary now renders as clean Markdown table; test environment as bullet list + table; appendices use `\appendix` for proper unnumbered formatting; smart stdout truncation preserves PASS/FAIL status column; numpy repr compacted; stray image removed; PDF renders to 31 pages at `docs/validation/vv_report/_output/vv_report.pdf`).
 
 ### Files modified:
 
@@ -54,3 +54,4 @@ Task 7.1: Wrote `docs/validation/tested-behaviors.md` — complete claim-to-test
 - Phase 5 - **DONE** (GitHub Actions workflow for docs deployment created; repo made public; GitHub Pages enabled on `gh-pages` branch; `site_description` added to `mkdocs.yml` to trigger first deployment to `https://sspa-inc.github.io/kt3d_h2o_py/`).
 - Phase 6 - **DONE** (Created GitHub Actions workflow for tests, added badge to README).
 - Phase 7 - **DONE** (Fixed relative links in documentation, removed line numbers from markdown links for GitHub compatibility).
+- Quarto V&V Report — **DONE** (PDF-only Quarto report at docs/validation/vv_report/; CI workflow generates PDF on version tags; MkDocs has download link page; no HTML rendering to avoid MkDocs clash; all subprocess calls have error handling).

@@ -29,6 +29,10 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Quick Start: quickstart.md
+  - Validation & Verification:
+      - 📥 Download V&V Report (PDF): validation/vv_report_download.md
+      - V&V Report (Web): validation/vv_report.md
+      - Tested Behaviors: validation/tested-behaviors.md
   - Configuration: configuration.md
   - Workflow: workflow.md
   - Data Contracts: data-contracts.md
@@ -50,7 +54,3 @@ nav:
       - Linear Drift: examples/ex_linear_drift.md
       - Linesink Drift: examples/ex_linesink_drift.md
       - Anisotropy: examples/ex_anisotropy.md
-  - Validation:
-      - V&V Report: validation/vv_report.md
-      - Tested Behaviors: validation/tested-behaviors.md
-      - Download PDF: validation/vv_report_download.md

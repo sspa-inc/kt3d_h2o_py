@@ -227,6 +227,8 @@ out_dir = os.path.join(os.path.dirname(__file__), "output")
 os.makedirs(out_dir, exist_ok=True)
 svg_path = os.path.join(out_dir, "vv_variogram_models.svg")
 fig.savefig(svg_path, format="svg", bbox_inches="tight")
+png_path = os.path.join(out_dir, "vv_variogram_models.png")
+fig.savefig(png_path, format="png", bbox_inches="tight", dpi=150)
 plt.close(fig)
 print(f"  Plot saved -> {svg_path}\n")
 

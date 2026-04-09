@@ -296,6 +296,8 @@ fig.text(0.5, 0.01, status_text, ha='center', fontsize=12,
 plt.tight_layout(rect=[0, 0.03, 1, 1])
 svg_path = os.path.join(OUTPUT_DIR, 'vv_aem_single_segment.svg')
 plt.savefig(svg_path, format='svg', bbox_inches='tight')
+png_path = os.path.join(OUTPUT_DIR, 'vv_aem_single_segment.png')
+plt.savefig(png_path, format='png', bbox_inches='tight', dpi=150)
 plt.close()
 print(f"\nSVG saved -> {svg_path}")
 
