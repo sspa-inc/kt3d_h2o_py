@@ -1,5 +1,7 @@
 # UK_SSPA v2 — Universal Kriging for Water Level Mapping
 
+![Tests](https://github.com/sspa-inc/kt3d_h2o_py/actions/workflows/tests.yml/badge.svg)
+
 ## What It Does
 UK_SSPA v2 (Universal Kriging with Specified Spatial Polynomial and AEM drift) is a Python program for producing spatially interpolated groundwater level maps from point observation data. It implements Universal Kriging with user-specified drift terms, including polynomial trend functions and Analytic Element Method (AEM) linesink potentials derived from river geometry.
 
