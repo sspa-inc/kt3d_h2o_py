@@ -154,7 +154,7 @@ Apply the forward affine transformation to convert coordinates from **raw space*
 |---|---|---|---|
 | `x` | `np.ndarray` | Yes | 1-D array of X coordinates in raw space. |
 | `y` | `np.ndarray` | Yes | 1-D array of Y coordinates in raw space. |
-| `params` | `dict` | Yes | Transform parameter dict as returned by [`get_transform_params()`](transform.py:14). If `None`, inputs are returned unchanged. |
+| `params` | `dict` | Yes | Transform parameter dict as returned by [`get_transform_params()`](transform.py). If `None`, inputs are returned unchanged. |
 
 ### Returns
 

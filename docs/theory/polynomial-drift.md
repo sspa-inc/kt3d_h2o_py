@@ -66,7 +66,7 @@ Setting a key to `true` includes that term; `false` or omitting it excludes it.
 
 ### Formula
 
-The rescaling factor is computed by [`compute_resc()`](../drift.py:8):
+The rescaling factor is computed by [`compute_resc()`](../drift.py):
 
 ```
 radsqd    = max( (xᵢ - x̄)² + (yᵢ - ȳ)² )   [max squared distance from centroid]
@@ -118,7 +118,7 @@ The safety floor `safe_radsqd = max(radsqd, range²)` prevents a specific failur
 [linear_x, linear_y, quadratic_x, quadratic_y]
 ```
 
-This is enforced in [`compute_polynomial_drift()`](../drift.py:34) by iterating over a fixed list:
+This is enforced in [`compute_polynomial_drift()`](../drift.py) by iterating over a fixed list:
 
 ```python
 for term in ["linear_x", "linear_y", "quadratic_x", "quadratic_y"]:
@@ -128,13 +128,13 @@ for term in ["linear_x", "linear_y", "quadratic_x", "quadratic_y"]:
 
 **Why this matters:** The `term_names` list is used to reconstruct drift columns at prediction time (grid nodes). If the order changed between training and prediction, the drift coefficients `βₖ` would be applied to the wrong columns, producing incorrect predictions.
 
-The `term_names` list returned by [`compute_polynomial_drift()`](../drift.py:34) must be stored and passed unchanged to [`compute_drift_at_points()`](../drift.py:83) during prediction.
+The `term_names` list returned by [`compute_polynomial_drift()`](../drift.py) must be stored and passed unchanged to [`compute_drift_at_points()`](../drift.py) during prediction.
 
 ---
 
 ## 5. Drift Computation at Prediction Points
 
-At prediction time (grid nodes), drift columns are reconstructed using [`compute_drift_at_points()`](../drift.py:83):
+At prediction time (grid nodes), drift columns are reconstructed using [`compute_drift_at_points()`](../drift.py):
 
 ```python
 drift_matrix, computed_names = compute_drift_at_points(x_grid, y_grid, term_names, resc)
@@ -152,7 +152,7 @@ drift_matrix, computed_names = compute_drift_at_points(x_grid, y_grid, term_name
 
 ### `drift_diagnostics()`
 
-[`drift_diagnostics()`](../drift.py:108) performs a magnitude check on each drift column relative to the variogram sill:
+[`drift_diagnostics()`](../drift.py) performs a magnitude check on each drift column relative to the variogram sill:
 
 ```
 ratio = max(|drift_column|) / sill
@@ -162,7 +162,7 @@ A warning is logged if `ratio > 1000`, indicating the drift terms are disproport
 
 ### `verify_drift_physics()`
 
-[`verify_drift_physics()`](../drift.py:262) mathematically verifies that each drift column follows its theoretical equation. It is called after training and logs PASS/FAIL for each term.
+[`verify_drift_physics()`](../drift.py) mathematically verifies that each drift column follows its theoretical equation. It is called after training and logs PASS/FAIL for each term.
 
 **For linear terms** (`linear_x`, `linear_y`):
 
@@ -206,8 +206,8 @@ See [`docs/theory/anisotropy.md`](anisotropy.md) for the transformation details 
 
 | Contract | Where Enforced |
 |---|---|
-| Term order is always `[linear_x, linear_y, quadratic_x, quadratic_y]` | [`compute_polynomial_drift():52`](../drift.py:52) |
-| `resc` is computed from training data, not grid | [`compute_drift_at_points()`](../drift.py:83) caller |
-| `term_names` from training must be passed unchanged to prediction | [`compute_drift_at_points()`](../drift.py:83) |
+| Term order is always `[linear_x, linear_y, quadratic_x, quadratic_y]` | [`compute_polynomial_drift():52`](../drift.py) |
+| `resc` is computed from training data, not grid | [`compute_drift_at_points()`](../drift.py) caller |
+| `term_names` from training must be passed unchanged to prediction | [`compute_drift_at_points()`](../drift.py) |
 | Drift columns are in model space (after anisotropy transform) | [`main.py`](../main.py) pipeline |
-| Safety floor prevents instability for small data extents | [`compute_resc():23`](../drift.py:23) |
+| Safety floor prevents instability for small data extents | [`compute_resc():23`](../drift.py) |

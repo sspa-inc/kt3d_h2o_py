@@ -20,13 +20,13 @@ The codebase uses the following orientation conventions, which **must** be docum
 | Property | Convention | Reference |
 |---|---|---|
 | Coordinate system | Cartesian X-Y, units match input shapefile CRS | All modules |
-| Angle definition | **Arithmetic**: Counter-Clockwise from East (positive X-axis) | [`variogram.py:22`](variogram.py:22), [`transform.py:23`](transform.py:23) |
-| Angle = 0° | Points along the **positive X-axis** (East) | [`transform.py:23`](transform.py:23) |
+| Angle definition | **Arithmetic**: Counter-Clockwise from East (positive X-axis) | [`variogram.py`](variogram.py), [`transform.py`](transform.py) |
+| Angle = 0° | Points along the **positive X-axis** (East) | [`transform.py`](transform.py) |
 | Angle = 90° | Points along the **positive Y-axis** (North) | Implied by CCW convention |
-| Anisotropy ratio | `minor_range / major_range`, constrained to `(0, 1]` | [`variogram.py:49`](variogram.py:49) |
-| Major axis alignment | After rotation by `angle_major`, the major axis aligns with the **X-axis** in model space | [`transform.py:49-51`](transform.py:49) |
-| Scaling direction | The **Y-axis** (minor axis in model space) is stretched by `1/ratio` to make the field isotropic | [`transform.py:52-53`](transform.py:52) |
-| Transform order | Translate to centroid → Rotate → Scale | [`transform.py:69`](transform.py:69) |
+| Anisotropy ratio | `minor_range / major_range`, constrained to `(0, 1]` | [`variogram.py`](variogram.py) |
+| Major axis alignment | After rotation by `angle_major`, the major axis aligns with the **X-axis** in model space | [`transform.py-51`](transform.py) |
+| Scaling direction | The **Y-axis** (minor axis in model space) is stretched by `1/ratio` to make the field isotropic | [`transform.py-53`](transform.py) |
+| Transform order | Translate to centroid → Rotate → Scale | [`transform.py`](transform.py) |
 
 ### Coordinate Spaces
 
@@ -91,39 +91,39 @@ Include:
 - A full-featured config example (anisotropy + linesink drift + polynomial drift + contour export)
 - A decision table for `drift_terms.linesink_river` showing behavior when it is `true`, `false`, or `{"use": true, "apply_anisotropy": false}`
 
-Source: [`config.json`](config.json), [`data.py:36-128`](data.py:36), [`variogram.py:6-52`](variogram.py:6), [`main.py:380-391`](main.py:380)
+Source: [`config.json`](config.json), [`data.py-128`](data.py), [`variogram.py-52`](variogram.py), [`main.py-391`](main.py)
 
 ---
 
 #### Task 1.3 — Workflow Reference (DOC)
 **File:** `docs/workflow.md`
 
-Document the complete execution pipeline from [`main.py:298-520`](main.py:298) as a numbered sequence of stages. For each stage, document:
+Document the complete execution pipeline from [`main.py-520`](main.py) as a numbered sequence of stages. For each stage, document:
 
 | Stage | Function(s) Called | Inputs | Outputs | Coordinate Space | Failure Modes |
 |---|---|---|---|---|---|
 
 Stages:
-1. Configuration loading — [`load_config()`](data.py:36)
-2. Variogram initialization — [`variogram()`](variogram.py:6)
+1. Configuration loading — [`load_config()`](data.py)
+2. Variogram initialization — [`variogram()`](variogram.py)
 3. Observation well loading — [`load_observation_wells()`](data.py) 
 4. Optional control point loading — [`load_line_features()`](data.py) for each non-observation source
 5. Data preparation and merging — [`prepare_data()`](data.py)
-6. Coordinate transformation (conditional on `anisotropy.enabled`) — [`get_transform_params()`](transform.py:14), [`apply_transform()`](transform.py:64)
-7. Polynomial drift computation — [`compute_resc()`](drift.py:8), [`compute_polynomial_drift()`](drift.py:34)
-8. AEM linesink drift computation (conditional) — [`compute_linesink_drift_matrix()`](AEM_drift.py:53)
+6. Coordinate transformation (conditional on `anisotropy.enabled`) — [`get_transform_params()`](transform.py), [`apply_transform()`](transform.py)
+7. Polynomial drift computation — [`compute_resc()`](drift.py), [`compute_polynomial_drift()`](drift.py)
+8. AEM linesink drift computation (conditional) — [`compute_linesink_drift_matrix()`](AEM_drift.py)
 9. Drift matrix merging — `np.hstack([poly, aem])`
-10. Model building — [`build_uk_model()`](kriging.py:46)
-11. Diagnostics — [`drift_diagnostics()`](drift.py:108), [`verify_drift_physics()`](drift.py:262), [`diagnose_kriging_system()`](main.py:27)
-12. Cross-validation (conditional) — [`cross_validate()`](kriging.py:484)
-13. Grid prediction — [`predict_on_grid()`](kriging.py:260)
+10. Model building — [`build_uk_model()`](kriging.py)
+11. Diagnostics — [`drift_diagnostics()`](drift.py), [`verify_drift_physics()`](drift.py), [`diagnose_kriging_system()`](main.py)
+12. Cross-validation (conditional) — [`cross_validate()`](kriging.py)
+13. Grid prediction — [`predict_on_grid()`](kriging.py)
 14. Output generation — [`generate_map()`](main.py), [`export_contours()`](main.py), [`export_aux_points()`](main.py)
 
 Include the Mermaid flowchart from the review document, enhanced with coordinate-space annotations on each node.
 
 **Critical contracts to document:**
 - `term_names` order must be identical between training and prediction
-- AEM `scaling_factors` from training must be passed to [`predict_on_grid()`](kriging.py:260) via `scaling_factors` parameter
+- AEM `scaling_factors` from training must be passed to [`predict_on_grid()`](kriging.py) via `scaling_factors` parameter
 - When `apply_anisotropy=false` for linesink drift, raw coordinates are used for AEM computation even though model coordinates are used for polynomial drift and kriging
 - The variogram object is cloned with `anisotropy_enabled=False` before passing to PyKrige when pre-transformation is used
 
@@ -150,7 +150,7 @@ Document the exact input data requirements for each source type:
 - Auxiliary points shapefile: Point geometry with x, y, h columns
 - Map: matplotlib figure (displayed or saved depending on config)
 
-Document null handling, duplicate handling (via [`remove_duplicate_points()`](data.py:134) with `min_separation_distance`), and what happens when optional inputs are missing.
+Document null handling, duplicate handling (via [`remove_duplicate_points()`](data.py) with `min_separation_distance`), and what happens when optional inputs are missing.
 
 ---
 
@@ -159,7 +159,7 @@ Document null handling, duplicate handling (via [`remove_duplicate_points()`](da
 #### Task 2.1 — Variogram Models Reference (DOC)
 **File:** `docs/theory/variogram-models.md`
 
-Document each supported variogram model with its mathematical equation, referencing [`variogram.py:66-81`](variogram.py:66):
+Document each supported variogram model with its mathematical equation, referencing [`variogram.py-81`](variogram.py):
 
 1. **Linear:** `γ(h) = nugget + (psill/range) * h` for `h ≤ range`, else `sill`
 2. **Exponential:** `γ(h) = nugget + psill * (1 - exp(-h / (range/3)))`
@@ -180,10 +180,10 @@ Document the `effective_range_convention` parameter and its effect.
 Document:
 1. What geometric anisotropy means physically (directional dependence of spatial correlation)
 2. The pre-transformation approach: coordinates are transformed to make the field isotropic, then isotropic kriging is applied
-3. The transformation formula: `X' = S * (R * (X - center))` from [`transform.py:69`](transform.py:69)
+3. The transformation formula: `X' = S * (R * (X - center))` from [`transform.py`](transform.py)
 4. Step-by-step: translate to centroid, rotate by `angle_major` (CCW from East), scale Y by `1/ratio`
 5. **Explicitly state:** angle_major=0° means the major axis of correlation points East; angle_major=45° means it points NE
-6. The inverse transform for converting model-space results back to raw space: [`invert_transform_coords()`](transform.py:87)
+6. The inverse transform for converting model-space results back to raw space: [`invert_transform_coords()`](transform.py)
 7. Why PyKrige's internal anisotropy is disabled after pre-transformation (to avoid double-application)
 8. The `apply_anisotropy` toggle for linesink drift and what it means physically
 
@@ -201,11 +201,11 @@ Document:
    - `linear_y`: `D = resc * y`
    - `quadratic_x`: `D = resc * x²`
    - `quadratic_y`: `D = resc * y²`
-3. The rescaling factor `resc` computation from [`compute_resc()`](drift.py:8): `resc = sqrt(sill / max(radsqd, range²))`
+3. The rescaling factor `resc` computation from [`compute_resc()`](drift.py): `resc = sqrt(sill / max(radsqd, range²))`
 4. Why rescaling is necessary (numerical stability of the kriging matrix)
 5. The safety floor: `radsqd` is floored at `range²` to prevent instability when data extent is small relative to correlation range
 6. Term ordering contract: always `[linear_x, linear_y, quadratic_x, quadratic_y]` regardless of config dict order
-7. The drift verification system from [`verify_drift_physics()`](drift.py:262): R² checks and slope/curvature checks
+7. The drift verification system from [`verify_drift_physics()`](drift.py): R² checks and slope/curvature checks
 
 ---
 
@@ -214,7 +214,7 @@ Document:
 
 Document:
 1. The Analytic Element Method concept: line sinks generate a potential field that represents the hydraulic influence of a river
-2. The complex potential formula from [`compute_linesink_potential()`](AEM_drift.py:7):
+2. The complex potential formula from [`compute_linesink_potential()`](AEM_drift.py):
    - Map to ZZ space: `ZZ = (z - mid) / half_L_vec` where `z = x + iy`, `mid = (z1+z2)/2`, `half_L_vec = (z2-z1)/2`
    - Complex potential: `carg = (ZZ+1)ln(ZZ+1) - (ZZ-1)ln(ZZ-1) + 2ln(half_L_vec) - 2`
    - Real potential: `φ = (strength * L / 4π) * Re(carg)`
@@ -261,7 +261,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.2 — V&V: Coordinate Transformation Roundtrip (V&V)
 **File:** `docs/validation/vv_transform_roundtrip.py`
 
-**Objective:** Verify that [`apply_transform()`](transform.py:64) followed by [`invert_transform_coords()`](transform.py:87) recovers original coordinates exactly.
+**Objective:** Verify that [`apply_transform()`](transform.py) followed by [`invert_transform_coords()`](transform.py) recovers original coordinates exactly.
 
 **Test cases:**
 1. Random point cloud (N=50, seed=42), angle=0°, ratio=1.0 (identity transform)
@@ -283,7 +283,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.3 — V&V: Polynomial Drift Computation (V&V)
 **File:** `docs/validation/vv_polynomial_drift.py`
 
-**Objective:** Verify that [`compute_polynomial_drift()`](drift.py:34) produces mathematically correct drift columns.
+**Objective:** Verify that [`compute_polynomial_drift()`](drift.py) produces mathematically correct drift columns.
 
 **Test cases:**
 1. **Linear X verification:** Given x=[0, 10, 20], y=[0, 0, 0], resc=0.5, verify `drift[:,0] = [0, 5, 10]`
@@ -291,7 +291,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 3. **Quadratic X verification:** Given x=[0, 10, 20], resc=0.5, verify `drift[:,0] = [0, 50, 200]`
 4. **Quadratic Y verification:** Given y=[0, 10, 20], resc=0.5, verify `drift[:,0] = [0, 50, 200]`
 5. **Term ordering:** Enable all four terms in different config dict orderings; verify output column order is always `[linear_x, linear_y, quadratic_x, quadratic_y]`
-6. **Rescaling factor:** Verify [`compute_resc()`](drift.py:8) with known inputs:
+6. **Rescaling factor:** Verify [`compute_resc()`](drift.py) with known inputs:
    - x=[0, 100], y=[0, 100], sill=1.0, range=50 → `radsqd = 10000`, `safe_radsqd = max(10000, 2500) = 10000`, `resc = sqrt(1/10000) = 0.01`
    - x=[0, 1], y=[0, 1], sill=1.0, range=1000 → safety floor triggers: `safe_radsqd = 1000000`, `resc = sqrt(1/1000000) = 0.001`
 
@@ -304,7 +304,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.4 — V&V: Drift Physics Verification System (V&V)
 **File:** `docs/validation/vv_drift_physics.py`
 
-**Objective:** Verify that [`verify_drift_physics()`](drift.py:262) correctly identifies valid and invalid drift columns.
+**Objective:** Verify that [`verify_drift_physics()`](drift.py) correctly identifies valid and invalid drift columns.
 
 **Test cases:**
 1. **Valid linear_x:** Construct `drift_col = resc * x` and verify function returns "PASS"
@@ -320,7 +320,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.5 — V&V: AEM Linesink Potential — Single Segment Analytical Check (V&V)
 **File:** `docs/validation/vv_aem_single_segment.py`
 
-**Objective:** Verify [`compute_linesink_potential()`](AEM_drift.py:7) against hand-calculated values for simple geometries.
+**Objective:** Verify [`compute_linesink_potential()`](AEM_drift.py) against hand-calculated values for simple geometries.
 
 **Test cases:**
 1. **Segment along X-axis:** z1=(0,0), z2=(100,0), strength=1.0
@@ -340,7 +340,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.6 — V&V: AEM Drift Matrix Scaling Consistency (V&V)
 **File:** `docs/validation/vv_aem_scaling_consistency.py`
 
-**Objective:** Verify that AEM drift scaling factors from training are correctly reused during prediction via [`compute_linesink_drift_matrix()`](AEM_drift.py:53).
+**Objective:** Verify that AEM drift scaling factors from training are correctly reused during prediction via [`compute_linesink_drift_matrix()`](AEM_drift.py).
 
 **Test cases:**
 1. Create a simple linesink GeoDataFrame with 2 groups, each with 1 segment
@@ -357,7 +357,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.7 — V&V: Wrapper Equivalence — No Drift Path (V&V)
 **File:** `docs/validation/vv_wrapper_no_drift.py`
 
-**Objective:** Verify that [`build_uk_model()`](kriging.py:46) with an empty drift matrix produces results equivalent to direct `pykrige.uk.UniversalKriging` with no specified drift.
+**Objective:** Verify that [`build_uk_model()`](kriging.py) with an empty drift matrix produces results equivalent to direct `pykrige.uk.UniversalKriging` with no specified drift.
 
 **Setup:**
 - Synthetic dataset: 20 points, seed=42, z = random field with known variogram (spherical, sill=1, range=50, nugget=0.1)
@@ -409,7 +409,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 - Variogram: spherical, sill=1, range=100, nugget=0.1, angle=30° (CCW from East), ratio=0.4
 
 **Comparison:**
-1. **Our approach:** Transform coordinates via [`get_transform_params()`](transform.py:14) + [`apply_transform()`](transform.py:64), then run isotropic PyKrige (anisotropy disabled)
+1. **Our approach:** Transform coordinates via [`get_transform_params()`](transform.py) + [`apply_transform()`](transform.py), then run isotropic PyKrige (anisotropy disabled)
 2. **PyKrige internal:** Pass raw coordinates with `anisotropy_scaling=ratio, anisotropy_angle=angle` to PyKrige
 
 **Important angle note:** PyKrige uses **CCW from East** for `anisotropy_angle`, which matches our convention. Document this explicitly.
@@ -427,7 +427,7 @@ Each V&V task produces a self-contained Python script in `docs/validation/` that
 #### Task 3.10 — V&V: LOOCV Diagnostic Metrics (V&V)
 **File:** `docs/validation/vv_loocv.py`
 
-**Objective:** Verify that [`cross_validate()`](kriging.py:484) produces correct leave-one-out statistics.
+**Objective:** Verify that [`cross_validate()`](kriging.py) produces correct leave-one-out statistics.
 
 **Setup:**
 - 15 points (seed=42), simple linear trend + noise
@@ -516,8 +516,8 @@ Demonstrate anisotropy:
 **File:** `docs/api/data.md`
 
 Document all public functions in [`data.py`](data.py):
-- [`load_config()`](data.py:36) — parameters, return type, exceptions, validation rules
-- [`remove_duplicate_points()`](data.py:134) — parameters, algorithm, return type
+- [`load_config()`](data.py) — parameters, return type, exceptions, validation rules
+- [`remove_duplicate_points()`](data.py) — parameters, algorithm, return type
 - `load_observation_wells()` — parameters, return type, coordinate space (raw)
 - `load_line_features()` — parameters, return type (4-tuple: cx, cy, ch, cn), coordinate space (raw)
 - `prepare_data()` — parameters, merging logic, return type
@@ -529,10 +529,10 @@ For each function: parameter types, shapes, coordinate space assumptions, except
 #### Task 5.2 — API Reference: variogram.py (DOC)
 **File:** `docs/api/variogram.md`
 
-Document the [`variogram`](variogram.py:5) class:
+Document the [`variogram`](variogram.py) class:
 - Constructor parameters (config dict or config_path)
 - All attributes: `model_type`, `sill`, `range_`, `nugget`, `anisotropy_enabled`, `anisotropy_ratio`, `angle_major`, advanced params
-- Validation rules from [`_validate_basic_parameters()`](variogram.py:38), [`_validate_anisotropy()`](variogram.py:48)
+- Validation rules from [`_validate_basic_parameters()`](variogram.py), [`_validate_anisotropy()`](variogram.py)
 - Methods: `calculate_variogram(h)`, `calculate_variogram_at_vector(hx, hy)`, `clone()`
 - **Angle convention note:** `angle_major` is arithmetic (CCW from East), 0° = East
 
@@ -542,9 +542,9 @@ Document the [`variogram`](variogram.py:5) class:
 **File:** `docs/api/transform.md`
 
 Document:
-- [`get_transform_params()`](transform.py:14) — inputs (x, y arrays + angle + ratio), output dict structure (`center`, `R`, `S`)
-- [`apply_transform()`](transform.py:64) — formula `X' = S * (R * (X - center))`, input/output coordinate spaces
-- [`invert_transform_coords()`](transform.py:87) — inverse formula, when to use
+- [`get_transform_params()`](transform.py) — inputs (x, y arrays + angle + ratio), output dict structure (`center`, `R`, `S`)
+- [`apply_transform()`](transform.py) — formula `X' = S * (R * (X - center))`, input/output coordinate spaces
+- [`invert_transform_coords()`](transform.py) — inverse formula, when to use
 - **Orientation diagram:** Show the rotation matrix for angle=0°, 45°, 90° with example points
 
 ---
@@ -553,11 +553,11 @@ Document:
 **File:** `docs/api/drift.md`
 
 Document:
-- [`compute_resc()`](drift.py:8) — formula, safety floor, inputs/outputs
-- [`compute_polynomial_drift()`](drift.py:34) — config parsing, term ordering contract, return shapes
-- [`compute_drift_at_points()`](drift.py:83) — prediction-time drift reconstruction
-- [`drift_diagnostics()`](drift.py:108) — what it checks, warning thresholds
-- [`verify_drift_physics()`](drift.py:262) — R² and slope/curvature checks, pass/fail criteria
+- [`compute_resc()`](drift.py) — formula, safety floor, inputs/outputs
+- [`compute_polynomial_drift()`](drift.py) — config parsing, term ordering contract, return shapes
+- [`compute_drift_at_points()`](drift.py) — prediction-time drift reconstruction
+- [`drift_diagnostics()`](drift.py) — what it checks, warning thresholds
+- [`verify_drift_physics()`](drift.py) — R² and slope/curvature checks, pass/fail criteria
 
 ---
 
@@ -565,8 +565,8 @@ Document:
 **File:** `docs/api/aem_drift.md`
 
 Document:
-- [`compute_linesink_potential()`](AEM_drift.py:7) — complex potential formula, singularity handling, strength scaling
-- [`compute_linesink_drift_matrix()`](AEM_drift.py:53) — all parameters including `input_scaling_factors`, `apply_anisotropy`, `rescaling_method`; return value (3-tuple: matrix, names, factors)
+- [`compute_linesink_potential()`](AEM_drift.py) — complex potential formula, singularity handling, strength scaling
+- [`compute_linesink_drift_matrix()`](AEM_drift.py) — all parameters including `input_scaling_factors`, `apply_anisotropy`, `rescaling_method`; return value (3-tuple: matrix, names, factors)
 - **Critical contract:** scaling factors must be persisted and reused
 - Coordinate space behavior based on `apply_anisotropy` flag
 
@@ -576,11 +576,11 @@ Document:
 **File:** `docs/api/kriging.md`
 
 Document:
-- [`build_uk_model()`](kriging.py:46) — how it wraps PyKrige, drift_terms="specified" convention, anisotropy handling
-- [`predict_at_points()`](kriging.py:138) — drift column count validation, PyKrige version compatibility
-- [`predict_on_grid()`](kriging.py:260) — grid generation, coordinate transformation, drift reconstruction logic, the `scaling_factors` parameter
-- [`output_drift_coefficients()`](kriging.py:431) — OLS diagnostic, non-intrusive
-- [`cross_validate()`](kriging.py:484) — LOOCV algorithm, per-fold resc recomputation, return dict structure
+- [`build_uk_model()`](kriging.py) — how it wraps PyKrige, drift_terms="specified" convention, anisotropy handling
+- [`predict_at_points()`](kriging.py) — drift column count validation, PyKrige version compatibility
+- [`predict_on_grid()`](kriging.py) — grid generation, coordinate transformation, drift reconstruction logic, the `scaling_factors` parameter
+- [`output_drift_coefficients()`](kriging.py) — OLS diagnostic, non-intrusive
+- [`cross_validate()`](kriging.py) — LOOCV algorithm, per-fold resc recomputation, return dict structure
 
 ---
 

@@ -27,7 +27,7 @@ The plan correctly recognizes that the system revolves around:
 - LOOCV
 - grid prediction and contour generation
 
-Those themes align with the actual orchestration in [`main.py`](main.py:298), model construction in [`build_uk_model`](kriging.py:46), grid prediction in [`predict_on_grid`](kriging.py:260), config validation in [`load_config`](data.py:36), and linesink drift generation in [`compute_linesink_drift_matrix`](AEM_drift.py:53).
+Those themes align with the actual orchestration in [`main.py`](main.py), model construction in [`build_uk_model`](kriging.py), grid prediction in [`predict_on_grid`](kriging.py), config validation in [`load_config`](data.py), and linesink drift generation in [`compute_linesink_drift_matrix`](AEM_drift.py).
 
 ### 2. It recognizes that theory and implementation both matter
 
@@ -48,7 +48,7 @@ For a scientific Python tool, documentation is not complete unless claims are ti
 
 ## 1. The plan is not grounded enough in the actual workflow entrypoint
 
-The real workflow is not abstract. It is a concrete pipeline in [`main.py`](main.py:298):
+The real workflow is not abstract. It is a concrete pipeline in [`main.py`](main.py):
 
 1. load config
 2. instantiate variogram
@@ -129,14 +129,14 @@ Without those, an agent still has to reverse-engineer behavior from code.
 
 The plan says there should be a deep dive into [`config.json`](config.json), but that is not enough. This project needs a formal configuration contract.
 
-The code already enforces some required keys in [`load_config`](data.py:36):
+The code already enforces some required keys in [`load_config`](data.py):
 
 - `data_sources`
 - `variogram`
 - `drift_terms`
 - `grid`
 
-But the runtime behavior in [`main.py`](main.py:298) and [`predict_on_grid`](kriging.py:260) depends on more than just those top-level keys. There are nested conventions and optional branches, including:
+But the runtime behavior in [`main.py`](main.py) and [`predict_on_grid`](kriging.py) depends on more than just those top-level keys. There are nested conventions and optional branches, including:
 
 - observation well source structure
 - line feature source structure
@@ -165,10 +165,10 @@ This codebase has meaningful behavioral branches that documentation must make ex
 
 Examples:
 
-- anisotropy may be handled by pre-transforming coordinates and disabling anisotropy in the kriging object, as shown in [`main.py`](main.py:345) and [`build_uk_model`](kriging.py:103)
-- linesink drift can be enabled as a boolean or configured as a dict with `use` and `apply_anisotropy`, as shown in [`main.py`](main.py:381)
-- linesink scaling can be `adaptive` or `fixed`, as shown in [`compute_linesink_drift_matrix`](AEM_drift.py:53)
-- prediction reconstructs drift terms from `term_names`, and non-polynomial terms are assumed to be AEM linesink terms in [`predict_on_grid`](kriging.py:345)
+- anisotropy may be handled by pre-transforming coordinates and disabling anisotropy in the kriging object, as shown in [`main.py`](main.py) and [`build_uk_model`](kriging.py)
+- linesink drift can be enabled as a boolean or configured as a dict with `use` and `apply_anisotropy`, as shown in [`main.py`](main.py)
+- linesink scaling can be `adaptive` or `fixed`, as shown in [`compute_linesink_drift_matrix`](AEM_drift.py)
+- prediction reconstructs drift terms from `term_names`, and non-polynomial terms are assumed to be AEM linesink terms in [`predict_on_grid`](kriging.py)
 
 These are not minor implementation details. They are core behavioral contracts.
 
@@ -189,12 +189,12 @@ The code contains many validation and failure points, but the plan does not requ
 
 Examples visible in code:
 
-- missing or invalid config file in [`load_config`](data.py:36)
-- invalid variogram numeric constraints in [`load_config`](data.py:83)
-- invalid grid definitions in [`predict_on_grid`](kriging.py:302)
-- missing or invalid linesink shapefile path in [`main.py`](main.py:404)
-- drift mismatch risks during prediction in [`predict_at_points`](kriging.py:138)
-- insufficient points for LOOCV in [`cross_validate`](kriging.py:484)
+- missing or invalid config file in [`load_config`](data.py)
+- invalid variogram numeric constraints in [`load_config`](data.py)
+- invalid grid definitions in [`predict_on_grid`](kriging.py)
+- missing or invalid linesink shapefile path in [`main.py`](main.py)
+- drift mismatch risks during prediction in [`predict_at_points`](kriging.py)
+- insufficient points for LOOCV in [`cross_validate`](kriging.py)
 
 The plan should explicitly require:
 
@@ -221,10 +221,10 @@ For this project, a useful API reference must include more than signatures. It m
 
 Examples of coupling that must be documented:
 
-- [`build_uk_model`](kriging.py:46) expects drift columns in a specific order that must be preserved into prediction
-- [`predict_on_grid`](kriging.py:260) reconstructs drift from `term_names`, so term naming is part of the contract
-- [`compute_linesink_drift_matrix`](AEM_drift.py:53) returns scaling factors that must be reused during prediction for consistency
-- [`variogram`](variogram.py:5) and [`load_config`](data.py:36) both validate overlapping concepts, which should be documented to avoid duplicated or conflicting assumptions
+- [`build_uk_model`](kriging.py) expects drift columns in a specific order that must be preserved into prediction
+- [`predict_on_grid`](kriging.py) reconstructs drift from `term_names`, so term naming is part of the contract
+- [`compute_linesink_drift_matrix`](AEM_drift.py) returns scaling factors that must be reused during prediction for consistency
+- [`variogram`](variogram.py) and [`load_config`](data.py) both validate overlapping concepts, which should be documented to avoid duplicated or conflicting assumptions
 
 Without documenting these contracts, the API reference will be too weak for extension or automation.
 
@@ -242,10 +242,10 @@ The docs should specify:
 - whether outputs overwrite existing files
 - how to validate output correctness
 
-This is especially important because [`main.py`](main.py:498) conditionally generates:
+This is especially important because [`main.py`](main.py) conditionally generates:
 
 - maps
-- contour shapefiles via [`export_contours`](main.py:101)
+- contour shapefiles via [`export_contours`](main.py)
 - auxiliary point exports
 
 Agents need artifact expectations to verify success without manual inspection.
@@ -256,7 +256,7 @@ This section needs the harshest correction.
 
 ### Problem A: the baseline comparison is conceptually sloppy
 
-The plan proposes comparing the no-drift path from [`build_uk_model`](kriging.py:46) against `pykrige.ok.OrdinaryKriging`. But [`build_uk_model`](kriging.py:46) constructs a `UniversalKriging` object and simply omits specified drift terms when drift is absent. That is not the same thing as directly using `OrdinaryKriging`, even if results may be similar in some cases.
+The plan proposes comparing the no-drift path from [`build_uk_model`](kriging.py) against `pykrige.ok.OrdinaryKriging`. But [`build_uk_model`](kriging.py) constructs a `UniversalKriging` object and simply omits specified drift terms when drift is absent. That is not the same thing as directly using `OrdinaryKriging`, even if results may be similar in some cases.
 
 The benchmark should instead compare:
 
@@ -277,7 +277,7 @@ A better benchmark would compare:
 
 ### Problem C: anisotropy benchmarking needs stronger acceptance criteria
 
-The plan proposes max absolute difference in predictions, but that is not enough. Because the implementation explicitly pre-transforms coordinates in [`main.py`](main.py:345) and may disable anisotropy in the kriging object before training, the benchmark should also verify:
+The plan proposes max absolute difference in predictions, but that is not enough. Because the implementation explicitly pre-transforms coordinates in [`main.py`](main.py) and may disable anisotropy in the kriging object before training, the benchmark should also verify:
 
 - transformed coordinate consistency
 - prediction equivalence across representative angles and ratios
@@ -466,7 +466,7 @@ Also add decision tables for drift and anisotropy combinations.
 Examples that should be documented explicitly:
 
 - drift term order must remain stable between training and prediction
-- non-polynomial `term_names` are interpreted as linesink terms in [`predict_on_grid`](kriging.py:382)
+- non-polynomial `term_names` are interpreted as linesink terms in [`predict_on_grid`](kriging.py)
 - linesink scaling factors from training must be reused during prediction for consistency
 - transformed coordinates are used for kriging when anisotropy is enabled
 - grid resolution must be positive and ranges must be increasing

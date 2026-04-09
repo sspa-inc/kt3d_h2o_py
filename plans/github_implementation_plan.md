@@ -636,7 +636,7 @@ jobs:
 1. Search all `.md` files for relative links (pattern: `](`)
 2. Verify each linked file exists at the referenced path
 3. Fix any broken links
-4. Pay special attention to links that use line-number anchors (e.g., `file.py:42`) — these work in some contexts but not in GitHub rendered markdown
+4. Pay special attention to links that use line-number anchors (e.g., `file.py`) — these work in some contexts but not in GitHub rendered markdown
 5. Ensure no links point to files inside `Test/` (which will not be in the repo)
 
 **Acceptance:** No broken links in any `.md` file when viewed on GitHub.

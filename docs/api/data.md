@@ -140,7 +140,7 @@ Load observation well point data from a shapefile.
 
 | Parameter | Type | Required | Description |
 |---|---|---|---|
-| `config` | `dict` | Yes | Full validated configuration dictionary (as returned by [`load_config()`](data.py:36)). Must contain `config["data_sources"]["observation_wells"]` with `path` and `water_level_col` keys. |
+| `config` | `dict` | Yes | Full validated configuration dictionary (as returned by [`load_config()`](data.py)). Must contain `config["data_sources"]["observation_wells"]` with `path` and `water_level_col` keys. |
 
 ### Config Keys Used
 
@@ -286,7 +286,7 @@ Merge observation wells with one or more control point sources, then remove near
 
 1. Observation well arrays are placed first.
 2. Each `(cx, cy, ch)` tuple from `control_points_list` is appended in order using `np.concatenate`.
-3. The merged arrays are passed to [`remove_duplicate_points()`](data.py:134) with `min_dist = config.get("min_separation_distance", 0.0)`.
+3. The merged arrays are passed to [`remove_duplicate_points()`](data.py) with `min_dist = config.get("min_separation_distance", 0.0)`.
 
 ### Exceptions
 
@@ -299,7 +299,7 @@ Merge observation wells with one or more control point sources, then remove near
 - `None` inputs for `wx`, `wy`, `wh` are treated as empty arrays.
 - `None` entries in `control_points_list` are silently skipped.
 - If `min_separation_distance` is absent from config or `<= 0`, no duplicate removal is performed.
-- The nugget override array `cp_n` returned by [`load_line_features()`](data.py:311) is **not** passed to `prepare_data()` — it is handled separately in the main pipeline.
+- The nugget override array `cp_n` returned by [`load_line_features()`](data.py) is **not** passed to `prepare_data()` — it is handled separately in the main pipeline.
 
 ### Example
 

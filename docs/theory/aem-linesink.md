@@ -27,7 +27,7 @@ where β is a fitted coefficient, φ(x) is the AEM potential, and ε(x) is the s
 
 ## 2. The Complex Potential Formula
 
-The potential for a single line sink segment is computed in [`compute_linesink_potential()`](../AEM_drift.py:7).
+The potential for a single line sink segment is computed in [`compute_linesink_potential()`](../AEM_drift.py).
 
 ### 2.1 Coordinate Mapping to ZZ Space
 
@@ -102,7 +102,7 @@ where:
 
 The complex logarithm `ln(ZZ ± 1)` is singular when ZZ = ±1, i.e., when the evaluation point lies exactly on an endpoint of the segment.
 
-The implementation in [`compute_linesink_potential()`](../AEM_drift.py:27) handles this by perturbing ZZ slightly away from the singular values:
+The implementation in [`compute_linesink_potential()`](../AEM_drift.py) handles this by perturbing ZZ slightly away from the singular values:
 
 ```python
 small = 1e-10
@@ -134,7 +134,7 @@ All segments sharing the same `group_column` value are treated as a single hydra
 
 Each group becomes **one column** in the drift matrix. If there are N groups, the AEM drift matrix has N columns.
 
-This grouping is performed in [`compute_linesink_drift_matrix()`](../AEM_drift.py:53):
+This grouping is performed in [`compute_linesink_drift_matrix()`](../AEM_drift.py):
 
 ```python
 unique_ids = linesinks_gdf[group_col].unique()
@@ -196,7 +196,7 @@ The scaling factors `rescr` are computed from the **training data** (the observa
 
 ### How It Works
 
-**Training phase** — [`compute_linesink_drift_matrix()`](../AEM_drift.py:53) is called without `input_scaling_factors`:
+**Training phase** — [`compute_linesink_drift_matrix()`](../AEM_drift.py) is called without `input_scaling_factors`:
 
 ```python
 drift_matrix, term_names, scaling_factors = compute_linesink_drift_matrix(
@@ -230,7 +230,7 @@ if input_scaling_factors and linesink_id in input_scaling_factors:
 
 ### Return Value
 
-[`compute_linesink_drift_matrix()`](../AEM_drift.py:53) returns a 3-tuple:
+[`compute_linesink_drift_matrix()`](../AEM_drift.py) returns a 3-tuple:
 
 ```python
 (drift_matrix, term_names, scaling_factors_used)
@@ -308,4 +308,4 @@ Setting `"apply_anisotropy": false` uses raw coordinates for AEM computation.
 
 Strack, O. D. L. (1989). *Groundwater Mechanics*. Prentice Hall, Englewood Cliffs, NJ.
 
-The complex potential formula implemented in [`compute_linesink_potential()`](../AEM_drift.py:7) follows the line sink element derivation in Strack (1989), adapted for numerical implementation with singularity protection.
+The complex potential formula implemented in [`compute_linesink_potential()`](../AEM_drift.py) follows the line sink element derivation in Strack (1989), adapted for numerical implementation with singularity protection.

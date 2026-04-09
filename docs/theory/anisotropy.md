@@ -47,7 +47,7 @@ Where:
 - `⊙` = element-wise multiplication
 - `@` = matrix multiplication (coordinates as row vectors times rotation matrix)
 
-This is implemented in [`transform.py:69`](../transform.py:69) via [`apply_transform()`](../transform.py:64).
+This is implemented in [`transform.py`](../transform.py) via [`apply_transform()`](../transform.py).
 
 ### Angle Input and Internal Conversion
 
@@ -180,7 +180,7 @@ After step 4, the point cloud appears **circular** (isotropic) in model space, a
 
 ## 7. Inverse Transform
 
-To convert model-space coordinates back to raw space (e.g., for output or visualization), the inverse transformation is applied via [`invert_transform_coords()`](../transform.py:87):
+To convert model-space coordinates back to raw space (e.g., for output or visualization), the inverse transformation is applied via [`invert_transform_coords()`](../transform.py):
 
 ```
 X = (X′ / S) @ R^T + center
@@ -203,7 +203,7 @@ x = x_ur + x_center
 y = y_ur + y_center
 ```
 
-The inverse transform is used in [`predict_on_grid()`](../kriging.py:260) to convert grid coordinates from raw space to model space before prediction, and is also available for converting model-space outputs back to raw space.
+The inverse transform is used in [`predict_on_grid()`](../kriging.py) to convert grid coordinates from raw space to model space before prediction, and is also available for converting model-space outputs back to raw space.
 
 ---
 
@@ -249,11 +249,11 @@ Use this when the river's hydraulic influence is better represented in raw geogr
 
 | Function | File | Purpose |
 |---|---|---|
-| [`get_transform_params()`](../transform.py:14) | `transform.py` | Computes `center`, `R`, `S` from data coordinates and variogram parameters; converts azimuth to arithmetic internally |
-| [`apply_transform()`](../transform.py:64) | `transform.py` | Applies forward transform: raw → model space via `coords @ R` then scale |
-| [`invert_transform_coords()`](../transform.py:87) | `transform.py` | Applies inverse transform: model → raw space |
+| [`get_transform_params()`](../transform.py) | `transform.py` | Computes `center`, `R`, `S` from data coordinates and variogram parameters; converts azimuth to arithmetic internally |
+| [`apply_transform()`](../transform.py) | `transform.py` | Applies forward transform: raw → model space via `coords @ R` then scale |
+| [`invert_transform_coords()`](../transform.py) | `transform.py` | Applies inverse transform: model → raw space |
 | [`variogram.clone()`](../variogram.py) | `variogram.py` | Creates a copy with `anisotropy_enabled=False` for passing to PyKrige |
-| [`predict_on_grid()`](../kriging.py:260) | `kriging.py` | Transforms grid coordinates to model space before prediction |
+| [`predict_on_grid()`](../kriging.py) | `kriging.py` | Transforms grid coordinates to model space before prediction |
 
 ---
 

@@ -1,6 +1,6 @@
 # Configuration Reference
 
-This document describes every key in `config.json`. The file is loaded and validated by [`load_config()`](../data.py:36) at startup. All four top-level sections (`data_sources`, `variogram`, `drift_terms`, `grid`) are **required**.
+This document describes every key in `config.json`. The file is loaded and validated by [`load_config()`](../data.py) at startup. All four top-level sections (`data_sources`, `variogram`, `drift_terms`, `grid`) are **required**.
 
 ---
 
@@ -39,7 +39,7 @@ Configuration for the linesink river shapefile used as an AEM drift source and/o
 |---|---|---|---|---|---|---|
 | `data_sources.linesink_river.path` | string | Conditional | — | Any valid file path | Path to the linesink river shapefile (`.shp`). Must be LineString or MultiLineString geometry. | Required when `drift_terms.linesink_river` is enabled or `control_points.enabled` is `true`. |
 | `data_sources.linesink_river.group_column` | string | Conditional | `"DriftTerm"` | Any column name present in the shapefile | Attribute column that groups line segments into named linesink features. Segments sharing the same value are summed into one drift term. | Determines the column names in `term_names` for AEM drift terms. |
-| `data_sources.linesink_river.strength_col` | string | No | `"resistance"` | Any numeric column name | Attribute column containing the hydraulic strength (resistance) of each segment. | Passed to [`compute_linesink_drift_matrix()`](../AEM_drift.py:53) as `strength_col`. |
+| `data_sources.linesink_river.strength_col` | string | No | `"resistance"` | Any numeric column name | Attribute column containing the hydraulic strength (resistance) of each segment. | Passed to [`compute_linesink_drift_matrix()`](../AEM_drift.py) as `strength_col`. |
 | `data_sources.linesink_river.rescaling_method` | string | No | `"adaptive"` | `"adaptive"`, `"fixed"` | Controls how AEM potential values are normalized. `"adaptive"` scales each group so its maximum potential equals the variogram sill. `"fixed"` uses a KT3D-style constant: `sill / 0.0001`. | Scaling factors computed during training **must** be reused during prediction. See [Decision Table](#11-decision-table-drift_termslinesink_river). |
 
 ### 2a. `data_sources.linesink_river.control_points`
@@ -60,7 +60,7 @@ Sub-object controlling generation of synthetic control points along river line f
 
 ## 3. `variogram`
 
-Defines the spatial correlation model. All three numeric parameters (`sill`, `range`, `nugget`) are **required** and validated by [`load_config()`](../data.py:36) and [`variogram._validate_basic_parameters()`](../variogram.py:38).
+Defines the spatial correlation model. All three numeric parameters (`sill`, `range`, `nugget`) are **required** and validated by [`load_config()`](../data.py) and [`variogram._validate_basic_parameters()`](../variogram.py).
 
 | Key Path | Type | Required | Default | Allowed Values | Description | Interactions |
 |---|---|---|---|---|---|---|
@@ -75,7 +75,7 @@ Controls geometric anisotropy via coordinate pre-transformation. When enabled, c
 
 | Key Path | Type | Required | Default | Allowed Values | Description | Interactions |
 |---|---|---|---|---|---|---|
-| `variogram.anisotropy.enabled` | boolean | No | `false` | `true`, `false` | Whether to apply anisotropy pre-transformation. | When `true`, `ratio` and `angle_major` are validated by [`_validate_anisotropy()`](../variogram.py:48). PyKrige's internal anisotropy is disabled to avoid double-application. |
+| `variogram.anisotropy.enabled` | boolean | No | `false` | `true`, `false` | Whether to apply anisotropy pre-transformation. | When `true`, `ratio` and `angle_major` are validated by [`_validate_anisotropy()`](../variogram.py). PyKrige's internal anisotropy is disabled to avoid double-application. |
 | `variogram.anisotropy.ratio` | float | Conditional | `1.0` | `(0, 1]` | Anisotropy ratio: `minor_range / major_range`. A value of `0.5` means the minor range is half the major range. Must be in `(0, 1]`. | Required when `enabled` is `true`. The Y-axis (minor axis in model space) is stretched by `1/ratio` during transformation. |
 | `variogram.anisotropy.angle_major` | float | Conditional | `0.0` | `[0, 360)` | Direction of the **major axis** of spatial correlation, in **azimuth degrees** (clockwise from North). `0°` = North, `90°` = East, `45°` = Northeast. **This matches the KT3D SETROT convention.** | Required when `enabled` is `true`. Internally converted to arithmetic via `alpha = 90 - azimuth` before building the rotation matrix. To convert from arithmetic angle: `azimuth = 90 - arithmetic` (mod 360). |
 
@@ -126,7 +126,7 @@ Defines the prediction grid in **raw space** (original CRS coordinates). The gri
 
 | Key Path | Type | Required | Default | Allowed Values | Description | Interactions |
 |---|---|---|---|---|---|---|
-| `min_separation_distance` | float | No | — | `>= 0` | Minimum allowed distance (in CRS units) between any two data points. Points closer than this threshold are deduplicated by [`remove_duplicate_points()`](../data.py:134), retaining the first occurrence. | Applied after merging observation wells and control points. Set to `0` or omit to disable deduplication. |
+| `min_separation_distance` | float | No | — | `>= 0` | Minimum allowed distance (in CRS units) between any two data points. Points closer than this threshold are deduplicated by [`remove_duplicate_points()`](../data.py), retaining the first occurrence. | Applied after merging observation wells and control points. Set to `0` or omit to disable deduplication. |
 
 ---
 
@@ -288,6 +288,6 @@ The `linesink_river` drift term accepts three forms:
 | `{"use": true, "apply_anisotropy": false}` | object | `true` | `false` | AEM linesink drift is **enabled**, but linesink geometry remains in **raw space**. The AEM potential is computed using original (untransformed) coordinates. Polynomial drift and kriging still use model-space coordinates. Use this when the river geometry should not be distorted by the anisotropy transformation. |
 | `{"use": false, "apply_anisotropy": true}` | object | `false` | N/A | AEM linesink drift is **disabled** (same as `false`). |
 
-> **Critical contract:** When `use_linesink` is `true`, the scaling factors computed during training are stored as `trained_scaling_factors` and **must** be passed to [`predict_on_grid()`](../kriging.py:260) via the `scaling_factors` parameter. Failure to do so will cause the prediction-time AEM potential to be rescaled independently, producing inconsistent drift columns between training and prediction.
+> **Critical contract:** When `use_linesink` is `true`, the scaling factors computed during training are stored as `trained_scaling_factors` and **must** be passed to [`predict_on_grid()`](../kriging.py) via the `scaling_factors` parameter. Failure to do so will cause the prediction-time AEM potential to be rescaled independently, producing inconsistent drift columns between training and prediction.
 
-> **Source references:** [`main.py:380-436`](../main.py:380), [`data.py:36-128`](../data.py:36), [`variogram.py:6-52`](../variogram.py:6)
+> **Source references:** [`main.py-436`](../main.py), [`data.py-128`](../data.py), [`variogram.py-52`](../variogram.py)

@@ -72,7 +72,7 @@ z = L @ np.random.standard_normal(N)
 
 ### Step 2 — Build the ordinary kriging model
 
-[`build_uk_model()`](../kriging.py:46) is called with `drift_matrix=None`. When no
+[`build_uk_model()`](../kriging.py) is called with `drift_matrix=None`. When no
 drift matrix is provided (or an empty `N×0` matrix is passed), the function omits the
 `drift_terms` keyword from the PyKrige constructor entirely, producing an ordinary
 kriging model:
@@ -153,8 +153,8 @@ Use Universal Kriging with drift terms (Tasks 4.2–4.3) when:
 
 | Function | Module | Purpose |
 |---|---|---|
-| [`build_uk_model()`](../kriging.py:46) | `kriging.py` | Constructs PyKrige UniversalKriging model |
-| [`uk_model.execute()`](../kriging.py:128) | PyKrige | Predicts at arbitrary points |
+| [`build_uk_model()`](../kriging.py) | `kriging.py` | Constructs PyKrige UniversalKriging model |
+| [`uk_model.execute()`](../kriging.py) | PyKrige | Predicts at arbitrary points |
 
 See [`docs/api/kriging.md`](../api/kriging.md) for full API documentation.  
 See [`docs/theory/variogram-models.md`](../theory/variogram-models.md) for variogram model equations.

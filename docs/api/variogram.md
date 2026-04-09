@@ -1,6 +1,6 @@
 # API Reference: `variogram.py`
 
-The [`variogram`](variogram.py:5) class encapsulates all variogram model parameters, validation, and semivariance computation for UK_SSPA v2.
+The [`variogram`](variogram.py) class encapsulates all variogram model parameters, validation, and semivariance computation for UK_SSPA v2.
 
 ---
 
@@ -105,7 +105,7 @@ Compute the semivariance for a scalar isotropic lag distance `h`.
 
 **Returns:** `float` — semivariance `γ(h)`.
 
-**Note:** When `anisotropy_enabled=True`, this method still computes the isotropic semivariance. The caller is responsible for passing a pre-transformed (model-space) distance. For directional computation from raw-space lag vectors, use [`calculate_variogram_at_vector()`](variogram.py:92) instead.
+**Note:** When `anisotropy_enabled=True`, this method still computes the isotropic semivariance. The caller is responsible for passing a pre-transformed (model-space) distance. For directional computation from raw-space lag vectors, use [`calculate_variogram_at_vector()`](variogram.py) instead.
 
 **Model equations** (where `psill = sill - nugget`):
 

@@ -21,7 +21,7 @@ This example demonstrates how UK_SSPA v2 handles **geometric anisotropy** — di
 
 > **The `angle_major` parameter specifies the direction that gets STRETCHED in model space, which corresponds to the direction of SHORTER correlation (the minor axis). The major correlation axis is PERPENDICULAR to `angle_major`.**
 
-This is because [`apply_transform()`](../transform.py:64) works as follows:
+This is because [`apply_transform()`](../transform.py) works as follows:
 1. Convert azimuth to arithmetic internally (`alpha = 90 - azimuth`)
 2. Rotate using `coords @ R` — this maps the `angle_major` direction to the **Y-axis**
 3. Scale Y by `1/ratio` — this **stretches** Y-axis distances, making them larger in model space
@@ -67,7 +67,7 @@ azimuth    = 90 - arithmetic (mod 360)
 The example generates data with **true anisotropic spatial correlation** using the **same transform** as the production code:
 
 1. Place 20 random points in a 200x200 domain
-2. Transform coordinates to model space using [`apply_transform()`](../transform.py:64) with the same `angle_major` and `ratio`
+2. Transform coordinates to model space using [`apply_transform()`](../transform.py) with the same `angle_major` and `ratio`
 3. Compute pairwise distances in model space (where the field is isotropic)
 4. Build a spherical covariance matrix using `range_major` in model space
 5. Generate correlated values via **Cholesky decomposition**: `z = L @ N(0,1)` where `L L^T = C`
@@ -138,7 +138,7 @@ uk_model = build_uk_model(x_model, y_model, z,
                           drift_matrix=None, variogram=vario_iso_clone)
 ```
 
-> **Contract:** [`build_uk_model()`](../kriging.py:46) checks `anisotropy_enabled`. When `False`, it sets `anisotropy_scaling=1.0` and `anisotropy_angle=0.0` in PyKrige.
+> **Contract:** [`build_uk_model()`](../kriging.py) checks `anisotropy_enabled`. When `False`, it sets `anisotropy_scaling=1.0` and `anisotropy_angle=0.0` in PyKrige.
 
 ---
 
@@ -204,7 +204,7 @@ NW (-1,1) -> model dist=1.414 (unchanged)
 
 3. **Pre-transformation** converts raw coordinates to model space where the field is isotropic, then isotropic kriging is applied.
 
-4. **Clone the variogram** with `anisotropy_enabled=False` before passing to [`build_uk_model()`](../kriging.py:46) to prevent double-application.
+4. **Clone the variogram** with `anisotropy_enabled=False` before passing to [`build_uk_model()`](../kriging.py) to prevent double-application.
 
 5. **Both training and prediction** must use the same `transform_params` computed from training data.
 

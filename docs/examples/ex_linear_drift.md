@@ -72,7 +72,7 @@ at a rate of 0.5 units per coordinate unit. The noise term represents local vari
 
 ### Step 2 — Compute the rescaling factor
 
-[`compute_resc()`](../drift.py:8) normalises the drift column so it is numerically
+[`compute_resc()`](../drift.py) normalises the drift column so it is numerically
 comparable to the variogram sill. The formula is:
 
 ```
@@ -95,7 +95,7 @@ excessively large when the data domain is small relative to the correlation rang
 
 ### Step 3 — Build the drift matrix
 
-[`compute_polynomial_drift()`](../drift.py:34) constructs the drift matrix. With
+[`compute_polynomial_drift()`](../drift.py) constructs the drift matrix. With
 `linear_x: true`, the matrix has one column:
 
 ```
@@ -118,7 +118,7 @@ larger than the sill, causing numerical instability in the kriging matrix.
 
 ### Step 4 — Verify drift physics
 
-[`verify_drift_physics()`](../drift.py:262) checks that each drift column is
+[`verify_drift_physics()`](../drift.py) checks that each drift column is
 mathematically consistent with its theoretical formula. For `linear_x`:
 
 1. **R² check:** Fit a degree-1 polynomial to `drift_col` vs `x`. Require R² > 0.999.
@@ -135,7 +135,7 @@ computation or a mismatch between the coordinate space used for drift and for kr
 
 ### Step 5 — Build the Universal Kriging model
 
-[`build_uk_model()`](../kriging.py:46) is called with the drift matrix. Internally
+[`build_uk_model()`](../kriging.py) is called with the drift matrix. Internally
 it passes the drift columns to PyKrige as `specified_drift`:
 
 ```python
@@ -210,7 +210,7 @@ ensuring a well-conditioned kriging matrix.
 
 ### 4. verify_drift_physics() confirms correctness
 
-The `PASS` result from [`verify_drift_physics()`](../drift.py:262) confirms:
+The `PASS` result from [`verify_drift_physics()`](../drift.py) confirms:
 - The drift column is a perfect linear function of X (R² = 1.000)
 - The slope equals `resc` to within 0.0001% error
 
@@ -241,7 +241,7 @@ Do **not** use drift terms when:
 
 ## Term Ordering Contract
 
-When multiple drift terms are enabled, [`compute_polynomial_drift()`](../drift.py:34)
+When multiple drift terms are enabled, [`compute_polynomial_drift()`](../drift.py)
 always produces columns in this fixed order, regardless of the order in `config.json`:
 
 ```
@@ -258,10 +258,10 @@ order must be used at prediction time. The `term_names` list returned by
 
 | Function | Module | Purpose |
 |---|---|---|
-| [`compute_resc()`](../drift.py:8) | `drift.py` | Compute rescaling factor for drift normalisation |
-| [`compute_polynomial_drift()`](../drift.py:34) | `drift.py` | Build drift matrix from config and coordinates |
-| [`verify_drift_physics()`](../drift.py:262) | `drift.py` | Verify drift columns match theoretical equations |
-| [`build_uk_model()`](../kriging.py:46) | `kriging.py` | Construct PyKrige UniversalKriging model with drift |
+| [`compute_resc()`](../drift.py) | `drift.py` | Compute rescaling factor for drift normalisation |
+| [`compute_polynomial_drift()`](../drift.py) | `drift.py` | Build drift matrix from config and coordinates |
+| [`verify_drift_physics()`](../drift.py) | `drift.py` | Verify drift columns match theoretical equations |
+| [`build_uk_model()`](../kriging.py) | `kriging.py` | Construct PyKrige UniversalKriging model with drift |
 
 See [`docs/theory/polynomial-drift.md`](../theory/polynomial-drift.md) for the full
 mathematical derivation of polynomial drift terms and the rescaling factor.  
