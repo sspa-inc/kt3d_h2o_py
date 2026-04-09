@@ -1,6 +1,6 @@
 # Variogram Models Reference
 
-**Source:** [`variogram.py-81`](../variogram.py#L66)
+**Source:** [`variogram.py-81`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L66)
 
 ---
 
@@ -32,7 +32,7 @@ A variogram model describes how spatial correlation decays with distance. The se
 
 The linear model increases linearly with distance up to the range, then plateaus at the sill. It is bounded (reaches the sill exactly at `h = range`).
 
-**Implementation:** [`variogram.py-70`](../variogram.py#L69)
+**Implementation:** [`variogram.py-70`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L69)
 
 ```python
 nugget + (psill / range_) * h_val if h_val <= range_ else sill
@@ -53,7 +53,7 @@ nugget + (psill / range_) * h_val if h_val <= range_ else sill
 
 The exponential model approaches the sill asymptotically. The `range/3` factor is applied so that the model reaches approximately 95% of the sill at `h = range` (the "practical range").
 
-**Implementation:** [`variogram.py`](../variogram.py#L72)
+**Implementation:** [`variogram.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L72)
 
 ```python
 nugget + psill * (1 - math.exp(-h_val / (range_ / 3.0)))
@@ -75,7 +75,7 @@ nugget + psill * (1 - math.exp(-h_val / (range_ / 3.0)))
 
 The spherical model is the most commonly used in geostatistics. It rises steeply near the origin and reaches the sill exactly at `h = range`.
 
-**Implementation:** [`variogram.py-77`](../variogram.py#L73)
+**Implementation:** [`variogram.py-77`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L73)
 
 ```python
 if h_val <= range_:
@@ -99,7 +99,7 @@ else:
 
 The Gaussian model has a parabolic behavior near the origin, indicating very smooth spatial variation. The `range/√3` factor ensures the model reaches approximately 95% of the sill at `h = range`.
 
-**Implementation:** [`variogram.py`](../variogram.py#L79)
+**Implementation:** [`variogram.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L79)
 
 ```python
 nugget + psill * (1 - math.exp(-(h_val / (range_ / math.sqrt(3.0)))**2))
@@ -209,7 +209,7 @@ When `effective_range_convention = false`:
 
 ## Validation Rules
 
-The [`variogram`](../variogram.py#L5) class enforces the following at construction time (see [`_validate_basic_parameters()`](../variogram.py#L38)):
+The [`variogram`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L5) class enforces the following at construction time (see [`_validate_basic_parameters()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py#L38)):
 
 | Rule | Error Raised |
 |---|---|

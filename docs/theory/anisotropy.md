@@ -28,7 +28,7 @@ This approach has several advantages:
 - It allows the same transformation to be applied consistently to drift terms, control points, and prediction grids
 - It avoids numerical issues that can arise from PyKrige's internal anisotropy handling when combined with specified drift
 
-> **Critical contract:** PyKrige's internal anisotropy parameters (`anisotropy_scaling`, `anisotropy_angle`) are explicitly set to their identity values (scaling=1, angle=0) after pre-transformation. See [`kriging.py`](../kriging.py) for the variogram clone with `anisotropy_enabled=False`.
+> **Critical contract:** PyKrige's internal anisotropy parameters (`anisotropy_scaling`, `anisotropy_angle`) are explicitly set to their identity values (scaling=1, angle=0) after pre-transformation. See [`kriging.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py) for the variogram clone with `anisotropy_enabled=False`.
 
 ---
 
@@ -47,7 +47,7 @@ Where:
 - `⊙` = element-wise multiplication
 - `@` = matrix multiplication (coordinates as row vectors times rotation matrix)
 
-This is implemented in [`transform.py`](../transform.py) via [`apply_transform()`](../transform.py).
+This is implemented in [`transform.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) via [`apply_transform()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py).
 
 ### Angle Input and Internal Conversion
 
@@ -180,7 +180,7 @@ After step 4, the point cloud appears **circular** (isotropic) in model space, a
 
 ## 7. Inverse Transform
 
-To convert model-space coordinates back to raw space (e.g., for output or visualization), the inverse transformation is applied via [`invert_transform_coords()`](../transform.py):
+To convert model-space coordinates back to raw space (e.g., for output or visualization), the inverse transformation is applied via [`invert_transform_coords()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py):
 
 ```
 X = (X′ / S) @ R^T + center
@@ -203,7 +203,7 @@ x = x_ur + x_center
 y = y_ur + y_center
 ```
 
-The inverse transform is used in [`predict_on_grid()`](../kriging.py) to convert grid coordinates from raw space to model space before prediction, and is also available for converting model-space outputs back to raw space.
+The inverse transform is used in [`predict_on_grid()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py) to convert grid coordinates from raw space to model space before prediction, and is also available for converting model-space outputs back to raw space.
 
 ---
 
@@ -217,7 +217,7 @@ PyKrige supports anisotropy natively via `anisotropy_scaling` and `anisotropy_an
 | Pre-transform applied + PyKrige anisotropy disabled | **Correct** — isotropic kriging in model space |
 | No pre-transform + PyKrige anisotropy enabled | Equivalent (but drift terms would need separate handling) |
 
-In practice, the [`variogram`](../variogram.py) object is **cloned** with `anisotropy_enabled=False` before being passed to PyKrige. This clone preserves all other variogram parameters (sill, range, nugget, model type) but sets `anisotropy_scaling=1` and `anisotropy_angle=0`.
+In practice, the [`variogram`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py) object is **cloned** with `anisotropy_enabled=False` before being passed to PyKrige. This clone preserves all other variogram parameters (sill, range, nugget, model type) but sets `anisotropy_scaling=1` and `anisotropy_angle=0`.
 
 ---
 
@@ -249,11 +249,11 @@ Use this when the river's hydraulic influence is better represented in raw geogr
 
 | Function | File | Purpose |
 |---|---|---|
-| [`get_transform_params()`](../transform.py) | `transform.py` | Computes `center`, `R`, `S` from data coordinates and variogram parameters; converts azimuth to arithmetic internally |
-| [`apply_transform()`](../transform.py) | `transform.py` | Applies forward transform: raw → model space via `coords @ R` then scale |
-| [`invert_transform_coords()`](../transform.py) | `transform.py` | Applies inverse transform: model → raw space |
-| [`variogram.clone()`](../variogram.py) | `variogram.py` | Creates a copy with `anisotropy_enabled=False` for passing to PyKrige |
-| [`predict_on_grid()`](../kriging.py) | `kriging.py` | Transforms grid coordinates to model space before prediction |
+| [`get_transform_params()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) | `transform.py` | Computes `center`, `R`, `S` from data coordinates and variogram parameters; converts azimuth to arithmetic internally |
+| [`apply_transform()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) | `transform.py` | Applies forward transform: raw → model space via `coords @ R` then scale |
+| [`invert_transform_coords()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) | `transform.py` | Applies inverse transform: model → raw space |
+| [`variogram.clone()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py) | `variogram.py` | Creates a copy with `anisotropy_enabled=False` for passing to PyKrige |
+| [`predict_on_grid()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py) | `kriging.py` | Transforms grid coordinates to model space before prediction |
 
 ---
 

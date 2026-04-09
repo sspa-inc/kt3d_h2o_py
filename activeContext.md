@@ -51,6 +51,6 @@ Task 7.1: Wrote `docs/validation/tested-behaviors.md` — complete claim-to-test
 - Task 3.1 - **DONE** (Created `mkdocs.yml` with MkDocs configuration).
 - Task 3.2 - **DONE** (Created `requirements-docs.txt` with docs build dependencies).
 - Phase 4 - **DONE** (Initialized git, made first commit, created remote repo `https://github.com/sspa-inc/kt3d_h2o_py`, pushed to main).
-- Phase 5 - **DONE** (Created GitHub Actions workflow for docs deployment).
+- Phase 5 - **DONE** (GitHub Actions workflow for docs deployment created; repo made public; GitHub Pages enabled on `gh-pages` branch; `site_description` added to `mkdocs.yml` to trigger first deployment to `https://sspa-inc.github.io/kt3d_h2o_py/`).
 - Phase 6 - **DONE** (Created GitHub Actions workflow for tests, added badge to README).
 - Phase 7 - **DONE** (Fixed relative links in documentation, removed line numbers from markdown links for GitHub compatibility).

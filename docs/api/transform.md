@@ -154,7 +154,7 @@ Apply the forward affine transformation to convert coordinates from **raw space*
 |---|---|---|---|
 | `x` | `np.ndarray` | Yes | 1-D array of X coordinates in raw space. |
 | `y` | `np.ndarray` | Yes | 1-D array of Y coordinates in raw space. |
-| `params` | `dict` | Yes | Transform parameter dict as returned by [`get_transform_params()`](transform.py). If `None`, inputs are returned unchanged. |
+| `params` | `dict` | Yes | Transform parameter dict as returned by [`get_transform_params()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py). If `None`, inputs are returned unchanged. |
 
 ### Returns
 

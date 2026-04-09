@@ -6,7 +6,7 @@ Provides polynomial drift term computation, rescaling, diagnostics, and physics 
 
 ## `compute_resc(covmax, x, y, variogram_range)`
 
-**Source:** [`drift.py`](../drift.py)
+**Source:** [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py)
 
 Computes the rescaling factor (`resc`) applied to all polynomial drift columns. The factor normalises drift magnitudes relative to the variogram sill and the spatial extent of the data, ensuring numerical stability of the kriging system matrix.
 
@@ -56,7 +56,7 @@ resc = compute_resc(covmax=1.0, x=x, y=y, variogram_range=50.0)
 
 ## `compute_polynomial_drift(x, y, config, resc)`
 
-**Source:** [`drift.py`](../drift.py)
+**Source:** [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py)
 
 Computes the polynomial drift matrix for a set of points. Supported terms are `linear_x`, `linear_y`, `quadratic_x`, and `quadratic_y`.
 
@@ -116,7 +116,7 @@ drift_matrix, term_names = compute_polynomial_drift(x, y, config, resc)
 
 ## `compute_drift_at_points(x, y, term_names, resc)`
 
-**Source:** [`drift.py`](../drift.py)
+**Source:** [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py)
 
 Reconstructs polynomial drift columns at prediction-time points (e.g., grid nodes) using the same `term_names` and `resc` that were used during training. This is the prediction-phase counterpart to [`compute_polynomial_drift()`](#compute_polynomial_drift).
 
@@ -145,7 +145,7 @@ Internally delegates to [`compute_polynomial_drift()`](#compute_polynomial_drift
 
 ## `drift_diagnostics(drift_matrix, term_names, variogram=None)`
 
-**Source:** [`drift.py`](../drift.py)
+**Source:** [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py)
 
 Performs magnitude diagnostics on the drift matrix and logs results. Does not modify any state; output is informational only.
 
@@ -184,7 +184,7 @@ If `variogram` is `None`, has no `sill` attribute, or `sill ≤ 0`, the magnitud
 
 ## `verify_drift_physics(drift_matrix, term_names, all_x, all_y, resc)`
 
-**Source:** [`drift.py`](../drift.py)
+**Source:** [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py)
 
 Mathematically verifies that each drift column follows its theoretical equation. Returns a per-term PASS/FAIL/SKIP/ERROR result dict. This is a post-hoc sanity check, not a filter — it does not modify the drift matrix.
 
@@ -257,8 +257,8 @@ These functions are not exported in `__all__` but are called by [`verify_drift_p
 
 | Function | Purpose |
 |---|---|
-| [`_verify_linear_term()`](../drift.py) | R² and slope check for linear drift columns. |
-| [`_verify_quadratic_term()`](../drift.py) | R² and curvature check for quadratic drift columns; also warns if vertex is inside the data domain. |
+| [`_verify_linear_term()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py) | R² and slope check for linear drift columns. |
+| [`_verify_quadratic_term()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py) | R² and curvature check for quadratic drift columns; also warns if vertex is inside the data domain. |
 
 ---
 

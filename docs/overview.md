@@ -14,7 +14,7 @@ Given a set of observation wells with measured water levels, UK_SSPA v2:
 4. Solves the Universal Kriging system to produce a predicted water level surface on a regular grid
 5. Exports the result as a map, contour shapefile, or point shapefile
 
-The program is driven entirely by a single [`config.json`](../config.json) file — no code changes are required to switch between configurations.
+The program is driven entirely by a single [`config.json`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/config.json) file — no code changes are required to switch between configurations.
 
 ---
 
@@ -56,16 +56,16 @@ Users are expected to have:
 
 ## Architecture
 
-UK_SSPA v2 is a **config-driven, modular pipeline**. All execution logic lives in [`main.py`](../main.py); each module handles a single concern:
+UK_SSPA v2 is a **config-driven, modular pipeline**. All execution logic lives in [`main.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/main.py); each module handles a single concern:
 
 | Module | Responsibility |
 |---|---|
-| [`data.py`](../data.py) | Config loading, shapefile I/O, data preparation |
-| [`variogram.py`](../variogram.py) | Variogram model definition and evaluation |
-| [`transform.py`](../transform.py) | Anisotropy coordinate transformation (forward and inverse) |
-| [`drift.py`](../drift.py) | Polynomial drift computation and diagnostics |
-| [`AEM_drift.py`](../AEM_drift.py) | AEM linesink potential computation |
-| [`kriging.py`](../kriging.py) | Universal Kriging model building, prediction, cross-validation |
+| [`data.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/data.py) | Config loading, shapefile I/O, data preparation |
+| [`variogram.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py) | Variogram model definition and evaluation |
+| [`transform.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) | Anisotropy coordinate transformation (forward and inverse) |
+| [`drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py) | Polynomial drift computation and diagnostics |
+| [`AEM_drift.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py) | AEM linesink potential computation |
+| [`kriging.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py) | Universal Kriging model building, prediction, cross-validation |
 
 The pipeline is a linear sequence of stages: load → transform → build drift → build model → predict → export. See [`docs/workflow.md`](workflow.md) for the complete stage-by-stage description.
 

@@ -1,6 +1,6 @@
 # API Reference: `variogram.py`
 
-The [`variogram`](variogram.py) class encapsulates all variogram model parameters, validation, and semivariance computation for UK_SSPA v2.
+The [`variogram`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py) class encapsulates all variogram model parameters, validation, and semivariance computation for UK_SSPA v2.
 
 ---
 
@@ -105,7 +105,7 @@ Compute the semivariance for a scalar isotropic lag distance `h`.
 
 **Returns:** `float` — semivariance `γ(h)`.
 
-**Note:** When `anisotropy_enabled=True`, this method still computes the isotropic semivariance. The caller is responsible for passing a pre-transformed (model-space) distance. For directional computation from raw-space lag vectors, use [`calculate_variogram_at_vector()`](variogram.py) instead.
+**Note:** When `anisotropy_enabled=True`, this method still computes the isotropic semivariance. The caller is responsible for passing a pre-transformed (model-space) distance. For directional computation from raw-space lag vectors, use [`calculate_variogram_at_vector()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py) instead.
 
 **Model equations** (where `psill = sill - nugget`):
 
@@ -147,7 +147,7 @@ Compute the semivariance for a 2-D lag vector `(hx, hy)`, accounting for geometr
 4. Compute effective isotropic distance: `h_eff = sqrt(hx'² + hy_scaled²)`
 5. Return `calculate_variogram(h_eff)`
 
-> **Note:** The rotation convention here matches [`transform.py`](transform.py) — `theta = 90 - angle_major` converts the azimuth input to the arithmetic rotation angle applied to the coordinate system.
+> **Note:** The rotation convention here matches [`transform.py`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py) — `theta = 90 - angle_major` converts the azimuth input to the arithmetic rotation angle applied to the coordinate system.
 
 ---
 
