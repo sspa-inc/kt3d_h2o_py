@@ -1,0 +1,2042 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../data/">
+      
+      
+        <link rel="next" href="../transform/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>variogram.py - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference-variogrampy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              variogram.py
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../theory/variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/aem-linesink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#class-variogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class: variogram
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Class: variogram">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#constructor-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Attributes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-variogram-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Variogram Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anisotropy-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anisotropy Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_validate_basic_parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _validate_basic_parameters()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_validate_anisotropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        _validate_anisotropy()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#calculate_variogramh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calculate_variogram(h)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calculate_variogram_at_vectorhx-hy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        calculate_variogram_at_vector(hx, hy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        clone()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#instantiate-from-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instantiate from config file
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instantiate-from-dict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Instantiate from dict
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clone-and-disable-anisotropy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clone and disable anisotropy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linesink_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference-variogrampy">API Reference: <code>variogram.py</code><a class="headerlink" href="#api-reference-variogrampy" title="Permanent link">&para;</a></h1>
+<p>The <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py"><code>variogram</code></a> class encapsulates all variogram model parameters, validation, and semivariance computation for UK_SSPA v2.</p>
+<hr />
+<h2 id="class-variogram">Class: <code>variogram</code><a class="headerlink" href="#class-variogram" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">variogram</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;config.json&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="constructor-parameters">Constructor Parameters<a class="headerlink" href="#constructor-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Required</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config</code></td>
+<td><code>dict</code></td>
+<td>No</td>
+<td><code>None</code></td>
+<td>Pre-loaded configuration dictionary. If provided, <code>config_path</code> is ignored.</td>
+</tr>
+<tr>
+<td><code>config_path</code></td>
+<td><code>str</code></td>
+<td>No</td>
+<td><code>"config.json"</code></td>
+<td>Path to JSON config file. Used only when <code>config</code> is <code>None</code>.</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>config</code> is <code>None</code>, the constructor opens <code>config_path</code> and reads it with <code>json.load</code>. No validation of the file path is performed at this level — a <code>FileNotFoundError</code> or <code>json.JSONDecodeError</code> will propagate from the standard library.</p>
+<hr />
+<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
+<p>All attributes are set during <code>__init__</code> and validated before the constructor returns.</p>
+<h3 id="core-variogram-parameters">Core Variogram Parameters<a class="headerlink" href="#core-variogram-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Source Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model_type</code></td>
+<td><code>str</code></td>
+<td><code>variogram.model</code></td>
+<td><code>"spherical"</code></td>
+<td>Variogram model name. One of <code>"spherical"</code>, <code>"exponential"</code>, <code>"gaussian"</code>, <code>"linear"</code>.</td>
+</tr>
+<tr>
+<td><code>sill</code></td>
+<td><code>float</code></td>
+<td><code>variogram.sill</code></td>
+<td><code>1.0</code></td>
+<td>Total sill (variance at large lag distances). Must be <code>&gt; 0</code>.</td>
+</tr>
+<tr>
+<td><code>range_</code></td>
+<td><code>float</code></td>
+<td><code>variogram.range</code></td>
+<td><code>1000.0</code></td>
+<td>Range parameter. For bounded models (spherical, linear), the semivariance reaches the sill at this distance. For unbounded models (exponential, gaussian), this is the practical range parameter. Must be <code>&gt; 0</code>.</td>
+</tr>
+<tr>
+<td><code>nugget</code></td>
+<td><code>float</code></td>
+<td><code>variogram.nugget</code></td>
+<td><code>0.0</code></td>
+<td>Nugget effect (discontinuity at the origin). Must be <code>&gt;= 0</code> and <code>&lt; sill</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="anisotropy-parameters">Anisotropy Parameters<a class="headerlink" href="#anisotropy-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Source Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>anisotropy_enabled</code></td>
+<td><code>bool</code></td>
+<td><code>variogram.anisotropy.enabled</code></td>
+<td><code>False</code></td>
+<td>Whether geometric anisotropy is active.</td>
+</tr>
+<tr>
+<td><code>anisotropy_ratio</code></td>
+<td><code>float</code></td>
+<td><code>variogram.anisotropy.ratio</code></td>
+<td><code>1.0</code></td>
+<td><code>minor_range / major_range</code>. Must be in <code>(0, 1]</code> when anisotropy is enabled. A ratio of <code>1.0</code> means isotropic.</td>
+</tr>
+<tr>
+<td><code>angle_major</code></td>
+<td><code>float</code></td>
+<td><code>variogram.anisotropy.angle_major</code></td>
+<td><code>0.0</code></td>
+<td>Direction of the major axis of spatial correlation. <strong>Azimuth convention: Clockwise from North (KT3D convention). <code>0°</code> = North, <code>90°</code> = East.</strong> Must be in <code>[0, 360)</code> when anisotropy is enabled.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>⚠ Angle Convention:</strong> <code>angle_major</code> is stored and accepted as an <strong>azimuth</strong> (compass bearing — clockwise from North), following the KT3D convention. This is <strong>not</strong> arithmetic (CCW from East). Internally, the code converts to arithmetic via <code>theta = 90 - angle_major</code> before applying the rotation matrix. To convert: <code>arithmetic_CCW_from_East = 90 - azimuth_CW_from_North</code> (mod 360). See <a href="../../glossary/"><code>docs/glossary.md</code></a> for the full convention table.</p>
+<p><strong>Anisotropy Ratio:</strong> <code>anisotropy_ratio = minor_range / major_range</code>. A ratio of <code>0.5</code> means the minor (short) range is half the major (long) range. The major axis is the direction of <strong>greatest</strong> spatial correlation (longest range). The minor axis is perpendicular to it.</p>
+</blockquote>
+<h3 id="advanced-parameters">Advanced Parameters<a class="headerlink" href="#advanced-parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Type</th>
+<th>Source Key</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>effective_range_convention</code></td>
+<td><code>bool</code></td>
+<td><code>variogram.advanced.effective_range_convention</code></td>
+<td><code>True</code></td>
+<td>When <code>True</code>, the <code>range_</code> value is interpreted as the <strong>effective range</strong> (distance at which semivariance reaches ~95% of sill for exponential/gaussian). When <code>False</code>, it is the raw scale parameter.</td>
+</tr>
+<tr>
+<td><code>search_radius</code></td>
+<td><code>float</code> or <code>None</code></td>
+<td><code>variogram.advanced.search_radius</code></td>
+<td><code>None</code></td>
+<td>Maximum search radius for neighbor selection during kriging. <code>None</code> means no limit. Must be <code>&gt; 0</code> if set.</td>
+</tr>
+<tr>
+<td><code>max_neighbors</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>variogram.advanced.max_neighbors</code></td>
+<td><code>None</code></td>
+<td>Maximum number of neighbors to use in kriging. <code>None</code> means no limit.</td>
+</tr>
+<tr>
+<td><code>min_neighbors</code></td>
+<td><code>int</code> or <code>None</code></td>
+<td><code>variogram.advanced.min_neighbors</code></td>
+<td><code>None</code></td>
+<td>Minimum number of neighbors required for kriging at a point. <code>None</code> means no minimum.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="properties">Properties<a class="headerlink" href="#properties" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Returns</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>model</code></td>
+<td><code>str</code></td>
+<td>Alias for <code>model_type</code>.</td>
+</tr>
+<tr>
+<td><code>parameters</code></td>
+<td><code>dict</code></td>
+<td><code>{'sill': ..., 'range': ..., 'nugget': ...}</code> — convenience dict for passing to PyKrige.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="validation-methods">Validation Methods<a class="headerlink" href="#validation-methods" title="Permanent link">&para;</a></h2>
+<h3 id="_validate_basic_parameters"><code>_validate_basic_parameters()</code><a class="headerlink" href="#_validate_basic_parameters" title="Permanent link">&para;</a></h3>
+<p>Called automatically during <code>__init__</code>. Raises <code>ValueError</code> if:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sill &lt;= 0</code></td>
+<td><code>"Variogram sill must be positive, got {sill}"</code></td>
+</tr>
+<tr>
+<td><code>range_ &lt;= 0</code></td>
+<td><code>"Variogram range must be positive, got {range_}"</code></td>
+</tr>
+<tr>
+<td><code>nugget &lt; 0</code></td>
+<td><code>"Variogram nugget must be non-negative, got {nugget}"</code></td>
+</tr>
+<tr>
+<td><code>nugget &gt;= sill</code></td>
+<td><code>"Variogram nugget ({nugget}) must be less than total sill ({sill})"</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_validate_anisotropy"><code>_validate_anisotropy()</code><a class="headerlink" href="#_validate_anisotropy" title="Permanent link">&para;</a></h3>
+<p>Called automatically during <code>__init__</code> only when <code>anisotropy_enabled=True</code>. Raises <code>ValueError</code> if:</p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Error Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>anisotropy_ratio</code> not in <code>(0, 1]</code></td>
+<td><code>"Anisotropy ratio must be in (0, 1], got {ratio}"</code></td>
+</tr>
+<tr>
+<td><code>angle_major</code> not in <code>[0, 360)</code></td>
+<td><code>"Angle major must be in [0, 360), got {angle_major}"</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="methods">Methods<a class="headerlink" href="#methods" title="Permanent link">&para;</a></h2>
+<h3 id="calculate_variogramh"><code>calculate_variogram(h)</code><a class="headerlink" href="#calculate_variogramh" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">calculate_variogram</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+</code></pre></div>
+<p>Compute the semivariance for a scalar isotropic lag distance <code>h</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>h</code></td>
+<td><code>float</code></td>
+<td>Isotropic lag distance. Must be <code>&gt;= 0</code>.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>float</code> — semivariance <code>γ(h)</code>.</p>
+<p><strong>Note:</strong> When <code>anisotropy_enabled=True</code>, this method still computes the isotropic semivariance. The caller is responsible for passing a pre-transformed (model-space) distance. For directional computation from raw-space lag vectors, use <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/variogram.py"><code>calculate_variogram_at_vector()</code></a> instead.</p>
+<p><strong>Model equations</strong> (where <code>psill = sill - nugget</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Equation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>linear</code></td>
+<td><code>γ(h) = nugget + (psill / range) * h</code> for <code>h ≤ range</code>, else <code>sill</code></td>
+</tr>
+<tr>
+<td><code>exponential</code></td>
+<td><code>γ(h) = nugget + psill * (1 - exp(-h / (range/3)))</code></td>
+</tr>
+<tr>
+<td><code>spherical</code></td>
+<td><code>γ(h) = nugget + psill * (1.5*(h/range) - 0.5*(h/range)³)</code> for <code>h ≤ range</code>, else <code>sill</code></td>
+</tr>
+<tr>
+<td><code>gaussian</code></td>
+<td><code>γ(h) = nugget + psill * (1 - exp(-(h / (range/√3))²))</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="calculate_variogram_at_vectorhx-hy"><code>calculate_variogram_at_vector(hx, hy)</code><a class="headerlink" href="#calculate_variogram_at_vectorhx-hy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">calculate_variogram_at_vector</span><span class="p">(</span><span class="n">hx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">hy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span>
+</code></pre></div>
+<p>Compute the semivariance for a 2-D lag vector <code>(hx, hy)</code>, accounting for geometric anisotropy.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>hx</code></td>
+<td><code>float</code></td>
+<td>X-component of the lag vector (in raw/original coordinate space).</td>
+</tr>
+<tr>
+<td><code>hy</code></td>
+<td><code>float</code></td>
+<td>Y-component of the lag vector (in raw/original coordinate space).</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Returns:</strong> <code>float</code> — semivariance <code>γ(hx, hy)</code>.</p>
+<p><strong>When <code>anisotropy_enabled=False</code>:</strong> Computes <code>h = sqrt(hx² + hy²)</code> and delegates to <code>calculate_variogram(h)</code>.</p>
+<p><strong>When <code>anisotropy_enabled=True</code>:</strong> Applies the anisotropy transformation inline:</p>
+<ol>
+<li>Convert <code>angle_major</code> from azimuth (CW from North) to arithmetic (CCW from East): <code>theta = radians(90 - angle_major)</code></li>
+<li>Rotate the lag vector to align the major axis with the X-axis:
+   <div class="highlight"><pre><span></span><code>hx&#39; =  hx * cos(theta) + hy * sin(theta)
+hy&#39; = -hx * sin(theta) + hy * cos(theta)
+</code></pre></div></li>
+<li>Scale the minor axis (Y') to match the major range: <code>hy_scaled = hy' / ratio</code></li>
+<li>Compute effective isotropic distance: <code>h_eff = sqrt(hx'² + hy_scaled²)</code></li>
+<li>Return <code>calculate_variogram(h_eff)</code></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> The rotation convention here matches <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/transform.py"><code>transform.py</code></a> — <code>theta = 90 - angle_major</code> converts the azimuth input to the arithmetic rotation angle applied to the coordinate system.</p>
+</blockquote>
+<hr />
+<h3 id="clone"><code>clone()</code><a class="headerlink" href="#clone" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">clone</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">variogram</span>
+</code></pre></div>
+<p>Return a deep copy of this variogram object.</p>
+<p><strong>Returns:</strong> A new <code>variogram</code> instance with identical attribute values. Modifying the clone does not affect the original.</p>
+<p><strong>Use case:</strong> The main pipeline clones the variogram and sets <code>anisotropy_enabled=False</code> on the clone before passing it to PyKrige, to prevent double-application of anisotropy after the pre-transformation step has already been applied to the coordinates.</p>
+<div class="highlight"><pre><span></span><code><span class="n">vgm_clone</span> <span class="o">=</span> <span class="n">vgm</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">vgm_clone</span><span class="o">.</span><span class="n">anisotropy_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># Pass vgm_clone to build_uk_model() when using pre-transformation</span>
+</code></pre></div>
+<hr />
+<h2 id="usage-examples">Usage Examples<a class="headerlink" href="#usage-examples" title="Permanent link">&para;</a></h2>
+<h3 id="instantiate-from-config-file">Instantiate from config file<a class="headerlink" href="#instantiate-from-config-file" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">variogram</span><span class="w"> </span><span class="kn">import</span> <span class="n">variogram</span>
+
+<span class="n">vgm</span> <span class="o">=</span> <span class="n">variogram</span><span class="p">(</span><span class="n">config_path</span><span class="o">=</span><span class="s2">&quot;config.json&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">model_type</span><span class="p">)</span>          <span class="c1"># e.g. &quot;spherical&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">sill</span><span class="p">)</span>                <span class="c1"># e.g. 1.5</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">range_</span><span class="p">)</span>              <span class="c1"># e.g. 500.0</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">nugget</span><span class="p">)</span>              <span class="c1"># e.g. 0.1</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">anisotropy_enabled</span><span class="p">)</span>  <span class="c1"># e.g. True</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">angle_major</span><span class="p">)</span>         <span class="c1"># e.g. 45.0  (azimuth: 45° CW from North = NE direction)</span>
+</code></pre></div>
+<h3 id="instantiate-from-dict">Instantiate from dict<a class="headerlink" href="#instantiate-from-dict" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">variogram</span><span class="w"> </span><span class="kn">import</span> <span class="n">variogram</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;variogram&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;exponential&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;sill&quot;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span>
+        <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="mf">300.0</span><span class="p">,</span>
+        <span class="s2">&quot;nugget&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+        <span class="s2">&quot;anisotropy&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;enabled&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;ratio&quot;</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+            <span class="s2">&quot;angle_major&quot;</span><span class="p">:</span> <span class="mf">45.0</span>   <span class="c1"># azimuth: 45° CW from North = NE direction</span>
+                                   <span class="c1"># internally converted to arithmetic: 90 - 45 = 45° CCW from East</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="n">vgm</span> <span class="o">=</span> <span class="n">variogram</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">calculate_variogram</span><span class="p">(</span><span class="mf">150.0</span><span class="p">))</span>              <span class="c1"># isotropic semivariance at h=150</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vgm</span><span class="o">.</span><span class="n">calculate_variogram_at_vector</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>  <span class="c1"># directional semivariance</span>
+</code></pre></div>
+<h3 id="clone-and-disable-anisotropy">Clone and disable anisotropy<a class="headerlink" href="#clone-and-disable-anisotropy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">vgm_for_pykrige</span> <span class="o">=</span> <span class="n">vgm</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">vgm_for_pykrige</span><span class="o">.</span><span class="n">anisotropy_enabled</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># vgm_for_pykrige.parameters returns {&#39;sill&#39;: ..., &#39;range&#39;: ..., &#39;nugget&#39;: ...}</span>
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

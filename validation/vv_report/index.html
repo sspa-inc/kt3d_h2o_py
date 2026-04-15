@@ -1,0 +1,2881 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../vv_report_download/">
+      
+      
+        <link rel="next" href="../tested-behaviors/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>V&V Report (Web) - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#verification-and-validation-report" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              V&V Report (Web)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../theory/variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pre-run-all-scripts-once-reuse-results-in-each-section" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-run all scripts once; reuse results in each section
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#variogram-model-equations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variogram Model Equations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coordinate-transform-roundtrip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Transform Roundtrip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polynomial-drift-computation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polynomial Drift Computation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drift-physics-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Physics Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aem-linesink-single-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AEM Linesink — Single Segment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#aem-drift-scaling-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AEM Drift Scaling Consistency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wrapper-equivalence-no-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrapper Equivalence — No Drift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#polynomial-drift-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Polynomial Drift Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anisotropy-pre-transform-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anisotropy Pre-Transform Consistency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loocv-diagnostic-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOOCV Diagnostic Metrics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#purpose_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#test-design_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Design
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#results_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Results
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coverage-gap-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage Gap Analysis
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-re-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How to Re-Run
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/aem-linesink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/variogram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linesink_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="verification-and-validation-report">Verification and Validation Report<a class="headerlink" href="#verification-and-validation-report" title="Permanent link">&para;</a></h1>
+<p>This report presents the formal verification and validation (V&amp;V) of the <strong>UK_SSPA v2</strong> universal kriging tool. The tool performs spatial interpolation of water-level surfaces using kriging with specified drift, supporting four variogram models (spherical, exponential, Gaussian, linear), polynomial drift terms up to second order, and Analytic Element Method (AEM) linesink drift for incorporating river-boundary influence.</p>
+<p>Ten independent V&amp;V scripts were executed. Each script isolates a specific computational module and verifies its output against analytical solutions, hand-calculated reference values, or the reference implementation in PyKrige. The table below summarizes the outcome of every script.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">#</th>
+<th>V&amp;V Module</th>
+<th style="text-align: center;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">1</td>
+<td>Variogram Model Equations</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">2</td>
+<td>Coordinate Transform Roundtrip</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">3</td>
+<td>Polynomial Drift Computation</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">4</td>
+<td>Drift Physics Verification</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">5</td>
+<td>AEM Linesink — Single Segment</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">6</td>
+<td>AEM Drift Scaling Consistency</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">7</td>
+<td>Wrapper Equivalence — No Drift</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">8</td>
+<td>Polynomial Drift Recovery</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">9</td>
+<td>Anisotropy Pre-Transform Consistency</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td>LOOCV Diagnostic Metrics</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result: 10/10 scripts passed. All tests passed.</strong></p>
+<h2 id="pre-run-all-scripts-once-reuse-results-in-each-section">Pre-run all scripts once; reuse results in each section<a class="headerlink" href="#pre-run-all-scripts-once-reuse-results-in-each-section" title="Permanent link">&para;</a></h2>
+<p>_cache = {}
+SCRIPTS = [
+    ("vv_variogram_models.py",          "Variogram Model Equations"),
+    ("vv_transform_roundtrip.py",       "Coordinate Transform Roundtrip"),
+    ("vv_polynomial_drift.py",          "Polynomial Drift Computation"),
+    ("vv_drift_physics.py",             "Drift Physics Verification"),
+    ("vv_aem_single_segment.py",        "AEM Linesink — Single Segment"),
+    ("vv_aem_scaling_consistency.py",    "AEM Drift Scaling Consistency"),
+    ("vv_wrapper_no_drift.py",          "Wrapper Equivalence — No Drift"),
+    ("vv_polynomial_drift_recovery.py", "Polynomial Drift Recovery"),
+    ("vv_anisotropy_consistency.py",    "Anisotropy Pre-Transform Consistency"),
+    ("vv_loocv.py",                     "LOOCV Diagnostic Metrics"),
+]</p>
+<p>exec_results = []
+for script_file, description in SCRIPTS:
+    t0 = time.time()
+    proc = run_vv(script_file)
+    elapsed = time.time() - t0
+    status = "PASS" if proc.returncode == 0 else "FAIL"
+    _cache[script_file] = proc
+    exec_results.append((script_file, description, status, elapsed))
+<div class="highlight"><pre><span></span><code>## Build a proper Markdown table for Quarto to render via LaTeX
+lines = []
+lines.append(&quot;| # | V&amp;V Module | Result |&quot;)
+lines.append(&quot;|--:|------------|:------:|&quot;)
+for i, (sf, desc, status, elapsed) in enumerate(exec_results, 1):
+    icon = &quot;**PASS**&quot; if status == &quot;PASS&quot; else &quot;**FAIL**&quot;
+    lines.append(f&quot;| {i} | {desc} | {icon} |&quot;)
+
+n_pass = sum(1 for r in exec_results if r[2] == &quot;PASS&quot;)
+n_fail = sum(1 for r in exec_results if r[2] == &quot;FAIL&quot;)
+lines.append(&quot;&quot;)
+if n_fail == 0:
+    lines.append(f&quot;**Result: {n_pass}/{len(exec_results)} scripts passed. All tests passed.**&quot;)
+else:
+    lines.append(f&quot;**Result: {n_pass} PASS, {n_fail} FAIL out of {len(exec_results)} scripts.**&quot;)
+
+print(&quot;\n&quot;.join(lines))
+</code></pre></div></p>
+<h2 id="variogram-model-equations">Variogram Model Equations<a class="headerlink" href="#variogram-model-equations" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_variogram_models.py</code></p>
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>This test verifies that the four variogram model functions implemented in <a href="../../variogram.py"><code>variogram.py</code></a> produce numerically exact semivariance values at critical lag distances. Variogram models are the spatial-correlation engine of kriging: an error in the semivariance function propagates directly into every kriging weight and, consequently, every interpolated water level. Verifying these functions against closed-form analytical values is therefore a foundational V&amp;V requirement.</p>
+<h2 id="test-design">Test Design<a class="headerlink" href="#test-design" title="Permanent link">&para;</a></h2>
+<p>Each model (spherical, exponential, Gaussian, linear) is evaluated at five canonical lag distances — <span class="arithmatex">\(h = 0\)</span> (must return the nugget), <span class="arithmatex">\(h = a\)</span> (the range), <span class="arithmatex">\(h = a/2\)</span> (mid-range analytical value), <span class="arithmatex">\(h = 2a\)</span> (beyond-range, must equal the sill for bounded models), and the asymptotic formula check for unbounded models. Two additional tests confirm that invalid parameter combinations raise <code>ValueError</code>.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><span class="arithmatex">\(h = 0 \rightarrow\)</span> nugget</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td><span class="arithmatex">\(h = a \rightarrow\)</span> sill (exact for bounded models)</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td><span class="arithmatex">\(h = a\)</span> (asymptotic formula for exponential/Gaussian)</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td><span class="arithmatex">\(h = 2a \rightarrow\)</span> sill (bounded models saturate)</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>5</td>
+<td><span class="arithmatex">\(h = a/2\)</span> (analytical mid-range value)</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>nugget &gt;= sill</code> raises <code>ValueError</code></td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>range &lt; 0</code> raises <code>ValueError</code></td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h2 id="results">Results<a class="headerlink" href="#results" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>======================================================================================================...
+Task 3.1 -- V&amp;V: Variogram Model Equations
+  sill=10.0, range=100.0, nugget=1.0, psill=9.0
+  Tolerance: 1e-10
+======================================================================================================...
+Model          Test Case                                     h      Expected        Actual       |Erro...
+------------------------------------------------------------------------------------------------------...
+spherical      h=0 -&gt; nugget                              0.00    1.00000000    1.00000000      ...  PASS
+spherical      h=range -&gt; sill (exact)                  100.00   10.00000000   10.00000000      ...  PASS
+spherical      h=2*range -&gt; sill (bounded)              200.00   10.00000000   10.00000000      ...  PASS
+spherical      h=range/2 (analytical)                    50.00    7.18750000    7.18750000      ...  PASS
+exponential    h=0 -&gt; nugget                              0.00    1.00000000    1.00000000      ...  PASS
+exponential    h=range (asymptotic formula)             100.00    9.55191638    9.55191638      ...  PASS
+exponential    h=range/2 (analytical)                    50.00    7.99182856    7.99182856      ...  PASS
+gaussian       h=0 -&gt; nugget                              0.00    1.00000000    1.00000000      ...  PASS
+gaussian       h=range (asymptotic formula)             100.00    9.55191638    9.55191638      ...  PASS
+gaussian       h=range/2 (analytical)                    50.00    5.74870103    5.74870103      ...  PASS
+linear         h=0 -&gt; nugget                              0.00    1.00000000    1.00000000      ...  PASS
+linear         h=range -&gt; sill (exact)                  100.00   10.00000000   10.00000000      ...  PASS
+linear         h=2*range -&gt; sill (bounded)              200.00   10.00000000   10.00000000      ...  PASS
+linear         h=range/2 (analytical)                    50.00    5.50000000    5.50000000      ...  PASS
+(validation)   nugget&gt;=sill raises ValueError              N/A          True          True      ...  PASS
+(validation)   range&lt;0 raises ValueError                   N/A          True          True      ...  PASS
+------------------------------------------------------------------------------------------------------...
+
+  Overall: ALL TESTS PASSED
+</code></pre></div>
+<p><img alt="Variogram model curves for sill = 10.0, range = 100.0, nugget = 1.0. All four models converge to the sill; spherical and linear reach it exactly at the range." src="../output/vv_variogram_models.png" /></p>
+<h2 id="coordinate-transform-roundtrip">Coordinate Transform Roundtrip<a class="headerlink" href="#coordinate-transform-roundtrip" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_transform_roundtrip.py</code></p>
+<h2 id="purpose_1">Purpose<a class="headerlink" href="#purpose_1" title="Permanent link">&para;</a></h2>
+<p>The anisotropy pre-transformation rotates and scales observation coordinates before kriging so that the variogram range ellipse becomes isotropic. If the forward transform or its inverse introduces numerical drift, the back-transformed prediction grid will be spatially misaligned with the original data. This test confirms that <code>apply_transform()</code> followed by <code>invert_transform_coords()</code> recovers the original coordinates to machine precision (<span class="arithmatex">\(&lt; 10^{-12}\)</span>), ensuring the coordinate pipeline is lossless.</p>
+<h2 id="test-design_1">Test Design<a class="headerlink" href="#test-design_1" title="Permanent link">&para;</a></h2>
+<p>Six primary cases exercise random point clouds, edge cases (single point at origin, collinear points), and a sweep of ten azimuth angles from 0° to 270°. The azimuth convention (clockwise from North) is explicitly tested against the arithmetic convention used internally.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Random <span class="arithmatex">\(N{=}50\)</span>, azimuth 90° (East), ratio 1.0 (identity)</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Random <span class="arithmatex">\(N{=}50\)</span>, azimuth 45° (NE), ratio 0.5</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Random <span class="arithmatex">\(N{=}50\)</span>, azimuth 90° (East), ratio 0.3</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Random <span class="arithmatex">\(N{=}50\)</span>, azimuth 0° (North), ratio 0.5</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Single point at origin</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Collinear points along <span class="arithmatex">\(y = 2x + 5\)</span></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>A</td>
+<td>Azimuth 0° forward-transform coordinate check</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>B</td>
+<td>Azimuth 90° identity (no rotation) check</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>C</td>
+<td>Multi-angle sweep: 0°, 15°, 30°, …, 270°</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_1">Results<a class="headerlink" href="#results_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>=================================================================
+Task 3.2 -- V&amp;V: Coordinate Transformation Roundtrip
+  Convention: azimuth (CW from North, 0 deg=North)
+=================================================================
+
+Test 1: Random N=50, angle=90 deg (East), ratio=1.0 (identity)
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=2.842e-14)
+
+Test 2: Random N=50, angle=45 deg (NE), ratio=0.5
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=1.137e-13)
+
+Test 3: Random N=50, angle=90 deg (East), ratio=0.3
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=1.137e-13)
+
+Test 4: Random N=50, angle=0 deg (North), ratio=0.5 (rotation + scaling)
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=2.842e-14)
+
+Test 5: Single point at origin
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=0.000e+00)
+
+Test 6: Collinear points along y = 2x + 5
+  [PASS] Roundtrip error &lt; 1e-12  (max_err=1.137e-13)
+
+Additional Check A: angle=0 deg (North), ratio=0.5
+  Azimuth 0 deg -&gt; arithmetic 90 deg -&gt; R rotates 90 deg CCW
+  Forward: xp = y_centered, yp = -x_centered * 2
+  [PASS] xp = y_centered (rotation maps Y-&gt;X)  (max_err=0.000e+00)
+  [PASS] yp = -x_centered * 2 (rotation maps X-&gt;-Y, scaled by 2)  (max_err=0.000e+00)
+
+Additional Check B: angle=90 deg (East), ratio=1.0 -&gt; identity (no rotation)
+  Azimuth 90 deg -&gt; arithmetic 0 deg -&gt; R = identity
+  [PASS] xp = x_centered (identity, no rotation)  (max_err=0.000e+00)
+  [PASS] yp = y_centered (identity, no scaling)  (max_err=0.000e+00)
+
+Additional Check C: roundtrip for angles 0,15,30,45,60,75,90,135,180,270 deg (azimuth)
+    angle=  0 deg  max_err=1.421e-14  PASS
+    angle= 15 deg  max_err=5.684e-14  PASS
+    angle= 30 deg  max_err=5.684e-14  PASS
+    angle= 45 deg  max_err=7.105e-14  PASS
+    angle= 60 deg  max_err=5.684e-14  PASS
+    angle= 75 deg  max_err=5.684e-14  PASS
+    angle= 90 deg  max_err=1.421e-14  PASS
+    angle=135 deg  max_err=7.105e-14  PASS
+    angle=180 deg  max_err=1.421e-14  PASS
+    angle=270 deg  max_err=1.421e-14  PASS
+
+=================================================================
+SUMMARY
+=================================================================
+Test                                     Result
+-----------------------------------------------------------------
+  Test 1 (identity, az=90)               PASS
+  Test 2 (45 deg, 0.5)                   PASS
+  Test 3 (90 deg, 0.3)                   PASS
+  Test 4 (0 deg, 0.5)                    PASS
+  Test 5 (origin)                        PASS
+  Test 6 (collinear)                     PASS
+  Check A (az=0, rotation+scaling)       PASS
+  Check B (az=90, identity)              PASS
+  Check C (multi-angle)                  PASS
+-----------------------------------------------------------------
+  Overall: ALL PASS
+=================================================================
+</code></pre></div>
+<p><img alt="Forward and inverse coordinate transforms for six test configurations. Residual errors are at or below \(10^{-13}\)." src="../output/vv_transform_roundtrip.png" /></p>
+<h2 id="polynomial-drift-computation">Polynomial Drift Computation<a class="headerlink" href="#polynomial-drift-computation" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_polynomial_drift.py</code></p>
+<h2 id="purpose_2">Purpose<a class="headerlink" href="#purpose_2" title="Permanent link">&para;</a></h2>
+<p>Universal kriging requires external drift columns that capture large-scale spatial trends. <code>compute_polynomial_drift()</code> constructs these columns as rescaled powers of the coordinates (<span class="arithmatex">\(\text{resc} \cdot x\)</span>, <span class="arithmatex">\(\text{resc} \cdot y\)</span>, <span class="arithmatex">\(\text{resc} \cdot x^2\)</span>, <span class="arithmatex">\(\text{resc} \cdot y^2\)</span>). The rescaling factor <code>resc</code> prevents numerical ill-conditioning in the kriging matrix. This test verifies (a) that each drift column matches its analytical formula exactly, (b) that column ordering and naming are correct, and (c) that the <code>compute_resc()</code> safety-floor logic activates when the centroid radius is smaller than the variogram range.</p>
+<h2 id="test-design_2">Test Design<a class="headerlink" href="#test-design_2" title="Permanent link">&para;</a></h2>
+<p>Nineteen sub-cases cover every drift term individually, the full four-column configuration, the rescaling factor under normal and floor-triggered conditions, and the empty-configuration edge case.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC-1</td>
+<td>Linear X: <span class="arithmatex">\(\text{drift}_{:,0} = \text{resc} \cdot x\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-1b</td>
+<td>Linear X: exactly 1 column produced</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC-1c</td>
+<td>Linear X: <code>term_names[0] == 'linear_x'</code></td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC-2</td>
+<td>Linear Y: <span class="arithmatex">\(\text{drift}_{:,0} = \text{resc} \cdot y\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-2b</td>
+<td>Linear Y: <code>term_names[0] == 'linear_y'</code></td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC-3</td>
+<td>Quadratic X: <span class="arithmatex">\(\text{drift}_{:,0} = \text{resc} \cdot x^2\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-3b</td>
+<td>Quadratic X: <code>term_names[0] == 'quadratic_x'</code></td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC-4</td>
+<td>Quadratic Y: <span class="arithmatex">\(\text{drift}_{:,0} = \text{resc} \cdot y^2\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-4b</td>
+<td>Quadratic Y: <code>term_names[0] == 'quadratic_y'</code></td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC-5a–f</td>
+<td>Full 4-column ordering and values</td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-6a</td>
+<td><code>compute_resc</code> normal: <span class="arithmatex">\(\text{resc} = \sqrt{\text{sill}/r^2_{\text{centroid}}}\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-6b</td>
+<td><code>compute_resc</code> safety floor triggered</td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+<tr>
+<td>TC-7a–b</td>
+<td>Empty config: 0 columns, 0 names</td>
+<td>exact</td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_2">Results<a class="headerlink" href="#results_2" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>====================================================================================================
+Test       Description                                             Expected           Actual          ...
+====================================================================================================
+TC-1       Linear X: drift[:,0] = resc*x = [0, 5, 10]              [0.0, 5.0, 10.0] [0.0, 5.0, 1...  PASS
+TC-1b      Linear X: only 1 column produced                        1                  1         ...  PASS
+TC-1c      Linear X: term_names[0] == &#39;linear_x&#39;                   0                  0         ...  PASS
+TC-2       Linear Y: drift[:,0] = resc*y = [0, 5, 10]              [0.0, 5.0, 10.0] [0.0, 5.0, 1...  PASS
+TC-2b      Linear Y: term_names[0] == &#39;linear_y&#39;                   0                  0         ...  PASS
+TC-3       Quadratic X: drift[:,0] = resc*x^2 = [0, 50, 200]       [0.0, 50.0, 200.0] [0.0, 50.0...  PASS
+TC-3b      Quadratic X: term_names[0] == &#39;quadratic_x&#39;             0                  0         ...  PASS
+TC-4       Quadratic Y: drift[:,0] = resc*y^2 = [0, 50, 200]       [0.0, 50.0, 200.0] [0.0, 50.0...  PASS
+TC-4b      Quadratic Y: term_names[0] == &#39;quadratic_y&#39;             0                  0         ...  PASS
+TC-5a      Term ordering: names == [linear_x, linear_y, quadratic_x, quadratic_y] 0             ...  PASS
+TC-5b      Term ordering: 4 columns produced                       4                  4         ...  PASS
+TC-5c      Term ordering: col 0 = resc*x (linear_x)                [1.0, 2.0, 3.0] [1.0, 2.0, 3....  PASS
+TC-5d      Term ordering: col 1 = resc*y (linear_y)                [4.0, 5.0, 6.0] [4.0, 5.0, 6....  PASS
+TC-5e      Term ordering: col 2 = resc*x^2 (quadratic_x)           [1.0, 4.0, 9.0] [1.0, 4.0, 9....  PASS
+TC-5f      Term ordering: col 3 = resc*y^2 (quadratic_y)           [16.0, 25.0, 36.0] [16.0, 25....  PASS
+TC-6a      compute_resc normal: resc = sqrt(sill/radsqd_centroid)  0.0141421          0.0141421 ...  PASS
+TC-6b      compute_resc safety floor: resc = sqrt(sill/range^2) = 0.001 0.001              0.001...  PASS
+TC-6b-floor compute_resc safety floor: floor triggered (radsqd &lt; range^2) 0                  0  ...  PASS
+TC-7a      Empty config: 0 columns                                 0                  0         ...  PASS
+TC-7b      Empty config: 0 term names                              0                  0         ...  PASS
+====================================================================================================
+
+Overall: ALL PASS
+</code></pre></div>
+<p><img alt="Polynomial drift columns for a three-point test configuration." src="../output/vv_polynomial_drift.png" /></p>
+<p><img alt="compute_resc() safety-floor behavior: the rescaling factor is clamped when the centroid radius falls below the variogram range." src="../output/vv_polynomial_drift_resc.png" /></p>
+<h2 id="drift-physics-verification">Drift Physics Verification<a class="headerlink" href="#drift-physics-verification" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_drift_physics.py</code></p>
+<h2 id="purpose_3">Purpose<a class="headerlink" href="#purpose_3" title="Permanent link">&para;</a></h2>
+<p><code>verify_drift_physics()</code> is a runtime diagnostic that checks whether each polynomial drift column is physically consistent with its declared term name — i.e., that a column labeled <code>linear_x</code> actually varies linearly with <span class="arithmatex">\(x\)</span>. This test verifies the diagnostic itself by feeding it known-good columns (which must return PASS), deliberately corrupted columns (which must return FAIL), and an AEM term (which must return SKIP, since AEM drift has no simple polynomial form to check).</p>
+<h2 id="test-design_3">Test Design<a class="headerlink" href="#test-design_3" title="Permanent link">&para;</a></h2>
+<p>Five cases cover the three possible outcomes of the diagnostic function. The corruption in TC-3 adds 10% Gaussian noise to break the <span class="arithmatex">\(R^2 &gt; 0.999\)</span> threshold; TC-4 doubles the rescaling factor to produce a 100% slope error.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC-1</td>
+<td>Valid <code>linear_x</code> (<span class="arithmatex">\(\text{drift} = \text{resc} \cdot x\)</span>)</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>TC-2</td>
+<td>Valid <code>quadratic_y</code> (<span class="arithmatex">\(\text{drift} = \text{resc} \cdot y^2\)</span>)</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>TC-3</td>
+<td>Corrupted <code>linear_x</code> (10% noise → <span class="arithmatex">\(R^2 &lt; 0.999\)</span>)</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>TC-4</td>
+<td>Wrong scaling (<span class="arithmatex">\(2 \cdot \text{resc} \cdot x\)</span> → 100% slope error)</td>
+<td>FAIL</td>
+</tr>
+<tr>
+<td>TC-5</td>
+<td>AEM term (no <code>_x</code>/<code>_y</code> suffix) → SKIP</td>
+<td>SKIP</td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_3">Results<a class="headerlink" href="#results_3" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Test     Description                                             Expected   Actual     Status
+---------------------------------------------------------------------------------------------
+TC-1     Valid linear_x (drift = resc*x)                         PASS       PASS       PASS
+TC-2     Valid quadratic_y (drift = resc*y^2)                    PASS       PASS       PASS
+TC-3     Corrupted linear_x (10% noise -&gt; R^2&lt;0.999)             FAIL       FAIL       PASS
+TC-4     Wrong scaling (2*resc*x -&gt; slope error 100%)            FAIL       FAIL       PASS
+TC-5     AEM term (no _x/_y) -&gt; SKIP                             SKIP       SKIP       PASS
+
+Result: 5/5 tests passed
+Overall: PASS
+</code></pre></div>
+<p><img alt="Drift physics diagnostic: valid columns produce tight regression fits (PASS), corrupted columns scatter (FAIL), and AEM terms are correctly skipped." src="../output/vv_drift_physics.png" /></p>
+<h2 id="aem-linesink-single-segment">AEM Linesink — Single Segment<a class="headerlink" href="#aem-linesink-single-segment" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_aem_single_segment.py</code></p>
+<h2 id="purpose_4">Purpose<a class="headerlink" href="#purpose_4" title="Permanent link">&para;</a></h2>
+<p>The Analytic Element Method (AEM) linesink potential models the hydraulic influence of a river segment on the surrounding water table. <code>compute_linesink_potential()</code> evaluates the complex-variable potential integral for a single line segment. This test verifies the implementation against hand-calculated reference values at four specific field points, confirms the expected symmetry about the segment axis, validates the superposition principle (two collinear half-segments must equal one full segment), and checks boundary conditions (zero-length segment, strength linearity).</p>
+<h2 id="test-design_4">Test Design<a class="headerlink" href="#test-design_4" title="Permanent link">&para;</a></h2>
+<p>Eight checks cover point-value accuracy, physical symmetry, superposition, and edge cases. The hand-calculated reference values use the closed-form linesink integral <span class="arithmatex">\(\phi = \frac{\sigma}{4\pi} \left[(z - z_2)\ln(z - z_2) - (z - z_1)\ln(z - z_1)\right]\)</span> evaluated in the complex plane.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1a</td>
+<td><span class="arithmatex">\(\phi(50, 50)\)</span> matches hand-calc</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC1b</td>
+<td><span class="arithmatex">\(\phi(50, -50)\)</span> matches hand-calc</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC1c</td>
+<td><span class="arithmatex">\(\phi(200, 0)\)</span> matches hand-calc</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC1d</td>
+<td><span class="arithmatex">\(\phi(50, 0.001)\)</span> near centerline</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Symmetry: <span class="arithmatex">\(\phi(x,y) = \phi(x,-y)\)</span></td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC3</td>
+<td>Superposition: <span class="arithmatex">\([0,50] + [50,100] = [0,100]\)</span></td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>Zero-length segment returns zeros</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC5</td>
+<td><span class="arithmatex">\(\phi(\sigma{=}2) = 2 \cdot \phi(\sigma{=}1)\)</span></td>
+<td><span class="arithmatex">\(10^{-14}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_4">Results<a class="headerlink" href="#results_4" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>=== TEST CASE 1: Segment along X-axis (z1=(0,0), z2=(100,0), strength=1.0) ===
+
+=== TEST CASE 2: Symmetry about segment axis ===
+
+=== TEST CASE 3: Superposition of collinear segments ===
+
+=== TEST CASE 4: Zero-length segment returns zeros ===
+
+=== TEST CASE 5: Strength linearity ===
+
+========================================================================
+Test                                                 Status Detail
+========================================================================
+TC1a: phi(50, 50) matches hand-calc                  PASS   got=64.36217557, ref=64.36217557, |err|=0....
+TC1b: phi(50, -50) matches hand-calc                 PASS   got=64.36217557, ref=64.36217557, |err|=0....
+TC1c: phi(200, 0) matches hand-calc                  PASS   got=79.44162559, ref=79.44162559, |err|=0....
+TC1d: phi(50, 0.001) near centerline matches hand-calc PASS   got=46.34678557, ref=46.34678557, |err|=...
+TC2: Symmetry phi(x,y)==phi(x,-y) for all test points PASS   max |phi(x,y)-phi(x,-y)| = 0.00e+00
+TC3: Superposition [0,50]+[50,100] == [0,100]        PASS   max |phi_full - phi_sum| = 1.42e-14 (tol=1...
+TC4: L &lt; 1e-6 returns zeros                          PASS   phi_zero = [0. 0. 0.]
+TC5: phi(strength=2) == 2*phi(strength=1)            PASS   max |phi_s2 - 2*phi_s1| = 0.00e+00
+========================================================================
+
+Summary: 8 PASS, 0 FAIL out of 8 checks
+</code></pre></div>
+<p><img alt="AEM linesink potential field for a single segment along the \(x\)-axis, with test-point locations and reference values annotated." src="../output/vv_aem_single_segment.png" /></p>
+<h2 id="aem-drift-scaling-consistency">AEM Drift Scaling Consistency<a class="headerlink" href="#aem-drift-scaling-consistency" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_aem_scaling_consistency.py</code></p>
+<h2 id="purpose_5">Purpose<a class="headerlink" href="#purpose_5" title="Permanent link">&para;</a></h2>
+<p>When AEM linesink drift is used in kriging, the raw potential values are rescaled by a factor that normalizes them relative to the variogram sill. These scaling factors are computed during model training and must be identically reused during prediction — otherwise the drift columns at prediction points would be on a different numerical scale than those used to fit the kriging weights, producing silently incorrect interpolations. This test verifies that <code>compute_linesink_drift_matrix()</code> preserves scaling factors across the training-to-prediction pipeline.</p>
+<h2 id="test-design_5">Test Design<a class="headerlink" href="#test-design_5" title="Permanent link">&para;</a></h2>
+<p>Five cases verify dictionary structure, factor persistence, independence of free-vs-fixed computation, the fixed-method formula, and column-level numerical equality.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1</td>
+<td>Training returns <code>sf</code> dict with keys <span class="arithmatex">\(\{A, B\}\)</span> and matrix shape <span class="arithmatex">\((10, 2)\)</span></td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Prediction scaling factors match training factors exactly</td>
+<td><span class="arithmatex">\(10^{-15}\)</span></td>
+</tr>
+<tr>
+<td>TC3</td>
+<td>Free prediction (no <code>input_sf</code>) produces different factors</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>Fixed method: <span class="arithmatex">\(\text{sf}[A] = \text{sill} / 0.0001\)</span></td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC5</td>
+<td>Drift column <span class="arithmatex">\(A\)</span> at prediction points <span class="arithmatex">\(= \phi_A \cdot \text{sf}_{\text{train}}[A]\)</span></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_5">Results<a class="headerlink" href="#results_5" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>==========================================================================================
+Task 3.6 - V&amp;V: AEM Drift Matrix Scaling Consistency
+==========================================================================================
+TC     Description                                                    Error  Status
+------------------------------------------------------------------------------------------
+TC1    Training returns sf dict with keys {A,B} and matrix shape (10,2)    0.000e+00  PASS
+TC2    Prediction scaling factors match training factors exactly (tol=1e-15)    0.000e+00  PASS
+TC3    Free prediction (no input_sf) produces different scaling factors    0.000e+00  PASS
+TC4    Fixed method: sf[&#39;A&#39;] == sill/0.0001 = 2.500000e+04        0.000e+00  PASS
+TC4    Fixed method: sf[&#39;B&#39;] == sill/0.0001 = 2.500000e+04        0.000e+00  PASS
+TC5    Drift column A at pred points == phi_A * sf_train[&#39;A&#39;] (tol=1e-12)    0.000e+00  PASS
+TC5    Drift column B at pred points == phi_B * sf_train[&#39;B&#39;] (tol=1e-12)    0.000e+00  PASS
+------------------------------------------------------------------------------------------
+TOTAL: 7 PASS, 0 FAIL
+==========================================================================================
+</code></pre></div>
+<p><img alt="AEM drift scaling consistency: training and prediction drift columns are compared to confirm identical scaling factors." src="../output/vv_aem_scaling_consistency.png" /></p>
+<h2 id="wrapper-equivalence-no-drift">Wrapper Equivalence — No Drift<a class="headerlink" href="#wrapper-equivalence-no-drift" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_wrapper_no_drift.py</code></p>
+<h2 id="purpose_6">Purpose<a class="headerlink" href="#purpose_6" title="Permanent link">&para;</a></h2>
+<p><code>build_uk_model()</code> is the project's high-level wrapper around PyKrige's <code>UniversalKriging</code>. When no external drift is specified, the wrapper must produce predictions and variances that are numerically identical to a direct PyKrige call — any discrepancy would indicate that the wrapper introduces unintended side effects (e.g., default parameter differences, coordinate reordering, or drift-column injection). This test establishes the wrapper's baseline correctness by confirming bit-level equivalence in the zero-drift case.</p>
+<h2 id="test-design_6">Test Design<a class="headerlink" href="#test-design_6" title="Permanent link">&para;</a></h2>
+<p>Four cases compare wrapper output against direct PyKrige for point predictions, point variances, the <code>None</code>-drift code path, and a full 10×10 grid prediction.</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1</td>
+<td>Point predictions: wrapper (<code>drift_matrix=zeros</code>) vs. direct PyKrige</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Point variances: wrapper vs. direct PyKrige</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC3</td>
+<td>Point predictions: wrapper (<code>drift_matrix=None</code>) vs. direct PyKrige</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>Grid predictions (10×10): wrapper vs. direct PyKrige</td>
+<td><span class="arithmatex">\(10^{-10}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_6">Results<a class="headerlink" href="#results_6" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>=================================================================
+Task 3.7 — V&amp;V: Wrapper Equivalence — No Drift Path
+=================================================================
+
+TC     Description                                                 Tol       MaxErr Status
+-----------------------------------------------------------------------------------------------
+TC1    Point predictions: wrapper (zeros drift) vs direct PyKrige    1.0e-10    0.000e+00  OK PASS
+TC2    Point variances: wrapper (zeros drift) vs direct PyKrige    1.0e-10    0.000e+00  OK PASS
+TC3    Point predictions: wrapper (None drift) vs direct PyKrige    1.0e-10    0.000e+00  OK PASS
+TC4    Grid predictions (10x10): wrapper vs direct PyKrige     1.0e-10    0.000e+00  OK PASS
+
+-----------------------------------------------------------------------------------------------
+Result: 4/4 PASS
+Overall: PASS
+</code></pre></div>
+<p><img alt="Wrapper vs. direct PyKrige predictions on a 10×10 grid with no drift. Residuals are identically zero." src="../output/vv_wrapper_no_drift.png" /></p>
+<h2 id="polynomial-drift-recovery">Polynomial Drift Recovery<a class="headerlink" href="#polynomial-drift-recovery" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_polynomial_drift_recovery.py</code></p>
+<h2 id="purpose_7">Purpose<a class="headerlink" href="#purpose_7" title="Permanent link">&para;</a></h2>
+<p>This is an end-to-end integration test: synthetic water-level data are generated from a known linear trend (<span class="arithmatex">\(0.5x + 0.3y\)</span>) plus spatially correlated noise, then kriged with polynomial drift enabled. The test verifies that (a) the wrapper and direct PyKrige produce identical results when given the same drift columns, and (b) both recover the underlying trend with an RMSE well below the noise floor. This confirms that the full pipeline — drift computation, rescaling, kriging-system assembly, and prediction — functions correctly as an integrated system.</p>
+<h2 id="test-design_7">Test Design<a class="headerlink" href="#test-design_7" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1</td>
+<td>Wrapper predictions match direct PyKrige specified-drift</td>
+<td><span class="arithmatex">\(10^{-8}\)</span></td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Wrapper variances match direct PyKrige specified-drift</td>
+<td><span class="arithmatex">\(10^{-8}\)</span></td>
+</tr>
+<tr>
+<td>TC3</td>
+<td>Wrapper trend-recovery RMSE <span class="arithmatex">\(&lt; 0.5\)</span> (noise-limited)</td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>Direct PyKrige trend-recovery RMSE <span class="arithmatex">\(&lt; 0.5\)</span></td>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_7">Results<a class="headerlink" href="#results_7" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>=================================================================
+Task 3.8 — V&amp;V: Polynomial Drift Recovery
+=================================================================
+
+resc = 5.952110e-03
+term_names = [&#39;linear_x&#39;, &#39;linear_y&#39;]
+drift_train shape = (30, 2)
+
+TC     Description                                               Tol        Value Status
+------------------------------------------------------------------------------------------
+TC1    Wrapper vs direct PyKrige: max |pred diff|            1.0e-08    0.000e+00  OK PASS
+TC2    Wrapper vs direct PyKrige: max |var diff|             1.0e-08    0.000e+00  OK PASS
+TC3    Wrapper trend recovery RMSE vs 0.5x+0.3y              5.0e-01    4.077e-02  OK PASS
+TC4    Direct PyKrige trend recovery RMSE vs 0.5x+0.3y       5.0e-01    4.077e-02  OK PASS
+
+------------------------------------------------------------------------------------------
+Result: 4/4 PASS
+Overall: PASS
+</code></pre></div>
+<p><img alt="Polynomial drift recovery: synthetic truth surface (\(0.5x + 0.3y\)), kriged prediction, and residual map." src="../output/vv_polynomial_drift_recovery.png" /></p>
+<h2 id="anisotropy-pre-transform-consistency">Anisotropy Pre-Transform Consistency<a class="headerlink" href="#anisotropy-pre-transform-consistency" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_anisotropy_consistency.py</code></p>
+<h2 id="purpose_8">Purpose<a class="headerlink" href="#purpose_8" title="Permanent link">&para;</a></h2>
+<p>UK_SSPA v2 handles geometric anisotropy by pre-transforming coordinates before passing them to PyKrige (which then operates isotropically). PyKrige also has its own internal anisotropy handling. This test verifies that the pre-transformation approach produces predictions and variances that are numerically equivalent to PyKrige's internal method — confirming that the coordinate transformation correctly replicates the anisotropy ellipse stretching. Three azimuth angles (0°, 45°, 90°) are tested to exercise rotation in all quadrants.</p>
+<h2 id="test-design_8">Test Design<a class="headerlink" href="#test-design_8" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1</td>
+<td>Pre-transform vs. PyKrige internal: max prediction difference</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Pre-transform vs. PyKrige internal: max variance difference</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>TC3a</td>
+<td>Our transform at azimuth 90°, ratio 0.5: <span class="arithmatex">\(x\)</span> unchanged</td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>TC3b</td>
+<td>Our transform at azimuth 90°, ratio 0.5: <span class="arithmatex">\(y\)</span> scaled by <span class="arithmatex">\(2\times\)</span></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>Azimuth 90°, ratio 0.5: pre-transform vs. PyKrige internal</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>TC5</td>
+<td>Azimuth 45°, ratio 0.5: pre-transform vs. PyKrige internal</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+<tr>
+<td>TC6</td>
+<td>Azimuth 0°, ratio 0.5: pre-transform vs. PyKrige internal</td>
+<td><span class="arithmatex">\(10^{-6}\)</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_8">Results<a class="headerlink" href="#results_8" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>==========================================================================================
+Task 3.9 — V&amp;V: Anisotropy Pre-Transform Consistency
+==========================================================================================
+
+Convention note:
+  Our system uses AZIMUTH convention: angle_major in CW from North (0°=North).
+  PyKrige uses ARITHMETIC convention: anisotropy_angle in CCW from East.
+  Conversion: arithmetic = 90 - azimuth.
+  TC1/TC2/TC4/TC5/TC6 use PyKrige&#39;s exact transform replicated manually.
+  TC3 verifies our own transform&#39;s coordinate properties independently.
+
+TC     Description                                                       Tol     Max|err| Status
+-----------------------------------------------------------------------------------------------
+TC1    Pre-transform (replicating PyKrige) vs PyKrige internal: max |pred diff|   1.00e-06   2.3...  PASS
+TC2    Pre-transform (replicating PyKrige) vs PyKrige internal: max |var diff|   1.00e-06   4.38...  PASS
+TC3a   Our transform angle=90° azimuth (East), ratio=0.5: X unchanged   1.00e-12   0.0000e+00   PASS
+TC3b   Our transform angle=90° azimuth (East), ratio=0.5: Y scaled by 2x   1.00e-12   0.0000e+00   PASS
+TC4    angle=90.0° azimuth, ratio=0.5: pre-transform vs PyKrige internal   1.00e-06   0.0000e+00   PASS
+TC5    angle=45.0° azimuth, ratio=0.5: pre-transform vs PyKrige internal   1.00e-06   1.8874e-15   PASS
+TC6    angle=0.0° azimuth, ratio=0.5: pre-transform vs PyKrige internal   1.00e-06   0.0000e+00   PASS
+-----------------------------------------------------------------------------------------------
+
+Result: 7/7 PASS
+</code></pre></div>
+<p><img alt="Anisotropy pre-transform consistency: prediction surfaces from the pre-transform approach and PyKrige's internal method are visually indistinguishable; residuals are at machine precision." src="../output/vv_anisotropy_consistency.png" /></p>
+<h2 id="loocv-diagnostic-metrics">LOOCV Diagnostic Metrics<a class="headerlink" href="#loocv-diagnostic-metrics" title="Permanent link">&para;</a></h2>
+<p><strong>Script:</strong> <code>docs/validation/vv_loocv.py</code></p>
+<h2 id="purpose_9">Purpose<a class="headerlink" href="#purpose_9" title="Permanent link">&para;</a></h2>
+<p>Leave-one-out cross-validation (LOOCV) is the primary diagnostic for assessing kriging model quality in production. <code>cross_validate()</code> removes each observation in turn, re-fits the model, predicts the held-out value, and computes summary statistics (RMSE, MAE, Q1, Q2). This test verifies that the reported metrics match independently computed reference values to machine precision, and that the function degrades gracefully (returning <code>NaN</code>) when given fewer than three data points.</p>
+<h2 id="test-design_9">Test Design<a class="headerlink" href="#test-design_9" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Description</th>
+<th>Tolerance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TC1</td>
+<td><span class="arithmatex">\(n\)</span> predictions produced for <span class="arithmatex">\(n\)</span> input points</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC2</td>
+<td>Predictions differ from observations (nugget <span class="arithmatex">\(&gt; 0\)</span>)</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC3</td>
+<td>RMSE <span class="arithmatex">\(= \sqrt{\text{mean}((\hat{z} - z)^2)}\)</span></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>TC4</td>
+<td>MAE $= \text{mean}(</td>
+<td>\hat{z} - z</td>
+</tr>
+<tr>
+<td>TC5</td>
+<td>Q1 and Q2 are finite</td>
+<td>exact</td>
+</tr>
+<tr>
+<td>TC5b</td>
+<td>Q1 matches <code>nanmean(standardized errors)</code></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>TC5c</td>
+<td>Q2 matches <code>nanvar(standardized errors)</code></td>
+<td><span class="arithmatex">\(10^{-12}\)</span></td>
+</tr>
+<tr>
+<td>TC6</td>
+<td><span class="arithmatex">\(&lt; 3\)</span> points → <code>NaN</code> metrics (graceful degradation)</td>
+<td>exact</td>
+</tr>
+</tbody>
+</table>
+<h2 id="results_9">Results<a class="headerlink" href="#results_9" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Running cross_validate() on 15-point dataset (no drift)...
+TC1 [PASS]: len(predictions)=15, expected 15
+TC2 [PASS]: fraction of predictions differing from obs by &gt;1e-6 = 1.00 (need &gt;=0.80)
+TC3 [PASS]: RMSE reported=10.12643490, manual=10.12643490, |err|=0.00e+00
+TC4 [PASS]: MAE reported=7.01050084, manual=7.01050084, |err|=0.00e+00
+TC5 [PASS]: Q1=0.300125, Q2=109.533586
+TC5b [PASS]: Q1 reported=0.30012512, manual=0.30012512, |err|=0.00e+00
+TC5c [PASS]: Q2 reported=109.53358572, manual=109.53358572, |err|=0.00e+00
+TC6 [PASS]: rmse=nan, mae=nan, q1=nan, q2=nan
+
+================================================================================
+TC     Description                                          Tol          Value          Status
+--------------------------------------------------------------------------------
+TC1    n predictions produced for n input points            N/A          N/A            PASS
+TC2    Predictions differ from observations (nugget &gt; 0, no exact interpolation) N/A          N/...  PASS
+TC3    RMSE = sqrt(mean((pred - obs)^2))                    1e-12        0.00e+00       PASS
+TC4    MAE = mean(|pred - obs|)                             1e-12        0.00e+00       PASS
+TC5    Q1 (mean standardized error) and Q2 (variance of standardized errors) are finite N/A     ...  PASS
+TC5b   Q1 matches manual nanmean(standardized errors)       1e-12        0.00e+00       PASS
+TC5c   Q2 matches manual nanvar(standardized errors)        1e-12        0.00e+00       PASS
+TC6    With &lt; 3 points, function returns NaN metrics gracefully N/A          N/A            PASS
+================================================================================
+
+Summary: 8/8 PASS, 0 FAIL
+</code></pre></div>
+<p><img alt="LOOCV diagnostic metrics: observed vs. predicted values, residual distribution, and standardized-error statistics." src="../output/vv_loocv.png" /></p>
+<h2 id="coverage-gap-analysis">Coverage Gap Analysis<a class="headerlink" href="#coverage-gap-analysis" title="Permanent link">&para;</a></h2>
+<p>The following table identifies behaviors that are verified by V&amp;V scripts but do not yet have corresponding unit tests in the project's <code>pytest</code> suite. These V&amp;V scripts serve as the primary verification for these behaviors; adding unit tests is recommended for CI regression coverage but is not blocking for release.</p>
+<p>See <a href="../tested-behaviors.md"><code>docs/validation/tested-behaviors.md</code></a> for the full claim-to-test traceability matrix.</p>
+<table>
+<thead>
+<tr>
+<th>Behavior</th>
+<th>V&amp;V Script</th>
+<th style="text-align: center;">Unit Test</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variogram model equations match analytical values</td>
+<td><code>vv_variogram_models.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Coordinate transform roundtrip <span class="arithmatex">\(&lt; 10^{-12}\)</span></td>
+<td><code>vv_transform_roundtrip.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>AEM linesink potential symmetry and superposition</td>
+<td><code>vv_aem_single_segment.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>AEM scaling factor persistence across train → predict</td>
+<td><code>vv_aem_scaling_consistency.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Wrapper equivalence to direct PyKrige <span class="arithmatex">\(&lt; 10^{-10}\)</span></td>
+<td><code>vv_wrapper_no_drift.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Polynomial drift recovery RMSE</td>
+<td><code>vv_polynomial_drift_recovery.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>Anisotropy pre-transform matches PyKrige internal <span class="arithmatex">\(&lt; 10^{-6}\)</span></td>
+<td><code>vv_anisotropy_consistency.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+<tr>
+<td>LOOCV metric formulas: RMSE, MAE, Q1, Q2</td>
+<td><code>vv_loocv.py</code></td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-re-run">How to Re-Run<a class="headerlink" href="#how-to-re-run" title="Permanent link">&para;</a></h2>
+<p><strong>Run individual V&amp;V scripts</strong> from the project root:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>docs/validation/vv_variogram_models.py
+python<span class="w"> </span>docs/validation/vv_transform_roundtrip.py
+python<span class="w"> </span>docs/validation/vv_polynomial_drift.py
+python<span class="w"> </span>docs/validation/vv_drift_physics.py
+python<span class="w"> </span>docs/validation/vv_aem_single_segment.py
+python<span class="w"> </span>docs/validation/vv_aem_scaling_consistency.py
+python<span class="w"> </span>docs/validation/vv_wrapper_no_drift.py
+python<span class="w"> </span>docs/validation/vv_polynomial_drift_recovery.py
+python<span class="w"> </span>docs/validation/vv_anisotropy_consistency.py
+python<span class="w"> </span>docs/validation/vv_loocv.py
+</code></pre></div>
+<p><strong>Run all scripts with summary:</strong></p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>docs/validation/vv_report/run_all_vv.py
+</code></pre></div>
+<p><strong>Regenerate this PDF report</strong> (requires Quarto CLI and TinyTeX):</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>docs/validation/vv_report
+quarto<span class="w"> </span>render<span class="w"> </span>vv_report.qmd<span class="w"> </span>--to<span class="w"> </span>pdf
+</code></pre></div>
+<p>The output PDF will be at <code>docs/validation/vv_report/_output/vv_report.pdf</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

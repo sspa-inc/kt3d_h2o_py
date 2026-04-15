@@ -1,0 +1,2565 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../aem_drift/">
+      
+      
+        <link rel="next" href="../../examples/ex_ordinary_kriging/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>kriging.py - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference-krigingpy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              kriging.py
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../theory/variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/aem-linesink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../variogram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#build_uk_modelall_x-all_y-all_h-drift_matrix-variogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        build_uk_model(all_x, all_y, all_h, drift_matrix, variogram)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="build_uk_model(all_x, all_y, all_h, drift_matrix, variogram)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pykrige-wrapping-convention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyKrige Wrapping Convention
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#anisotropy-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anisotropy Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variogram-parameter-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Variogram Parameter Extraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predict_at_pointsuk_model-x-y-drift_matrix_prednone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict_at_points(uk_model, x, y, drift_matrix_pred=None)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="predict_at_points(uk_model, x, y, drift_matrix_pred=None)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#drift-column-count-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Column Count Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pykrige-version-compatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PyKrige Version Compatibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raises_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#predict_on_griduk_model-config-term_names-resc-transform_paramsnone-scaling_factorsnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        predict_on_grid(uk_model, config, term_names, resc, transform_params=None, scaling_factors=None)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="predict_on_grid(uk_model, config, term_names, resc, transform_params=None, scaling_factors=None)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#grid-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grid Generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coordinate-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coordinate Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drift-reconstruction-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drift Reconstruction Logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scaling_factors-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        scaling_factors Parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raises_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output_drift_coefficientsall_h-drift_matrix-term_names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        output_drift_coefficients(all_h, drift_matrix, term_names)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="output_drift_coefficients(all_h, drift_matrix, term_names)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cross_validateall_x-all_y-all_h-config-variogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cross_validate(all_x, all_y, all_h, config, variogram)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="cross_validate(all_x, all_y, all_h, config, variogram)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loocv-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LOOCV Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-data-requirement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Data Requirement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raises_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-contracts-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Contracts Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linesink_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference-krigingpy">API Reference: <code>kriging.py</code><a class="headerlink" href="#api-reference-krigingpy" title="Permanent link">&para;</a></h1>
+<p>Provides the Universal Kriging model wrapper, grid and point prediction, OLS drift diagnostics, and Leave-One-Out Cross Validation (LOOCV).</p>
+<hr />
+<h2 id="build_uk_modelall_x-all_y-all_h-drift_matrix-variogram"><code>build_uk_model(all_x, all_y, all_h, drift_matrix, variogram)</code><a class="headerlink" href="#build_uk_modelall_x-all_y-all_h-drift_matrix-variogram" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>kriging.py</code></a></p>
+<p>Constructs and initialises a <code>pykrige.uk.UniversalKriging</code> model. This is the central training function of the pipeline.</p>
+<h3 id="pykrige-wrapping-convention">PyKrige Wrapping Convention<a class="headerlink" href="#pykrige-wrapping-convention" title="Permanent link">&para;</a></h3>
+<p>When a non-empty drift matrix is provided, the model is initialised with:</p>
+<div class="highlight"><pre><span></span><code><span class="n">uk_kwargs</span><span class="p">[</span><span class="s2">&quot;drift_terms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;specified&quot;</span><span class="p">]</span>
+<span class="n">uk_kwargs</span><span class="p">[</span><span class="s2">&quot;specified_drift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">drift_matrix</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_terms</span><span class="p">)]</span>
+</code></pre></div>
+<p>This tells PyKrige to use externally supplied drift columns rather than its built-in polynomial drift. When <code>drift_matrix</code> is <code>None</code> or has zero columns, <code>drift_terms</code> is omitted entirely, producing an Ordinary Kriging model.</p>
+<h3 id="anisotropy-handling">Anisotropy Handling<a class="headerlink" href="#anisotropy-handling" title="Permanent link">&para;</a></h3>
+<p>The function reads <code>variogram.anisotropy_enabled</code> to decide how to configure PyKrige's internal anisotropy:</p>
+<table>
+<thead>
+<tr>
+<th><code>anisotropy_enabled</code></th>
+<th>PyKrige <code>anisotropy_scaling</code></th>
+<th>PyKrige <code>anisotropy_angle</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>True</code></td>
+<td><code>variogram.anisotropy_ratio</code></td>
+<td><code>90.0 - variogram.angle_major</code></td>
+<td>PyKrige applies internal anisotropy (used when coordinates are <strong>not</strong> pre-transformed).</td>
+</tr>
+<tr>
+<td><code>False</code></td>
+<td><code>1.0</code></td>
+<td><code>0.0</code></td>
+<td>PyKrige anisotropy disabled (used when coordinates <strong>are</strong> pre-transformed by <a href="../transform/#apply_transform"><code>apply_transform()</code></a>).</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Important:</strong> When the main pipeline pre-transforms coordinates via <a href="../transform/#apply_transform"><code>apply_transform()</code></a>, it passes a cloned variogram with <code>anisotropy_enabled=False</code> to this function. This prevents double-application of the anisotropy transformation.</p>
+</blockquote>
+<h3 id="variogram-parameter-extraction">Variogram Parameter Extraction<a class="headerlink" href="#variogram-parameter-extraction" title="Permanent link">&para;</a></h3>
+<p>The function reads the following attributes from the <code>variogram</code> object:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Fallback</th>
+<th>PyKrige key</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>variogram.sill</code></td>
+<td><code>0.0</code></td>
+<td><code>variogram_parameters["sill"]</code></td>
+</tr>
+<tr>
+<td><code>variogram.range_</code> or <code>variogram.range</code></td>
+<td><code>0.0</code></td>
+<td><code>variogram_parameters["range"]</code></td>
+</tr>
+<tr>
+<td><code>variogram.nugget</code></td>
+<td><code>0.0</code></td>
+<td><code>variogram_parameters["nugget"]</code></td>
+</tr>
+<tr>
+<td><code>variogram.model</code></td>
+<td><code>"spherical"</code></td>
+<td><code>variogram_model</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>all_x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of training X coordinates (model space if anisotropy pre-transformed).</td>
+</tr>
+<tr>
+<td><code>all_y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of training Y coordinates (model space if anisotropy pre-transformed).</td>
+</tr>
+<tr>
+<td><code>all_h</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of observed values (water levels).</td>
+</tr>
+<tr>
+<td><code>drift_matrix</code></td>
+<td><code>np.ndarray</code> or <code>None</code></td>
+<td>Drift matrix of shape <code>(N, n_terms)</code>, or <code>None</code> / zero-column array for Ordinary Kriging.</td>
+</tr>
+<tr>
+<td><code>variogram</code></td>
+<td><code>object</code></td>
+<td>Variogram-like object with <code>sill</code>, <code>range_</code>, <code>nugget</code>, <code>model</code>, and optional anisotropy attributes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UniversalKriging</code></td>
+<td>Initialised PyKrige <code>UniversalKriging</code> instance ready for prediction.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raises">Raises<a class="headerlink" href="#raises" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ImportError</code></td>
+<td><code>pykrige</code> is not installed.</td>
+</tr>
+<tr>
+<td>Any exception from PyKrige</td>
+<td>Re-raised after logging context.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">variogram</span><span class="w"> </span><span class="kn">import</span> <span class="n">variogram</span> <span class="k">as</span> <span class="n">Variogram</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drift</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_resc</span><span class="p">,</span> <span class="n">compute_polynomial_drift</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kriging</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_uk_model</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">50.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">75.</span><span class="p">,</span> <span class="mf">25.</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">50.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">100.</span><span class="p">,</span> <span class="mf">75.</span><span class="p">])</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">,</span> <span class="mf">11.</span><span class="p">,</span> <span class="mf">13.</span><span class="p">,</span> <span class="mf">11.5</span><span class="p">])</span>
+
+<span class="n">vario</span> <span class="o">=</span> <span class="n">Variogram</span><span class="p">({</span><span class="s2">&quot;variogram&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="s2">&quot;sill&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="mf">80.0</span><span class="p">,</span> <span class="s2">&quot;nugget&quot;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">}})</span>
+<span class="n">resc</span> <span class="o">=</span> <span class="n">compute_resc</span><span class="p">(</span><span class="n">vario</span><span class="o">.</span><span class="n">sill</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">vario</span><span class="o">.</span><span class="n">range_</span><span class="p">)</span>
+<span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span> <span class="o">=</span> <span class="n">compute_polynomial_drift</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;drift_terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;linear_x&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span> <span class="n">resc</span><span class="p">)</span>
+
+<span class="n">uk_model</span> <span class="o">=</span> <span class="n">build_uk_model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">drift_matrix</span><span class="p">,</span> <span class="n">vario</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h2 id="predict_at_pointsuk_model-x-y-drift_matrix_prednone"><code>predict_at_points(uk_model, x, y, drift_matrix_pred=None)</code><a class="headerlink" href="#predict_at_pointsuk_model-x-y-drift_matrix_prednone" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>kriging.py</code></a></p>
+<p>Predicts values and kriging variances at arbitrary point locations using a trained <code>UniversalKriging</code> model.</p>
+<h3 id="drift-column-count-validation">Drift Column Count Validation<a class="headerlink" href="#drift-column-count-validation" title="Permanent link">&para;</a></h3>
+<p>Before calling <code>uk_model.execute()</code>, the function validates that the number of drift columns at prediction time matches the number used during training:</p>
+<div class="highlight"><pre><span></span><code>n_train_cols  ← inferred from uk_model.specified_drift (or related attributes)
+n_pred_cols   ← drift_matrix_pred.shape[1]
+
+if n_train_cols != n_pred_cols:
+    raise ValueError(&quot;Drift column count mismatch: ...&quot;)
+</code></pre></div>
+<p>This guards against the most common pipeline error: changing <code>term_names</code> between training and prediction.</p>
+<h3 id="pykrige-version-compatibility">PyKrige Version Compatibility<a class="headerlink" href="#pykrige-version-compatibility" title="Permanent link">&para;</a></h3>
+<p>PyKrige has changed the keyword argument name for specified drift across versions. The function tries the modern name first, then falls back:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Modern (preferred)</span>
+<span class="n">uk_model</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;points&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">specified_drift_arrays</span><span class="o">=</span><span class="n">specified_drift_arrays</span><span class="p">)</span>
+
+<span class="c1"># Fallback for older versions</span>
+<span class="n">uk_model</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;points&quot;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">specified_drift</span><span class="o">=</span><span class="n">specified_drift_arrays</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uk_model</code></td>
+<td><code>UniversalKriging</code></td>
+<td>Trained PyKrige model (or test double).</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td><code>array-like</code></td>
+<td>1-D array of prediction X coordinates (model space).</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td><code>array-like</code></td>
+<td>1-D array of prediction Y coordinates (model space).</td>
+</tr>
+<tr>
+<td><code>drift_matrix_pred</code></td>
+<td><code>np.ndarray</code> or <code>None</code></td>
+<td>Drift matrix for prediction points, shape <code>(N_pred, n_terms)</code>. Required if model was trained with drift; ignored (with a warning) if model has no drift.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(np.ndarray, np.ndarray)</code></td>
+<td>Tuple <code>(z, ss)</code>: predicted values and kriging variances, both shape <code>(N_pred,)</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raises_1">Raises<a class="headerlink" href="#raises_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>x</code> and <code>y</code> have different lengths.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Model trained with drift but <code>drift_matrix_pred</code> is <code>None</code>.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>drift_matrix_pred</code> is not 2-D when drift is expected.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Drift column count mismatch between training and prediction.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="predict_on_griduk_model-config-term_names-resc-transform_paramsnone-scaling_factorsnone"><code>predict_on_grid(uk_model, config, term_names, resc, transform_params=None, scaling_factors=None)</code><a class="headerlink" href="#predict_on_griduk_model-config-term_names-resc-transform_paramsnone-scaling_factorsnone" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>kriging.py</code></a></p>
+<p>Predicts on a regular grid defined by <code>config["grid"]</code>. Handles coordinate transformation, drift reconstruction (both polynomial and AEM), and calls <a href="#predict_at_points"><code>predict_at_points()</code></a>.</p>
+<h3 id="grid-generation">Grid Generation<a class="headerlink" href="#grid-generation" title="Permanent link">&para;</a></h3>
+<p>Grid axes are built with <code>np.arange</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">grid_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>   <span class="c1"># endpoint exclusive</span>
+<span class="n">grid_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+<span class="n">GX</span><span class="p">,</span> <span class="n">GY</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">grid_x</span><span class="p">,</span> <span class="n">grid_y</span><span class="p">)</span>
+</code></pre></div>
+<p>The grid is defined in <strong>raw space</strong> (matching the input shapefile CRS). Grid coordinates are then transformed to model space if <code>transform_params</code> is provided.</p>
+<h3 id="coordinate-transformation">Coordinate Transformation<a class="headerlink" href="#coordinate-transformation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">transform_params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">flat_x_model</span><span class="p">,</span> <span class="n">flat_y_model</span> <span class="o">=</span> <span class="n">apply_transform</span><span class="p">(</span><span class="n">flat_x</span><span class="p">,</span> <span class="n">flat_y</span><span class="p">,</span> <span class="n">transform_params</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">flat_x_model</span><span class="p">,</span> <span class="n">flat_y_model</span> <span class="o">=</span> <span class="n">flat_x</span><span class="p">,</span> <span class="n">flat_y</span>
+</code></pre></div>
+<p>Prediction is always performed in model space (the space in which the kriging model was trained).</p>
+<h3 id="drift-reconstruction-logic">Drift Reconstruction Logic<a class="headerlink" href="#drift-reconstruction-logic" title="Permanent link">&para;</a></h3>
+<p>The function reconstructs the drift matrix column-by-column, preserving the exact <code>term_names</code> order from training:</p>
+<table>
+<thead>
+<tr>
+<th>Term type</th>
+<th>Identified by</th>
+<th>Coordinates used</th>
+<th>Function called</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Polynomial</td>
+<td>Name in <code>["linear_x", "linear_y", "quadratic_x", "quadratic_y"]</code></td>
+<td>Model space (<code>flat_x_model</code>, <code>flat_y_model</code>)</td>
+<td><a href="../drift/#compute_drift_at_points"><code>compute_drift_at_points()</code></a></td>
+</tr>
+<tr>
+<td>AEM linesink</td>
+<td>Any other name (group column value)</td>
+<td>Model space if <code>apply_anisotropy=True</code>; raw space if <code>False</code></td>
+<td><a href="../aem_drift/#compute_linesink_drift_matrix"><code>compute_linesink_drift_matrix()</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>For AEM terms, the <code>apply_anisotropy</code> flag is read from <code>config["drift_terms"]["linesink_river"]["apply_anisotropy"]</code>. When <code>False</code>, raw grid coordinates (<code>flat_x</code>, <code>flat_y</code>) are passed to the AEM function instead of model-space coordinates.</p>
+<h3 id="scaling_factors-parameter"><code>scaling_factors</code> Parameter<a class="headerlink" href="#scaling_factors-parameter" title="Permanent link">&para;</a></h3>
+<p>The <code>scaling_factors</code> dict (returned by <a href="../aem_drift/#compute_linesink_drift_matrix"><code>compute_linesink_drift_matrix()</code></a> during training) is passed as <code>input_scaling_factors</code> to each AEM column reconstruction call. This ensures the same normalisation is applied at prediction time as at training time.</p>
+<div class="highlight"><pre><span></span><code><span class="n">col_data</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_linesink_drift_matrix</span><span class="p">(</span>
+    <span class="o">...</span><span class="p">,</span>
+    <span class="n">input_scaling_factors</span><span class="o">=</span><span class="n">scaling_factors</span>  <span class="c1"># from training</span>
+<span class="p">)</span>
+</code></pre></div>
+<h3 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uk_model</code></td>
+<td><code>UniversalKriging</code></td>
+<td>Trained PyKrige model.</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>dict</code></td>
+<td>Full configuration dict containing <code>"grid"</code> sub-dict with <code>x_min</code>, <code>x_max</code>, <code>y_min</code>, <code>y_max</code>, <code>resolution</code>. Also used to read <code>data_sources.linesink_river</code> and <code>drift_terms</code> if AEM terms are present.</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Ordered list of drift term names from training. Must be identical to those used in <code>build_uk_model()</code>.</td>
+</tr>
+<tr>
+<td><code>resc</code></td>
+<td><code>float</code></td>
+<td>Rescaling factor from training. Must be the same value used during training.</td>
+</tr>
+<tr>
+<td><code>transform_params</code></td>
+<td><code>dict</code> or <code>None</code></td>
+<td>Anisotropy transform parameters from <a href="../transform/#get_transform_params"><code>get_transform_params()</code></a>. <code>None</code> if no anisotropy.</td>
+</tr>
+<tr>
+<td><code>scaling_factors</code></td>
+<td><code>dict</code> or <code>None</code></td>
+<td>AEM scaling factors from training. <code>None</code> if no AEM drift terms.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(GX, GY, Z_grid, SS_grid)</code></td>
+<td>4-tuple of <code>np.ndarray</code>. <code>GX</code> and <code>GY</code> are meshgrid arrays in raw space. <code>Z_grid</code> and <code>SS_grid</code> are prediction and variance grids with the same shape as <code>GX</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raises_2">Raises<a class="headerlink" href="#raises_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>config</code> is not a dict.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>config["grid"]</code> is missing or not a dict.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Grid parameters are non-numeric or missing.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>resolution ≤ 0</code>.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>x_min ≥ x_max</code> or <code>y_min ≥ y_max</code>.</td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td>Grid axes are empty after applying resolution.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="output_drift_coefficientsall_h-drift_matrix-term_names"><code>output_drift_coefficients(all_h, drift_matrix, term_names)</code><a class="headerlink" href="#output_drift_coefficientsall_h-drift_matrix-term_names" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>kriging.py</code></a></p>
+<p>Computes OLS (Ordinary Least Squares) estimates of drift coefficients for diagnostic purposes. <strong>Non-intrusive:</strong> results are logged and returned but do not affect the kriging model state.</p>
+<h3 id="algorithm">Algorithm<a class="headerlink" href="#algorithm" title="Permanent link">&para;</a></h3>
+<p>Solves the least-squares problem:</p>
+<div class="highlight"><pre><span></span><code>drift_matrix · coeffs ≈ all_h
+</code></pre></div>
+<p>using <code>np.linalg.lstsq</code>. Each coefficient is logged with its corresponding term name.</p>
+<h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>all_h</code></td>
+<td><code>array-like</code></td>
+<td>Observed values, length <code>N</code>.</td>
+</tr>
+<tr>
+<td><code>drift_matrix</code></td>
+<td><code>np.ndarray</code> or <code>None</code></td>
+<td>Design matrix of shape <code>(N, p)</code>. If <code>None</code> or zero-column, returns <code>None</code>.</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Term names corresponding to columns of <code>drift_matrix</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>np.ndarray</code> or <code>None</code></td>
+<td>Coefficient vector of length <code>p</code> if solvable; <code>None</code> if <code>drift_matrix</code> is <code>None</code>, zero-column, or if <code>lstsq</code> fails.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>This is a diagnostic tool only. The OLS coefficients are not used by the kriging model.</li>
+<li>Useful for sanity-checking that drift terms have physically meaningful magnitudes relative to the observed values.</li>
+<li>Failures (e.g., rank-deficient matrix) are caught and logged as warnings; <code>None</code> is returned.</li>
+</ul>
+<hr />
+<h2 id="cross_validateall_x-all_y-all_h-config-variogram"><code>cross_validate(all_x, all_y, all_h, config, variogram)</code><a class="headerlink" href="#cross_validateall_x-all_y-all_h-config-variogram" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>kriging.py</code></a></p>
+<p>Leave-One-Out Cross Validation (LOOCV) for Universal Kriging. For each point <code>i</code>, trains a model on the remaining <code>n-1</code> points and predicts at point <code>i</code>.</p>
+<h3 id="loocv-algorithm">LOOCV Algorithm<a class="headerlink" href="#loocv-algorithm" title="Permanent link">&para;</a></h3>
+<p>For each fold <code>i = 0 … n-1</code>:</p>
+<ol>
+<li><strong>Exclude</strong> point <code>i</code> from the training set.</li>
+<li><strong>Recompute</strong> <code>resc</code> on the <code>n-1</code> training points via <a href="../drift/#compute_resc"><code>compute_resc()</code></a>.</li>
+<li><strong>Recompute</strong> polynomial drift matrix for the <code>n-1</code> training points via <a href="../drift/#compute_polynomial_drift"><code>compute_polynomial_drift()</code></a>.</li>
+<li><strong>Retrain</strong> a <code>UniversalKriging</code> model on the <code>n-1</code> points via <a href="#build_uk_model"><code>build_uk_model()</code></a>.</li>
+<li><strong>Reconstruct</strong> drift at the held-out point using the same <code>term_names</code> and <code>resc</code> from step 2–3.</li>
+<li><strong>Predict</strong> at the held-out point via <a href="#predict_at_points"><code>predict_at_points()</code></a>.</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> <code>resc</code> is recomputed per fold on the training subset. This is the statistically correct approach — the held-out point must not influence the rescaling factor.</p>
+</blockquote>
+<h3 id="minimum-data-requirement">Minimum Data Requirement<a class="headerlink" href="#minimum-data-requirement" title="Permanent link">&para;</a></h3>
+<p>If <code>n &lt; 3</code>, the function returns immediately with all metrics set to <code>float("nan")</code> and empty arrays. This prevents degenerate kriging systems.</p>
+<h3 id="error-statistics">Error Statistics<a class="headerlink" href="#error-statistics" title="Permanent link">&para;</a></h3>
+<p>Computed over all successfully predicted folds (folds where prediction did not raise an exception):</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Formula</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rmse</code></td>
+<td><code>sqrt(mean((pred - obs)²))</code></td>
+<td>Root Mean Squared Error</td>
+</tr>
+<tr>
+<td><code>mae</code></td>
+<td><code>mean(|pred - obs|)</code></td>
+<td>Mean Absolute Error</td>
+</tr>
+<tr>
+<td><code>q1</code></td>
+<td><code>nanmean(errors / sqrt(variances))</code></td>
+<td>Mean standardised error (should be ≈ 0 for unbiased model)</td>
+</tr>
+<tr>
+<td><code>q2</code></td>
+<td><code>nanvar(errors / sqrt(variances))</code></td>
+<td>Variance of standardised errors (should be ≈ 1 for correct variance model)</td>
+</tr>
+</tbody>
+</table>
+<p>Standardised errors use <code>float("nan")</code> when the predicted variance is <code>≤ 1e-12</code> or <code>NaN</code>.</p>
+<h3 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>all_x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of X coordinates.</td>
+</tr>
+<tr>
+<td><code>all_y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of Y coordinates.</td>
+</tr>
+<tr>
+<td><code>all_h</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of observed values.</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>dict</code></td>
+<td>Configuration dict (same format as main pipeline). Used to determine which drift terms to include in each fold.</td>
+</tr>
+<tr>
+<td><code>variogram</code></td>
+<td><code>object</code></td>
+<td>Variogram object with <code>sill</code>, <code>range_</code>, <code>nugget</code>, <code>model</code> attributes.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h3>
+<p><code>dict</code> with the following keys:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"rmse"</code></td>
+<td><code>float</code></td>
+<td>Root Mean Squared Error (or <code>nan</code> if no valid predictions).</td>
+</tr>
+<tr>
+<td><code>"mae"</code></td>
+<td><code>float</code></td>
+<td>Mean Absolute Error (or <code>nan</code>).</td>
+</tr>
+<tr>
+<td><code>"q1"</code></td>
+<td><code>float</code></td>
+<td>Mean standardised error (or <code>nan</code>).</td>
+</tr>
+<tr>
+<td><code>"q2"</code></td>
+<td><code>float</code></td>
+<td>Variance of standardised errors (or <code>nan</code>).</td>
+</tr>
+<tr>
+<td><code>"predictions"</code></td>
+<td><code>np.ndarray</code></td>
+<td>Per-point predictions, shape <code>(n,)</code>. Failed folds contain <code>nan</code>.</td>
+</tr>
+<tr>
+<td><code>"variances"</code></td>
+<td><code>np.ndarray</code></td>
+<td>Per-point kriging variances, shape <code>(n,)</code>. Failed folds contain <code>nan</code>.</td>
+</tr>
+<tr>
+<td><code>"observations"</code></td>
+<td><code>np.ndarray</code></td>
+<td>Original observed values <code>all_h</code>, shape <code>(n,)</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raises_3">Raises<a class="headerlink" href="#raises_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>all_x</code>, <code>all_y</code>, <code>all_h</code> have different lengths.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">variogram</span><span class="w"> </span><span class="kn">import</span> <span class="n">variogram</span> <span class="k">as</span> <span class="n">Variogram</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kriging</span><span class="w"> </span><span class="kn">import</span> <span class="n">cross_validate</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">43</span><span class="p">)</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">44</span><span class="p">)</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;variogram&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;model&quot;</span><span class="p">:</span> <span class="s2">&quot;spherical&quot;</span><span class="p">,</span> <span class="s2">&quot;sill&quot;</span><span class="p">:</span> <span class="mf">100.0</span><span class="p">,</span> <span class="s2">&quot;range&quot;</span><span class="p">:</span> <span class="mf">60.0</span><span class="p">,</span> <span class="s2">&quot;nugget&quot;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">},</span>
+    <span class="s2">&quot;drift_terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;linear_x&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;linear_y&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                    <span class="s2">&quot;quadratic_x&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;quadratic_y&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">},</span>
+<span class="p">}</span>
+<span class="n">vario</span> <span class="o">=</span> <span class="n">Variogram</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">vario</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RMSE: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;rmse&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MAE:  </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;mae&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q1:   </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;q1&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># ≈ 0 → unbiased</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Q2:   </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;q2&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>   <span class="c1"># ≈ 1 → correct variance</span>
+</code></pre></div>
+<hr />
+<h2 id="module-exports">Module Exports<a class="headerlink" href="#module-exports" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;build_uk_model&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;predict_at_points&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;predict_on_grid&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;output_drift_coefficients&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;cross_validate&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<hr />
+<h2 id="key-contracts-summary">Key Contracts Summary<a class="headerlink" href="#key-contracts-summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Contract</th>
+<th>Where Enforced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>term_names</code> order must be identical between training and prediction</td>
+<td><a href="#predict_at_points"><code>predict_at_points()</code></a> column count check</td>
+</tr>
+<tr>
+<td>AEM <code>scaling_factors</code> from training must be passed to <code>predict_on_grid()</code></td>
+<td><a href="#predict_on_grid"><code>predict_on_grid()</code></a> <code>scaling_factors</code> parameter</td>
+</tr>
+<tr>
+<td>Variogram must have <code>anisotropy_enabled=False</code> when coordinates are pre-transformed</td>
+<td><a href="#build_uk_model"><code>build_uk_model()</code></a> anisotropy block</td>
+</tr>
+<tr>
+<td><code>resc</code> must be the same value at training and prediction</td>
+<td>Caller responsibility; enforced by convention</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../workflow/"><code>docs/workflow.md</code></a> — Full pipeline execution order showing where each function is called.</li>
+<li><a href="../drift/"><code>docs/api/drift.md</code></a> — Polynomial drift computation functions consumed by this module.</li>
+<li><a href="../aem_drift/"><code>docs/api/aem_drift.md</code></a> — AEM drift matrix construction consumed by <code>predict_on_grid()</code>.</li>
+<li><a href="../transform/"><code>docs/api/transform.md</code></a> — Coordinate transformation applied before training and prediction.</li>
+<li><a href="../../theory/anisotropy/"><code>docs/theory/anisotropy.md</code></a> — Why PyKrige anisotropy is disabled after pre-transformation.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

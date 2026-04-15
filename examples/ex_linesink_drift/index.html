@@ -1,0 +1,2000 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../ex_linear_drift/">
+      
+      
+        <link rel="next" href="../ex_anisotropy/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Linesink Drift - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-43-incorporating-river-effects-with-aem-linesink-drift" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Linesink Drift
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../theory/variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/aem-linesink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/variogram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#river-geometry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        River geometry
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configjson-equivalent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        config.json equivalent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How It Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-create-the-synthetic-river-shapefile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Create the synthetic river shapefile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-coordinate-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Coordinate transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-aem-drift-matrix-training" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — AEM drift matrix (training)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-polynomial-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Polynomial drift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-combined-drift-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Combined drift matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-build-uk-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Build UK model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-grid-prediction-reusing-scaling-factors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Grid prediction (reusing scaling factors)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-aem-potential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The AEM Potential
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-factor-persistence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Factor Persistence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-figure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Figure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-43-incorporating-river-effects-with-aem-linesink-drift">Example 4.3 — Incorporating River Effects with AEM Linesink Drift<a class="headerlink" href="#example-43-incorporating-river-effects-with-aem-linesink-drift" title="Permanent link">&para;</a></h1>
+<p><strong>Script:</strong> <a href="../ex_linesink_drift.py"><code>docs/examples/ex_linesink_drift.py</code></a><br />
+<strong>Output:</strong> <a href="../output/ex_linesink_drift.svg"><code>docs/examples/output/ex_linesink_drift.svg</code></a></p>
+<hr />
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>This example demonstrates <strong>Universal Kriging with AEM (Analytic Element Method)
+linesink drift</strong> to model the hydraulic influence of rivers on groundwater levels.
+Rivers act as boundary conditions in groundwater systems — water levels near a
+gaining river are elevated relative to the regional trend, while levels near a
+losing river may be depressed. The AEM linesink drift term captures this spatial
+pattern as a deterministic component of the kriging model.</p>
+<p>The example is <strong>fully self-contained</strong>: the synthetic river shapefile is created
+programmatically inside the script, so no external data files are required.</p>
+<hr />
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training points</td>
+<td>25 (synthetic, seed=42)</td>
+</tr>
+<tr>
+<td>True field</td>
+<td>Water levels influenced by AEM potential of RiverA + noise</td>
+</tr>
+<tr>
+<td>Variogram model</td>
+<td>Spherical</td>
+</tr>
+<tr>
+<td>Sill</td>
+<td>2.0</td>
+</tr>
+<tr>
+<td>Range</td>
+<td>40 (same units as coordinates)</td>
+</tr>
+<tr>
+<td>Nugget</td>
+<td>0.1</td>
+</tr>
+<tr>
+<td>Anisotropy</td>
+<td>Enabled — angle=60° azimuth (CW from North, N60E direction), ratio=0.7</td>
+</tr>
+<tr>
+<td>Drift terms</td>
+<td><code>linear_x</code>, <code>linear_y</code> (polynomial) + <code>RiverA</code>, <code>RiverB</code> (AEM)</td>
+</tr>
+<tr>
+<td>Prediction grid</td>
+<td>50 × 50 (2 500 nodes)</td>
+</tr>
+<tr>
+<td>Coordinate domain</td>
+<td>[0, 100] × [0, 100]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="river-geometry">River geometry<a class="headerlink" href="#river-geometry" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Segments</th>
+<th>Resistance</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RiverA</code></td>
+<td>2 (connected)</td>
+<td>1.0</td>
+<td>Main channel, east-west</td>
+</tr>
+<tr>
+<td><code>RiverB</code></td>
+<td>1</td>
+<td>0.6</td>
+<td>Tributary, NW–SE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configjson-equivalent"><code>config.json</code> equivalent<a class="headerlink" href="#configjson-equivalent" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;data_sources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;observation_wells&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;path/to/wells.shp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;water_level_col&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;wl_m&quot;</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">&quot;linesink_river&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;path/to/river.shp&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;group_column&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;group&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;strength_col&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;resistance&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;rescaling_method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;adaptive&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;variogram&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spherical&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;sill&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;range&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;nugget&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;anisotropy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;enabled&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;ratio&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;angle_major&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;drift_terms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;linear_x&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;linear_y&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;linesink_river&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;apply_anisotropy&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">&quot;grid&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;x_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;x_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;y_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;y_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;resolution&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-create-the-synthetic-river-shapefile">Step 1 — Create the synthetic river shapefile<a class="headerlink" href="#step-1-create-the-synthetic-river-shapefile" title="Permanent link">&para;</a></h3>
+<p>The script builds a <code>GeoDataFrame</code> with three <code>LineString</code> geometries and writes
+it to a temporary shapefile using <code>geopandas</code>. This mirrors exactly what the
+production pipeline reads from <code>data_sources.linesink_river.path</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="n">river_segments</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span><span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="n">LineString</span><span class="p">([(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">60</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">55</span><span class="p">)]),</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;RiverA&quot;</span><span class="p">,</span> <span class="s2">&quot;resistance&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="n">LineString</span><span class="p">([(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">55</span><span class="p">),</span> <span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]),</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;RiverA&quot;</span><span class="p">,</span> <span class="s2">&quot;resistance&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;geometry&quot;</span><span class="p">:</span> <span class="n">LineString</span><span class="p">([(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">80</span><span class="p">),</span> <span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">60</span><span class="p">)]),</span> <span class="s2">&quot;group&quot;</span><span class="p">:</span> <span class="s2">&quot;RiverB&quot;</span><span class="p">,</span> <span class="s2">&quot;resistance&quot;</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">},</span>
+<span class="p">]</span>
+<span class="n">river_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">river_segments</span><span class="p">,</span> <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:32632&quot;</span><span class="p">)</span>
+<span class="n">river_gdf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">river_shp_path</span><span class="p">)</span>
+</code></pre></div>
+<p>Segments sharing the same <code>group</code> value are <strong>summed</strong> into a single drift column.
+Here <code>RiverA</code> contributes one column (sum of its two segments) and <code>RiverB</code>
+contributes a second column.</p>
+<h3 id="step-2-coordinate-transformation">Step 2 — Coordinate transformation<a class="headerlink" href="#step-2-coordinate-transformation" title="Permanent link">&para;</a></h3>
+<p>Because anisotropy is enabled, all coordinates are transformed to <strong>model space</strong>
+before kriging:</p>
+<div class="highlight"><pre><span></span><code><span class="n">transform_params</span> <span class="o">=</span> <span class="n">get_transform_params</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">angle_deg</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span> <span class="n">ratio</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span> <span class="o">=</span> <span class="n">apply_transform</span><span class="p">(</span><span class="n">x_obs</span><span class="p">,</span> <span class="n">y_obs</span><span class="p">,</span> <span class="n">transform_params</span><span class="p">)</span>
+</code></pre></div>
+<p>The transformation:
+1. Translates to the data centroid
+2. Converts azimuth 60° to arithmetic 30° internally (<code>alpha = 90 - azimuth</code>)
+3. Rotates using the arithmetic angle so the major correlation axis
+   aligns with the X-axis in model space
+4. Scales the Y-axis by <code>1/0.7 ≈ 1.43</code> to make the field isotropic</p>
+<blockquote>
+<p><strong>Angle convention:</strong> <code>angle_major=60°</code> is an azimuth (clockwise from North),
+meaning the major axis of spatial correlation points in the <strong>N60E direction</strong>.
+This matches the KT3D SETROT convention. Internally converted to 30° arithmetic.</p>
+</blockquote>
+<h3 id="step-3-aem-drift-matrix-training">Step 3 — AEM drift matrix (training)<a class="headerlink" href="#step-3-aem-drift-matrix-training" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_drift_matrix()</code></a> is called with
+<code>input_scaling_factors=None</code> (training phase):</p>
+<div class="highlight"><pre><span></span><code><span class="n">aem_matrix_train</span><span class="p">,</span> <span class="n">aem_names</span><span class="p">,</span> <span class="n">trained_scaling_factors</span> <span class="o">=</span> <span class="n">compute_linesink_drift_matrix</span><span class="p">(</span>
+    <span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span><span class="p">,</span>
+    <span class="n">river_gdf</span><span class="p">,</span>
+    <span class="n">group_col</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span>
+    <span class="n">transform_params</span><span class="o">=</span><span class="n">transform_params</span><span class="p">,</span>
+    <span class="n">sill</span><span class="o">=</span><span class="n">SILL</span><span class="p">,</span>
+    <span class="n">strength_col</span><span class="o">=</span><span class="s2">&quot;resistance&quot;</span><span class="p">,</span>
+    <span class="n">rescaling_method</span><span class="o">=</span><span class="s2">&quot;adaptive&quot;</span><span class="p">,</span>
+    <span class="n">apply_anisotropy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">input_scaling_factors</span><span class="o">=</span><span class="kc">None</span>   <span class="c1"># training: compute factors from data</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Because <code>apply_anisotropy=True</code>, the linesink segment endpoints are also
+transformed to model space before the AEM potential is evaluated. This ensures
+the river geometry is consistent with the anisotropically-transformed observation
+coordinates.</p>
+<p>The function returns:
+- <code>aem_matrix_train</code> — shape <code>(N_obs, N_groups)</code>, one column per river group
+- <code>aem_names</code> — <code>['RiverA', 'RiverB']</code>
+- <code>trained_scaling_factors</code> — <code>{'RiverA': 3.93e-02, 'RiverB': 1.77e-01}</code></p>
+<h3 id="step-4-polynomial-drift">Step 4 — Polynomial drift<a class="headerlink" href="#step-4-polynomial-drift" title="Permanent link">&para;</a></h3>
+<p>Linear polynomial terms are computed in model space:</p>
+<div class="highlight"><pre><span></span><code><span class="n">resc</span> <span class="o">=</span> <span class="n">compute_resc</span><span class="p">(</span><span class="n">SILL</span><span class="p">,</span> <span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span><span class="p">,</span> <span class="n">RANGE</span><span class="p">)</span>
+<span class="n">poly_matrix_train</span><span class="p">,</span> <span class="n">poly_names</span> <span class="o">=</span> <span class="n">compute_polynomial_drift</span><span class="p">(</span>
+    <span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;drift_terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;linear_x&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;linear_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+    <span class="n">resc</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><code>resc</code> normalises the polynomial columns to be numerically comparable to the
+variogram sill, preventing ill-conditioning of the kriging matrix.</p>
+<h3 id="step-5-combined-drift-matrix">Step 5 — Combined drift matrix<a class="headerlink" href="#step-5-combined-drift-matrix" title="Permanent link">&para;</a></h3>
+<p>The polynomial and AEM columns are concatenated horizontally:</p>
+<div class="highlight"><pre><span></span><code><span class="n">combined_matrix_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">poly_matrix_train</span><span class="p">,</span> <span class="n">aem_matrix_train</span><span class="p">])</span>
+<span class="c1"># shape: (25, 4)  →  columns: [linear_x, linear_y, RiverA, RiverB]</span>
+</code></pre></div>
+<p>The <strong>column order</strong> is the <code>term_names</code> contract: <code>[linear_x, linear_y, RiverA, RiverB]</code>.
+This order must be reproduced identically at prediction time.</p>
+<h3 id="step-6-build-uk-model">Step 6 — Build UK model<a class="headerlink" href="#step-6-build-uk-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">uk_model</span> <span class="o">=</span> <span class="n">build_uk_model</span><span class="p">(</span><span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span><span class="p">,</span> <span class="n">z_obs</span><span class="p">,</span> <span class="n">combined_matrix_train</span><span class="p">,</span> <span class="n">vario</span><span class="p">)</span>
+</code></pre></div>
+<p><a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/kriging.py"><code>build_uk_model()</code></a> passes the drift columns to PyKrige as
+<code>drift_terms=["specified"]</code> with <code>specified_drift</code> containing each column as a
+1-D array. PyKrige solves the Universal Kriging system and stores the drift
+coefficients internally.</p>
+<h3 id="step-7-grid-prediction-reusing-scaling-factors">Step 7 — Grid prediction (reusing scaling factors)<a class="headerlink" href="#step-7-grid-prediction-reusing-scaling-factors" title="Permanent link">&para;</a></h3>
+<p>At prediction time, the <strong>same</strong> <code>trained_scaling_factors</code> must be passed back
+to <code>compute_linesink_drift_matrix()</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">aem_grid</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_linesink_drift_matrix</span><span class="p">(</span>
+    <span class="n">gx_model</span><span class="p">,</span> <span class="n">gy_model</span><span class="p">,</span>
+    <span class="n">river_gdf</span><span class="p">,</span>
+    <span class="n">group_col</span><span class="o">=</span><span class="s2">&quot;group&quot;</span><span class="p">,</span>
+    <span class="n">transform_params</span><span class="o">=</span><span class="n">transform_params</span><span class="p">,</span>
+    <span class="n">sill</span><span class="o">=</span><span class="n">SILL</span><span class="p">,</span>
+    <span class="n">strength_col</span><span class="o">=</span><span class="s2">&quot;resistance&quot;</span><span class="p">,</span>
+    <span class="n">rescaling_method</span><span class="o">=</span><span class="s2">&quot;adaptive&quot;</span><span class="p">,</span>
+    <span class="n">apply_anisotropy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">input_scaling_factors</span><span class="o">=</span><span class="n">trained_scaling_factors</span>   <span class="c1"># &lt;- critical</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>If <code>input_scaling_factors</code> is omitted, the function recomputes scaling from the
+grid points' potential values, which will differ from the training-phase scaling.
+The drift coefficients solved during training would then be applied to
+differently-scaled columns, producing incorrect predictions.</p>
+<hr />
+<h2 id="the-aem-potential">The AEM Potential<a class="headerlink" href="#the-aem-potential" title="Permanent link">&para;</a></h2>
+<p>The potential at a point <code>(x, y)</code> due to a single linesink segment from
+<code>(x1, y1)</code> to <code>(x2, y2)</code> with strength <code>σ</code> and length <code>L</code> is:</p>
+<div class="highlight"><pre><span></span><code>φ = (σ · L / 4π) · Re[(ZZ+1)ln(ZZ+1) − (ZZ−1)ln(ZZ−1) + 2ln(L_vec/2) − 2]
+</code></pre></div>
+<p>where <code>ZZ = (z − mid) / half_L_vec</code> maps the physical plane to the normalised
+segment coordinate <code>[-1, 1]</code>, and <code>z = x + iy</code> is the complex coordinate.</p>
+<p>The potential is highest near the segment and decays with distance. Multiple
+segments in the same group are <strong>summed</strong> before scaling.</p>
+<hr />
+<h2 id="scaling-factor-persistence">Scaling Factor Persistence<a class="headerlink" href="#scaling-factor-persistence" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th><code>input_scaling_factors</code></th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Training</td>
+<td><code>None</code></td>
+<td>Factors computed as <code>sill / max(|φ|)</code> for each group</td>
+</tr>
+<tr>
+<td>Prediction</td>
+<td><code>trained_scaling_factors</code></td>
+<td>Stored factors reused exactly</td>
+</tr>
+<tr>
+<td>Prediction (wrong)</td>
+<td><code>None</code></td>
+<td>New factors computed from grid — <strong>incorrect</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The adaptive scaling formula is:</p>
+<div class="highlight"><pre><span></span><code>rescr = sill / max(|φ|)
+</code></pre></div>
+<p>This normalises each group's potential so its maximum value equals the variogram
+sill, making the AEM drift columns numerically comparable to the polynomial drift
+columns and to the variogram covariance values.</p>
+<hr />
+<h2 id="output-figure">Output Figure<a class="headerlink" href="#output-figure" title="Permanent link">&para;</a></h2>
+<p>The SVG figure contains eight panels:</p>
+<table>
+<thead>
+<tr>
+<th>Panel</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Top-left</td>
+<td>Observation points coloured by water level, with river geometry</td>
+</tr>
+<tr>
+<td>Top-centre-left</td>
+<td>Raw (unscaled) AEM potential field for RiverA</td>
+</tr>
+<tr>
+<td>Top-centre-right</td>
+<td>Scaled AEM potential field for RiverA (after <code>× 3.93e-02</code>)</td>
+</tr>
+<tr>
+<td>Top-right</td>
+<td>Scaled AEM potential field for RiverB (after <code>× 1.77e-01</code>)</td>
+</tr>
+<tr>
+<td>Bottom-left</td>
+<td>Combined drift matrix heatmap (all 4 columns, all 25 training points)</td>
+</tr>
+<tr>
+<td>Bottom-centre-left</td>
+<td>UK prediction surface with observation points and river overlay</td>
+</tr>
+<tr>
+<td>Bottom-centre-right</td>
+<td>Kriging variance (lower near data, higher in gaps)</td>
+</tr>
+<tr>
+<td>Bottom-right</td>
+<td>Scaling factor persistence explanation and verification result</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="AEM Linesink Drift Example" src="../output/ex_linesink_drift.svg" /></p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>River geometry is self-contained</strong> — the shapefile is created by the script;
+   no external data files are needed.</p>
+</li>
+<li>
+<p><strong><code>apply_anisotropy=True</code></strong> means the linesink segment endpoints are
+   transformed to model space before AEM potential evaluation. This keeps the
+   river geometry consistent with the anisotropically-transformed observation
+   coordinates.</p>
+</li>
+<li>
+<p><strong>Scaling factors are a training artifact</strong> — they must be stored after
+   training and passed to every subsequent prediction call via
+   <code>input_scaling_factors</code>. The script verifies this explicitly and prints
+   <code>PASS</code> when the factors match.</p>
+</li>
+<li>
+<p><strong>Column order is a contract</strong> — the combined drift matrix always follows
+   <code>[linear_x, linear_y, &lt;AEM groups in group_col order&gt;]</code>. Changing this order
+   between training and prediction will corrupt the kriging solution.</p>
+</li>
+<li>
+<p><strong>Adaptive vs fixed rescaling</strong> — <code>rescaling_method='adaptive'</code> (default)
+   normalises each group's potential to the variogram sill. <code>'fixed'</code> uses the
+   KT3D constant <code>sill / 0.0001</code>, which can produce very large drift values in
+   metric coordinate systems.</p>
+</li>
+</ol>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../theory/aem-linesink/"><code>docs/theory/aem-linesink.md</code></a> — AEM theory and
+  the complex potential formula</li>
+<li><a href="../../api/aem_drift/"><code>docs/api/aem_drift.md</code></a> — Full API reference for
+  <code>compute_linesink_drift_matrix()</code></li>
+<li><a href="../ex_linear_drift/"><code>docs/examples/ex_linear_drift.md</code></a> — Polynomial drift
+  example (simpler starting point)</li>
+<li><a href="../ex_anisotropy/"><code>docs/examples/ex_anisotropy.md</code></a> — Anisotropy handling
+  example</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

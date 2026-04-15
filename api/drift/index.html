@@ -1,0 +1,2252 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../transform/">
+      
+      
+        <link rel="next" href="../aem_drift/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>drift.py - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#api-reference-driftpy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              drift.py
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../theory/variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../theory/aem-linesink/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../variogram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#compute_resccovmax-x-y-variogram_range" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute_resc(covmax, x, y, variogram_range)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="compute_resc(covmax, x, y, variogram_range)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formula
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safety-floor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safety Floor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute_polynomial_driftx-y-config-resc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute_polynomial_drift(x, y, config, resc)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="compute_polynomial_drift(x, y, config, resc)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#term-formulas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Term Formulas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#term-ordering-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Term Ordering Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compute_drift_at_pointsx-y-term_names-resc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        compute_drift_at_points(x, y, term_names, resc)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="compute_drift_at_points(x, y, term_names, resc)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#parameters_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#critical-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drift_diagnosticsdrift_matrix-term_names-variogramnone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        drift_diagnostics(drift_matrix, term_names, variogram=None)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="drift_diagnostics(drift_matrix, term_names, variogram=None)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Checks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#warning-threshold" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Warning Threshold
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verify_drift_physicsdrift_matrix-term_names-all_x-all_y-resc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verify_drift_physics(drift_matrix, term_names, all_x, all_y, resc)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="verify_drift_physics(drift_matrix, term_names, all_x, all_y, resc)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pass-criteria" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pass Criteria
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#result-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parameters_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returns_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#raises" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raises
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#internal-helpers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Helpers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-exports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Exports
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linesink_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="api-reference-driftpy">API Reference: <code>drift.py</code><a class="headerlink" href="#api-reference-driftpy" title="Permanent link">&para;</a></h1>
+<p>Provides polynomial drift term computation, rescaling, diagnostics, and physics verification for Universal Kriging.</p>
+<hr />
+<h2 id="compute_resccovmax-x-y-variogram_range"><code>compute_resc(covmax, x, y, variogram_range)</code><a class="headerlink" href="#compute_resccovmax-x-y-variogram_range" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>drift.py</code></a></p>
+<p>Computes the rescaling factor (<code>resc</code>) applied to all polynomial drift columns. The factor normalises drift magnitudes relative to the variogram sill and the spatial extent of the data, ensuring numerical stability of the kriging system matrix.</p>
+<h3 id="formula">Formula<a class="headerlink" href="#formula" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>radsqd     = max( (x - x̄)² + (y - ȳ)² )          # max squared distance from centroid
+safe_radsqd = max(radsqd, variogram_range²)          # safety floor
+resc        = sqrt(covmax / safe_radsqd)
+</code></pre></div>
+<p>If <code>safe_radsqd == 0</code> (degenerate single-point dataset), <code>resc</code> is set to <code>1.0</code>.</p>
+<h3 id="safety-floor">Safety Floor<a class="headerlink" href="#safety-floor" title="Permanent link">&para;</a></h3>
+<p>The floor <code>max(radsqd, variogram_range²)</code> prevents <code>resc</code> from becoming excessively large when the data domain is small relative to the correlation range. Without it, drift columns would dwarf the variogram covariance terms and destabilise the kriging matrix.</p>
+<h3 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>covmax</code></td>
+<td><code>float</code></td>
+<td>Variogram sill (maximum covariance).</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of X coordinates (model space).</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of Y coordinates (model space).</td>
+</tr>
+<tr>
+<td><code>variogram_range</code></td>
+<td><code>float</code></td>
+<td>Variogram range; used as the safety floor for <code>radsqd</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>float</code></td>
+<td>Rescaling factor <code>resc ≥ 0</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drift</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_resc</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">])</span>
+<span class="n">resc</span> <span class="o">=</span> <span class="n">compute_resc</span><span class="p">(</span><span class="n">covmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">variogram_range</span><span class="o">=</span><span class="mf">50.0</span><span class="p">)</span>
+<span class="c1"># radsqd = 10000, safe_radsqd = max(10000, 2500) = 10000</span>
+<span class="c1"># resc = sqrt(1.0 / 10000) = 0.01</span>
+</code></pre></div>
+<hr />
+<h2 id="compute_polynomial_driftx-y-config-resc"><code>compute_polynomial_drift(x, y, config, resc)</code><a class="headerlink" href="#compute_polynomial_driftx-y-config-resc" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>drift.py</code></a></p>
+<p>Computes the polynomial drift matrix for a set of points. Supported terms are <code>linear_x</code>, <code>linear_y</code>, <code>quadratic_x</code>, and <code>quadratic_y</code>.</p>
+<h3 id="term-formulas">Term Formulas<a class="headerlink" href="#term-formulas" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Column Formula</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>linear_x</code></td>
+<td><code>resc * x</code></td>
+</tr>
+<tr>
+<td><code>linear_y</code></td>
+<td><code>resc * y</code></td>
+</tr>
+<tr>
+<td><code>quadratic_x</code></td>
+<td><code>resc * x²</code></td>
+</tr>
+<tr>
+<td><code>quadratic_y</code></td>
+<td><code>resc * y²</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="term-ordering-contract">Term Ordering Contract<a class="headerlink" href="#term-ordering-contract" title="Permanent link">&para;</a></h3>
+<p><strong>The output column order is always <code>[linear_x, linear_y, quadratic_x, quadratic_y]</code></strong>, regardless of the order keys appear in the config dict. This canonical order is enforced by iterating over a fixed sequence:</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;linear_x&quot;</span><span class="p">,</span> <span class="s2">&quot;linear_y&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic_x&quot;</span><span class="p">,</span> <span class="s2">&quot;quadratic_y&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">drift_cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">term</span><span class="p">):</span>
+        <span class="o">...</span>
+</code></pre></div>
+<p>This contract must be preserved between training and prediction. Any deviation will cause a drift column count mismatch error in <a href="../kriging/#predict_at_points"><code>predict_at_points()</code></a>.</p>
+<h3 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of X coordinates.</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of Y coordinates.</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>dict</code> or <code>list[str]</code></td>
+<td>If <code>dict</code>, reads <code>config["drift_terms"]</code> for enabled boolean flags. If <code>list</code>, treats the list as the ordered term names to compute directly (used by <a href="#compute_drift_at_points"><code>compute_drift_at_points()</code></a>).</td>
+</tr>
+<tr>
+<td><code>resc</code></td>
+<td><code>float</code></td>
+<td>Rescaling factor from <a href="#compute_resc"><code>compute_resc()</code></a>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(np.ndarray, list[str])</code></td>
+<td>Tuple of <code>(drift_matrix, term_names)</code>. <code>drift_matrix</code> has shape <code>(N, n_terms)</code>. <code>term_names</code> is the ordered list of column identifiers. If no terms are enabled, returns <code>(zeros((N, 0)), [])</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drift</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_resc</span><span class="p">,</span> <span class="n">compute_polynomial_drift</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;drift_terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;linear_x&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;linear_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}}</span>
+<span class="n">resc</span> <span class="o">=</span> <span class="n">compute_resc</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+
+<span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span> <span class="o">=</span> <span class="n">compute_polynomial_drift</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">resc</span><span class="p">)</span>
+<span class="c1"># term_names == [&quot;linear_x&quot;, &quot;linear_y&quot;]</span>
+<span class="c1"># drift_matrix.shape == (20, 2)</span>
+</code></pre></div>
+<hr />
+<h2 id="compute_drift_at_pointsx-y-term_names-resc"><code>compute_drift_at_points(x, y, term_names, resc)</code><a class="headerlink" href="#compute_drift_at_pointsx-y-term_names-resc" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>drift.py</code></a></p>
+<p>Reconstructs polynomial drift columns at prediction-time points (e.g., grid nodes) using the same <code>term_names</code> and <code>resc</code> that were used during training. This is the prediction-phase counterpart to <a href="#compute_polynomial_drift"><code>compute_polynomial_drift()</code></a>.</p>
+<p>Internally delegates to <a href="#compute_polynomial_drift"><code>compute_polynomial_drift()</code></a> by passing <code>term_names</code> as the <code>config</code> argument (list form).</p>
+<h3 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of X coordinates at prediction points (model space).</td>
+</tr>
+<tr>
+<td><code>y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of Y coordinates at prediction points (model space).</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Ordered list of drift term names from training (e.g., <code>["linear_x", "quadratic_y"]</code>). Must match the training order exactly.</td>
+</tr>
+<tr>
+<td><code>resc</code></td>
+<td><code>float</code></td>
+<td>Rescaling factor from training. Must be the same value used during training.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>(np.ndarray, list[str])</code></td>
+<td>Tuple of <code>(drift_matrix, computed_names)</code>. <code>drift_matrix</code> has shape <code>(N_points, N_terms)</code>. <code>computed_names</code> mirrors <code>term_names</code>.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="critical-contract">Critical Contract<a class="headerlink" href="#critical-contract" title="Permanent link">&para;</a></h3>
+<p><code>term_names</code> and <code>resc</code> must be identical to those used during training. Passing different values will produce a drift matrix that is inconsistent with the trained kriging model, leading to incorrect predictions or a column count mismatch error.</p>
+<hr />
+<h2 id="drift_diagnosticsdrift_matrix-term_names-variogramnone"><code>drift_diagnostics(drift_matrix, term_names, variogram=None)</code><a class="headerlink" href="#drift_diagnosticsdrift_matrix-term_names-variogramnone" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>drift.py</code></a></p>
+<p>Performs magnitude diagnostics on the drift matrix and logs results. Does not modify any state; output is informational only.</p>
+<h3 id="what-it-checks">What It Checks<a class="headerlink" href="#what-it-checks" title="Permanent link">&para;</a></h3>
+<p><strong>Drift Magnitude Check:</strong> For each drift column, computes:</p>
+<div class="highlight"><pre><span></span><code>ratio = max(|drift_column|) / sill
+</code></pre></div>
+<ul>
+<li>Logs <code>ratio</code> for each term.</li>
+<li>Emits a <code>WARNING</code> log if <code>ratio &gt; 1000</code>, indicating that drift terms are very large relative to the variogram sill. This can cause numerical instability in the kriging system.</li>
+</ul>
+<p>If <code>variogram</code> is <code>None</code>, has no <code>sill</code> attribute, or <code>sill ≤ 0</code>, the magnitude check is skipped.</p>
+<h3 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>drift_matrix</code></td>
+<td><code>np.ndarray</code></td>
+<td>Drift matrix of shape <code>(N, n_terms)</code>.</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Ordered list of term names corresponding to columns.</td>
+</tr>
+<tr>
+<td><code>variogram</code></td>
+<td><code>Any</code>, optional</td>
+<td>Variogram object with a <code>sill</code> attribute. If <code>None</code>, magnitude check is skipped.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h3>
+<p><code>None</code>. All output is via the <code>logging</code> module at <code>INFO</code> or <code>WARNING</code> level.</p>
+<h3 id="warning-threshold">Warning Threshold<a class="headerlink" href="#warning-threshold" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>Log Level</th>
+<th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ratio &gt; 1000</code></td>
+<td><code>WARNING</code></td>
+<td><code>"Drift Magnitude Check WARNING: Term '...' ratio (...) to sill is very high (&gt;1000)."</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="verify_drift_physicsdrift_matrix-term_names-all_x-all_y-resc"><code>verify_drift_physics(drift_matrix, term_names, all_x, all_y, resc)</code><a class="headerlink" href="#verify_drift_physicsdrift_matrix-term_names-all_x-all_y-resc" title="Permanent link">&para;</a></h2>
+<p><strong>Source:</strong> <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>drift.py</code></a></p>
+<p>Mathematically verifies that each drift column follows its theoretical equation. Returns a per-term PASS/FAIL/SKIP/ERROR result dict. This is a post-hoc sanity check, not a filter — it does not modify the drift matrix.</p>
+<h3 id="pass-criteria">Pass Criteria<a class="headerlink" href="#pass-criteria" title="Permanent link">&para;</a></h3>
+<p><strong>Linear terms</strong> (<code>linear_x</code>, <code>linear_y</code>): Fits a degree-1 polynomial to <code>(indep_var, drift_col)</code> and checks:
+1. R² &gt; 0.999 (the column is a perfect linear function of the coordinate)
+2. <code>|slope - resc| / resc &lt; 0.01</code> (slope is within 1% of <code>resc</code>)</p>
+<p><strong>Quadratic terms</strong> (<code>quadratic_x</code>, <code>quadratic_y</code>): Fits a degree-2 polynomial and checks:
+1. R² &gt; 0.999 (the column is a perfect quadratic function of the coordinate)
+2. <code>|A - resc| / resc &lt; 0.01</code> (leading coefficient within 1% of <code>resc</code>)
+3. <em>(Warning only, not a failure)</em> Vertex of the parabola is inside the data domain — this indicates a U-turn in the trend.</p>
+<p><strong>AEM or unknown terms</strong>: Any term name that does not contain <code>_x</code> or <code>_y</code> returns <code>"SKIP"</code>.</p>
+<h3 id="result-values">Result Values<a class="headerlink" href="#result-values" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"PASS"</code></td>
+<td>All checks passed for this term.</td>
+</tr>
+<tr>
+<td><code>"FAIL"</code></td>
+<td>One or more checks failed (R² too low or slope/curvature error too large).</td>
+</tr>
+<tr>
+<td><code>"SKIP"</code></td>
+<td>Term name does not match a known polynomial pattern (e.g., AEM group names).</td>
+</tr>
+<tr>
+<td><code>"ERROR"</code></td>
+<td>An exception occurred during verification (e.g., degenerate input).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>drift_matrix</code></td>
+<td><code>np.ndarray</code></td>
+<td>Drift matrix of shape <code>(N, n_terms)</code>.</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Ordered list of term names corresponding to columns.</td>
+</tr>
+<tr>
+<td><code>all_x</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of X coordinates used to compute the drift.</td>
+</tr>
+<tr>
+<td><code>all_y</code></td>
+<td><code>np.ndarray</code></td>
+<td>1-D array of Y coordinates used to compute the drift.</td>
+</tr>
+<tr>
+<td><code>resc</code></td>
+<td><code>float</code></td>
+<td>Rescaling factor used when computing the drift.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dict[str, str]</code></td>
+<td>Mapping of <code>term_name → result_string</code>. Empty dict if <code>drift_matrix</code> is <code>None</code> or empty.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="raises">Raises<a class="headerlink" href="#raises" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Exception</th>
+<th>Condition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>len(term_names) != drift_matrix.shape[1]</code></td>
+</tr>
+<tr>
+<td><code>ValueError</code></td>
+<td><code>all_x.size != drift_matrix.shape[0]</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">drift</span><span class="w"> </span><span class="kn">import</span> <span class="n">compute_resc</span><span class="p">,</span> <span class="n">compute_polynomial_drift</span><span class="p">,</span> <span class="n">verify_drift_physics</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;drift_terms&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;linear_x&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s2">&quot;quadratic_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}}</span>
+<span class="n">resc</span> <span class="o">=</span> <span class="n">compute_resc</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">50.0</span><span class="p">)</span>
+<span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span> <span class="o">=</span> <span class="n">compute_polynomial_drift</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">resc</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">verify_drift_physics</span><span class="p">(</span><span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">resc</span><span class="p">)</span>
+<span class="c1"># results == {&quot;linear_x&quot;: &quot;PASS&quot;, &quot;quadratic_y&quot;: &quot;PASS&quot;}</span>
+</code></pre></div>
+<hr />
+<h2 id="internal-helpers">Internal Helpers<a class="headerlink" href="#internal-helpers" title="Permanent link">&para;</a></h2>
+<p>These functions are not exported in <code>__all__</code> but are called by <a href="#verify_drift_physics"><code>verify_drift_physics()</code></a>:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>_verify_linear_term()</code></a></td>
+<td>R² and slope check for linear drift columns.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/drift.py"><code>_verify_quadratic_term()</code></a></td>
+<td>R² and curvature check for quadratic drift columns; also warns if vertex is inside the data domain.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="module-exports">Module Exports<a class="headerlink" href="#module-exports" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;compute_resc&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compute_polynomial_drift&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;compute_drift_at_points&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;drift_diagnostics&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;verify_drift_physics&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../theory/polynomial-drift/"><code>docs/theory/polynomial-drift.md</code></a> — Theory and motivation for polynomial drift terms and the rescaling factor.</li>
+<li><a href="../kriging/"><code>docs/api/kriging.md</code></a> — How drift matrices are consumed by <code>build_uk_model()</code> and <code>predict_on_grid()</code>.</li>
+<li><a href="../aem_drift/"><code>docs/api/aem_drift.md</code></a> — AEM linesink drift, which is combined with polynomial drift via <code>np.hstack</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1928 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Universal Kriging with specified drift for spatial water level mapping">
+      
+      
+      
+      
+        <link rel="prev" href="../polynomial-drift/">
+      
+      
+        <link rel="next" href="../../api/data/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>AEM Linesink Drift - UK_SSPA v2 Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#aem-linesink-drift-theory" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-header__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UK_SSPA v2 Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AEM Linesink Drift
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../validation/vv_report_download/" class="md-tabs__link">
+          
+  
+  
+  Validation & Verification
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../workflow/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Workflow
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../data-contracts/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Data Contracts
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../glossary/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Glossary
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../variogram-models/" class="md-tabs__link">
+          
+  
+  
+  Theory
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../api/data/" class="md-tabs__link">
+          
+  
+  
+  API Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../examples/ex_ordinary_kriging/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="UK_SSPA v2 Documentation" class="md-nav__button md-logo" aria-label="UK_SSPA v2 Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    UK_SSPA v2 Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sspa-inc/kt3d_h2o_py" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation & Verification
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Validation & Verification
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report_download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    📥 Download V&V Report (PDF)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/vv_report/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V&V Report (Web)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../validation/tested-behaviors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tested Behaviors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../workflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../data-contracts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Contracts
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Theory
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Theory
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../variogram-models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Variogram Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../polynomial-drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Polynomial Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-the-analytic-element-method-aem-concept" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. The Analytic Element Method (AEM) Concept
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-the-complex-potential-formula" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. The Complex Potential Formula
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. The Complex Potential Formula">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-coordinate-mapping-to-zz-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Coordinate Mapping to ZZ Space
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-complex-potential-carg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Complex Potential (carg)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-real-potential" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Real Potential φ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-diagram-single-linesink-segment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Diagram: Single Linesink Segment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-singularity-handling-at-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Singularity Handling at Endpoints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-segment-grouping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Segment Grouping
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rescaling-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Rescaling Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Rescaling Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-adaptive-rescaling-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Adaptive Rescaling (Default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-fixed-rescaling-kt3d-style" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Fixed Rescaling (KT3D-style)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-the-critical-trainingprediction-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. The Critical Training/Prediction Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. The Critical Training/Prediction Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How It Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#return-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Return Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-the-apply_anisotropy-toggle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. The apply_anisotropy Toggle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. The apply_anisotropy Toggle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#apply_anisotropy-true-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_anisotropy = True (default)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apply_anisotropy-false" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        apply_anisotropy = False
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-summary-of-key-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Summary of Key Contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    data.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/variogram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    variogram.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    transform.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/aem_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AEM_drift.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    kriging.py
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Examples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_ordinary_kriging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ordinary Kriging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linear_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linear Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_linesink_drift/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linesink Drift
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../examples/ex_anisotropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Anisotropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="aem-linesink-drift-theory">AEM Linesink Drift Theory<a class="headerlink" href="#aem-linesink-drift-theory" title="Permanent link">&para;</a></h1>
+<p><strong>File:</strong> <code>docs/theory/aem-linesink.md</code><br />
+<strong>Task:</strong> 2.4<br />
+<strong>Type:</strong> DOC<br />
+<strong>Depends on:</strong> <a href="../../glossary/">Glossary</a></p>
+<hr />
+<h2 id="1-the-analytic-element-method-aem-concept">1. The Analytic Element Method (AEM) Concept<a class="headerlink" href="#1-the-analytic-element-method-aem-concept" title="Permanent link">&para;</a></h2>
+<p>The Analytic Element Method (AEM) is a technique from groundwater modelling in which the hydraulic influence of physical features — such as rivers, drains, and wells — is represented by superimposing analytical solutions to the governing flow equations. Each feature is an <em>analytic element</em> that contributes a known, closed-form potential field to the total hydraulic head.</p>
+<p>In UK_SSPA v2, rivers are represented as <strong>line sinks</strong>: line segments that extract water from the aquifer (or inject it, depending on sign). Each line sink generates a <strong>potential field</strong> φ(x, y) that describes the hydraulic influence of that river segment at any point in the domain.</p>
+<p>This potential field is used as a <strong>drift term</strong> in Universal Kriging. Rather than fitting a polynomial trend, the kriging model uses the physically-motivated AEM potential as the deterministic component of the mean structure:</p>
+<div class="highlight"><pre><span></span><code>Z(x) = β · φ(x) + ε(x)
+</code></pre></div>
+<p>where β is a fitted coefficient, φ(x) is the AEM potential, and ε(x) is the spatially-correlated residual.</p>
+<p><strong>Reference:</strong> Strack, O. D. L. (1989). <em>Groundwater Mechanics</em>. Prentice Hall.</p>
+<hr />
+<h2 id="2-the-complex-potential-formula">2. The Complex Potential Formula<a class="headerlink" href="#2-the-complex-potential-formula" title="Permanent link">&para;</a></h2>
+<p>The potential for a single line sink segment is computed in <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_potential()</code></a>.</p>
+<h3 id="21-coordinate-mapping-to-zz-space">2.1 Coordinate Mapping to ZZ Space<a class="headerlink" href="#21-coordinate-mapping-to-zz-space" title="Permanent link">&para;</a></h3>
+<p>The segment runs from endpoint <strong>z₁ = x₁ + iy₁</strong> to <strong>z₂ = x₂ + iy₂</strong> in the complex plane. The evaluation point is <strong>z = x + iy</strong>.</p>
+<p>The segment is mapped to a normalised coordinate system ZZ ∈ [−1, +1] via:</p>
+<div class="highlight"><pre><span></span><code>mid      = (z₁ + z₂) / 2          (midpoint of segment)
+half_L   = (z₂ − z₁) / 2          (half-length vector, complex)
+ZZ       = (z − mid) / half_L      (normalised coordinate)
+</code></pre></div>
+<p>After this mapping:
+- ZZ = −1 corresponds to endpoint z₁
+- ZZ = 0 corresponds to the midpoint
+- ZZ = +1 corresponds to endpoint z₂</p>
+<div class="highlight"><pre><span></span><code>                z₁ ──────────── mid ──────────── z₂
+ZZ space:       −1               0               +1
+                ↑                                 ↑
+           ZZ = −1                           ZZ = +1
+</code></pre></div>
+<h3 id="22-complex-potential-carg">2.2 Complex Potential (carg)<a class="headerlink" href="#22-complex-potential-carg" title="Permanent link">&para;</a></h3>
+<p>The complex potential argument is:</p>
+<div class="highlight"><pre><span></span><code>carg = (ZZ + 1) · ln(ZZ + 1)  −  (ZZ − 1) · ln(ZZ − 1)  +  2 · ln(half_L)  −  2
+</code></pre></div>
+<p>This is the standard AEM line sink potential derived from the Cauchy integral representation of the stream function.</p>
+<h3 id="23-real-potential">2.3 Real Potential φ<a class="headerlink" href="#23-real-potential" title="Permanent link">&para;</a></h3>
+<p>The physical potential (hydraulic head contribution) is the real part of <code>carg</code>, scaled by the segment strength and length:</p>
+<div class="highlight"><pre><span></span><code>φ(x, y) = (strength · L) / (4π) · Re(carg)
+</code></pre></div>
+<p>where:
+- <code>strength</code> — the sink strength per unit length (from <code>strength_col</code> in the shapefile)
+- <code>L = |z₂ − z₁|</code> — the Euclidean length of the segment
+- <code>Re(·)</code> — the real part of the complex expression</p>
+<h3 id="24-diagram-single-linesink-segment">2.4 Diagram: Single Linesink Segment<a class="headerlink" href="#24-diagram-single-linesink-segment" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>                        Evaluation point P = (x, y)
+                              ·
+                             /|
+                            / |
+                           /  |
+                          /   |
+                         /    |
+                        /     |
+    z₁ ────────────── mid ──────────── z₂
+    (x₁,y₁)           ·              (x₂,y₂)
+    ZZ = −1          ZZ = 0          ZZ = +1
+
+    L = |z₂ − z₁|   (total segment length)
+    half_L = (z₂ − z₁)/2   (complex half-length vector)
+    ZZ = (z − mid) / half_L  (normalised coordinate of P)
+</code></pre></div>
+<hr />
+<h2 id="3-singularity-handling-at-endpoints">3. Singularity Handling at Endpoints<a class="headerlink" href="#3-singularity-handling-at-endpoints" title="Permanent link">&para;</a></h2>
+<p>The complex logarithm <code>ln(ZZ ± 1)</code> is singular when ZZ = ±1, i.e., when the evaluation point lies exactly on an endpoint of the segment.</p>
+<p>The implementation in <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_potential()</code></a> handles this by perturbing ZZ slightly away from the singular values:</p>
+<div class="highlight"><pre><span></span><code><span class="n">small</span> <span class="o">=</span> <span class="mf">1e-10</span>
+
+<span class="c1"># Protect ZZ = +1 (end of segment)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ZZ</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">small</span>
+<span class="n">ZZ</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">+=</span> <span class="n">small</span>
+
+<span class="c1"># Protect ZZ = -1 (start of segment)</span>
+<span class="n">mask_neg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ZZ</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">small</span>
+<span class="n">ZZ</span><span class="p">[</span><span class="n">mask_neg</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">small</span>
+</code></pre></div>
+<p>This ensures numerical stability when observation wells or control points coincide with segment endpoints. The perturbation is small enough (1e-10) that the resulting potential error is negligible.</p>
+<p><strong>Zero-length segments:</strong> If the segment length <code>L &lt; 1e-6</code>, the function returns zeros immediately without computing the potential. This prevents division by zero in the ZZ mapping.</p>
+<hr />
+<h2 id="4-segment-grouping">4. Segment Grouping<a class="headerlink" href="#4-segment-grouping" title="Permanent link">&para;</a></h2>
+<p>A river system typically consists of many individual line segments. In UK_SSPA v2, segments are grouped into named <strong>linesinks</strong> using the <code>group_column</code> attribute in the shapefile.</p>
+<p>All segments sharing the same <code>group_column</code> value are treated as a single hydraulic feature. Their individual potentials are <strong>summed</strong> to produce the total potential for that group:</p>
+<div class="highlight"><pre><span></span><code>φ_group(x, y) = Σ φ_segment_k(x, y)   for all k in group
+</code></pre></div>
+<p>Each group becomes <strong>one column</strong> in the drift matrix. If there are N groups, the AEM drift matrix has N columns.</p>
+<p>This grouping is performed in <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_drift_matrix()</code></a>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">unique_ids</span> <span class="o">=</span> <span class="n">linesinks_gdf</span><span class="p">[</span><span class="n">group_col</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+<span class="n">drift_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x_model</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_ids</span><span class="p">)))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">linesink_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">unique_ids</span><span class="p">):</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">linesinks_gdf</span><span class="p">[</span><span class="n">linesinks_gdf</span><span class="p">[</span><span class="n">group_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">linesink_id</span><span class="p">]</span>
+    <span class="n">total_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x_model</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">segments</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="c1"># ... accumulate potential from each segment</span>
+        <span class="n">total_phi</span> <span class="o">+=</span> <span class="n">compute_linesink_potential</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">drift_matrix</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">total_phi</span> <span class="o">*</span> <span class="n">rescr</span>
+</code></pre></div>
+<p>The <code>term_names</code> list returned by the function contains the <code>group_column</code> values in the order they appear in <code>unique_ids</code>.</p>
+<hr />
+<h2 id="5-rescaling-methods">5. Rescaling Methods<a class="headerlink" href="#5-rescaling-methods" title="Permanent link">&para;</a></h2>
+<p>The raw AEM potential φ can have arbitrary magnitude depending on segment lengths, strengths, and the spatial extent of the domain. For numerical stability of the kriging system, the potential must be rescaled to be comparable in magnitude to the variogram sill.</p>
+<p>Two rescaling methods are supported, controlled by the <code>rescaling_method</code> parameter:</p>
+<h3 id="51-adaptive-rescaling-default">5.1 Adaptive Rescaling (Default)<a class="headerlink" href="#51-adaptive-rescaling-default" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>rescr = sill / max(|φ_group|)
+</code></pre></div>
+<p>The scaling factor is computed so that the maximum absolute value of the scaled potential equals the variogram sill. This normalises each group's potential independently.</p>
+<ul>
+<li><strong>Advantage:</strong> Automatically adapts to the actual magnitude of the potential field; robust across different unit systems and domain sizes.</li>
+<li><strong>Use case:</strong> Default for all new analyses.</li>
+</ul>
+<p>If <code>max(|φ_group|) ≤ 1e-10</code> (effectively zero potential), the scaling factor defaults to 1.0 to avoid division by zero.</p>
+<h3 id="52-fixed-rescaling-kt3d-style">5.2 Fixed Rescaling (KT3D-style)<a class="headerlink" href="#52-fixed-rescaling-kt3d-style" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>rescr = sill / 0.0001
+</code></pre></div>
+<p>A constant scaling factor is applied regardless of the actual potential magnitude. This matches the original KT3D Fortran implementation.</p>
+<ul>
+<li><strong>Advantage:</strong> Reproducible, independent of data.</li>
+<li><strong>Disadvantage:</strong> Can produce very large drift values if the raw potential is small, potentially destabilising the kriging matrix.</li>
+<li><strong>Use case:</strong> Legacy compatibility only.</li>
+</ul>
+<hr />
+<h2 id="6-the-critical-trainingprediction-contract">6. The Critical Training/Prediction Contract<a class="headerlink" href="#6-the-critical-trainingprediction-contract" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>This is the most important operational constraint for AEM drift.</strong></p>
+</blockquote>
+<p>The scaling factors <code>rescr</code> are computed from the <strong>training data</strong> (the observation well locations). During prediction on a grid, the potential values at grid points will generally differ from those at training points — so if scaling factors were recomputed at prediction time, the drift columns would be on a different scale than during training. This would invalidate the kriging coefficients β.</p>
+<p><strong>The rule:</strong> Scaling factors computed during training <strong>must</strong> be reused during prediction.</p>
+<h3 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<p><strong>Training phase</strong> — <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_drift_matrix()</code></a> is called without <code>input_scaling_factors</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span><span class="p">,</span> <span class="n">scaling_factors</span> <span class="o">=</span> <span class="n">compute_linesink_drift_matrix</span><span class="p">(</span>
+    <span class="n">x_model</span><span class="p">,</span> <span class="n">y_model</span><span class="p">,</span> <span class="n">linesinks_gdf</span><span class="p">,</span> <span class="n">group_col</span><span class="p">,</span>
+    <span class="n">transform_params</span><span class="p">,</span> <span class="n">sill</span><span class="p">,</span>
+    <span class="n">rescaling_method</span><span class="o">=</span><span class="s1">&#39;adaptive&#39;</span>
+    <span class="c1"># input_scaling_factors not provided → factors are computed from training data</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>The returned <code>scaling_factors</code> dict maps each <code>group_column</code> value to its computed <code>rescr</code>.</p>
+<p><strong>Prediction phase</strong> — the saved <code>scaling_factors</code> are passed back in:</p>
+<div class="highlight"><pre><span></span><code><span class="n">drift_matrix_pred</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">compute_linesink_drift_matrix</span><span class="p">(</span>
+    <span class="n">x_grid</span><span class="p">,</span> <span class="n">y_grid</span><span class="p">,</span> <span class="n">linesinks_gdf</span><span class="p">,</span> <span class="n">group_col</span><span class="p">,</span>
+    <span class="n">transform_params</span><span class="p">,</span> <span class="n">sill</span><span class="p">,</span>
+    <span class="n">input_scaling_factors</span><span class="o">=</span><span class="n">scaling_factors</span>   <span class="c1"># ← reuse training factors</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>When <code>input_scaling_factors</code> is provided and contains the key for a group, that factor is used directly without recomputation:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">input_scaling_factors</span> <span class="ow">and</span> <span class="n">linesink_id</span> <span class="ow">in</span> <span class="n">input_scaling_factors</span><span class="p">:</span>
+    <span class="n">rescr</span> <span class="o">=</span> <span class="n">input_scaling_factors</span><span class="p">[</span><span class="n">linesink_id</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Consequence of not reusing factors:</strong> The drift columns at prediction points would be scaled differently from training, causing the kriging system to apply incorrect drift coefficients and producing systematically biased predictions.</p>
+<h3 id="return-value">Return Value<a class="headerlink" href="#return-value" title="Permanent link">&para;</a></h3>
+<p><a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_drift_matrix()</code></a> returns a 3-tuple:</p>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="n">drift_matrix</span><span class="p">,</span> <span class="n">term_names</span><span class="p">,</span> <span class="n">scaling_factors_used</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>drift_matrix</code></td>
+<td><code>np.ndarray</code> shape <code>(n_points, n_groups)</code></td>
+<td>Scaled AEM potential columns</td>
+</tr>
+<tr>
+<td><code>term_names</code></td>
+<td><code>list[str]</code></td>
+<td>Group names in column order</td>
+</tr>
+<tr>
+<td><code>scaling_factors_used</code></td>
+<td><code>dict[str, float]</code></td>
+<td>Maps group name → scaling factor used</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7-the-apply_anisotropy-toggle">7. The <code>apply_anisotropy</code> Toggle<a class="headerlink" href="#7-the-apply_anisotropy-toggle" title="Permanent link">&para;</a></h2>
+<p>When anisotropy is enabled in the variogram, observation well coordinates are transformed to model space before kriging (see <a href="../anisotropy/">Anisotropy Theory</a>). The question then arises: should the linesink geometry also be transformed to model space when computing the AEM potential?</p>
+<p>The <code>apply_anisotropy</code> parameter controls this behaviour:</p>
+<h3 id="apply_anisotropy-true-default"><code>apply_anisotropy = True</code> (default)<a class="headerlink" href="#apply_anisotropy-true-default" title="Permanent link">&para;</a></h3>
+<p>The linesink segment endpoints are transformed to model space using the same <code>transform_params</code> as the observation wells. The AEM potential is then computed in model space, consistent with the kriging coordinate system.</p>
+<div class="highlight"><pre><span></span><code><span class="n">current_transform</span> <span class="o">=</span> <span class="n">transform_params</span>   <span class="c1"># use anisotropy transform</span>
+<span class="n">x1_m</span><span class="p">,</span> <span class="n">y1_m</span> <span class="o">=</span> <span class="n">apply_transform</span><span class="p">(</span><span class="n">p1_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p1_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">current_transform</span><span class="p">)</span>
+<span class="n">x2_m</span><span class="p">,</span> <span class="n">y2_m</span> <span class="o">=</span> <span class="n">apply_transform</span><span class="p">(</span><span class="n">p2_raw</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">p2_raw</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">current_transform</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Physical meaning:</strong> The river geometry is "stretched" in the same way as the observation data. The AEM potential field is computed in the isotropic model space, so it is consistent with the kriging distances.</p>
+<h3 id="apply_anisotropy-false"><code>apply_anisotropy = False</code><a class="headerlink" href="#apply_anisotropy-false" title="Permanent link">&para;</a></h3>
+<p>The linesink segment endpoints are used in their <strong>raw (geographic) coordinates</strong>. The AEM potential is computed in raw space, even though the kriging system operates in model space.</p>
+<div class="highlight"><pre><span></span><code><span class="n">current_transform</span> <span class="o">=</span> <span class="kc">None</span>   <span class="c1"># bypass transform → apply_transform returns raw coords</span>
+</code></pre></div>
+<p><strong>Physical meaning:</strong> The river geometry is preserved in its true geographic shape. This is the KT3D-style approach and may be appropriate when the AEM potential is intended to capture the physical river geometry without distortion.</p>
+<p><strong>Interaction with polynomial drift:</strong> When <code>apply_anisotropy=False</code> for linesink drift, the polynomial drift terms are still computed in model space (they use the transformed x, y coordinates). Only the AEM columns use raw coordinates.</p>
+<h3 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h3>
+<p>In <code>config.json</code>, this is controlled via the <code>drift_terms.linesink_river</code> entry:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;drift_terms&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;linesink_river&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;use&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;apply_anisotropy&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Setting <code>"apply_anisotropy": false</code> uses raw coordinates for AEM computation.</p>
+<hr />
+<h2 id="8-summary-of-key-contracts">8. Summary of Key Contracts<a class="headerlink" href="#8-summary-of-key-contracts" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Contract</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Scaling factor persistence</strong></td>
+<td><code>scaling_factors</code> from training must be passed as <code>input_scaling_factors</code> during prediction</td>
+</tr>
+<tr>
+<td><strong>Term name ordering</strong></td>
+<td><code>term_names</code> returned at training must match the column order used in the kriging system</td>
+</tr>
+<tr>
+<td><strong>Coordinate space</strong></td>
+<td>Controlled by <code>apply_anisotropy</code>; when <code>True</code>, segment endpoints are in model space; when <code>False</code>, raw space</td>
+</tr>
+<tr>
+<td><strong>Zero-length segments</strong></td>
+<td>Segments with L &lt; 1e-6 contribute zero potential and are silently skipped</td>
+</tr>
+<tr>
+<td><strong>Endpoint singularities</strong></td>
+<td>Handled by perturbing ZZ by ±1e-10 when evaluation point is at a segment endpoint</td>
+</tr>
+<tr>
+<td><strong>Group superposition</strong></td>
+<td>All segments in a group are summed before scaling; scaling is per-group, not per-segment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9-reference">9. Reference<a class="headerlink" href="#9-reference" title="Permanent link">&para;</a></h2>
+<p>Strack, O. D. L. (1989). <em>Groundwater Mechanics</em>. Prentice Hall, Englewood Cliffs, NJ.</p>
+<p>The complex potential formula implemented in <a href="https://github.com/sspa-inc/kt3d_h2o_py/blob/main/AEM_drift.py"><code>compute_linesink_potential()</code></a> follows the line sink element derivation in Strack (1989), adapted for numerical implementation with singularity protection.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

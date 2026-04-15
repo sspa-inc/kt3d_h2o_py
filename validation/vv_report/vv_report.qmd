@@ -1,0 +1,505 @@
+---
+title: "UK_SSPA v2 — Verification and Validation Report"
+subtitle: "Universal Kriging with Specified Drift for Water Level Mapping"
+author: "SSPA, Inc."
+date: today
+date-format: "MMMM D, YYYY"
+---
+
+```{python}
+#| label: setup
+#| include: false
+import subprocess, sys, os, time, re
+
+SCRIPT_DIR = os.path.abspath(os.path.join(".", ".."))
+
+def run_vv(script_name):
+    """Run a V&V script and return the subprocess result object."""
+    script_path = os.path.join(SCRIPT_DIR, script_name)
+    result = subprocess.run(
+        [sys.executable, script_path],
+        capture_output=True, text=True, timeout=120
+    )
+    if result.returncode != 0:
+        raise RuntimeError(
+            f"{script_name} exited with code {result.returncode}\n"
+            f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
+    return result
+
+def print_filtered(result, max_width=105):
+    """Print stdout with SVG-path lines removed and wide lines intelligently truncated.
+
+    Strategy:
+    - Remove SVG/PNG save-path lines
+    - Compact verbose numpy repr (array[np.float64(...)] -> [...])
+    - For lines exceeding max_width: preserve the rightmost PASS/FAIL/OK token
+      by trimming from the middle rather than the end
+    """
+    for line in result.stdout.splitlines():
+        low = line.lower()
+        # Skip SVG/PNG save-path lines
+        if '.svg' in low and any(w in low for w in ('saved', 'plot', '->', 'path')):
+            continue
+        if '.png' in low and any(w in low for w in ('saved', 'plot', '->', 'path')):
+            continue
+        # Compact verbose numpy representations
+        line = re.sub(r'array\[np\.float64\(([^)]+)\)', r'[\1', line)
+        line = re.sub(r'np\.float64\(([^)]+)\)', r'\1', line)
+        # Smart truncation: preserve the right-side status column
+        if len(line) > max_width:
+            # Check if line ends with a status token we want to preserve
+            rstripped = line.rstrip()
+            tail = ""
+            for token in ["OK PASS", "PASS", "OK FAIL", "FAIL", "SKIP"]:
+                if rstripped.endswith(token):
+                    tail = "  " + token
+                    line = rstripped[: len(rstripped) - len(token)].rstrip()
+                    break
+            if tail:
+                avail = max_width - len(tail) - 3
+                if len(line) > avail:
+                    line = line[:avail] + "..." + tail
+                else:
+                    line = line + tail
+            else:
+                line = line[:max_width - 3] + "..."
+        print(line)
+
+# Pre-run all scripts once; reuse results in each section
+_cache = {}
+SCRIPTS = [
+    ("vv_variogram_models.py",          "Variogram Model Equations"),
+    ("vv_transform_roundtrip.py",       "Coordinate Transform Roundtrip"),
+    ("vv_polynomial_drift.py",          "Polynomial Drift Computation"),
+    ("vv_drift_physics.py",             "Drift Physics Verification"),
+    ("vv_aem_single_segment.py",        "AEM Linesink — Single Segment"),
+    ("vv_aem_scaling_consistency.py",    "AEM Drift Scaling Consistency"),
+    ("vv_wrapper_no_drift.py",          "Wrapper Equivalence — No Drift"),
+    ("vv_polynomial_drift_recovery.py", "Polynomial Drift Recovery"),
+    ("vv_anisotropy_consistency.py",    "Anisotropy Pre-Transform Consistency"),
+    ("vv_loocv.py",                     "LOOCV Diagnostic Metrics"),
+]
+
+exec_results = []
+for script_file, description in SCRIPTS:
+    t0 = time.time()
+    proc = run_vv(script_file)
+    elapsed = time.time() - t0
+    status = "PASS" if proc.returncode == 0 else "FAIL"
+    _cache[script_file] = proc
+    exec_results.append((script_file, description, status, elapsed))
+```
+
+# Executive Summary
+
+This report presents the formal verification and validation (V&V) of the **UK_SSPA v2** universal kriging tool. The tool performs spatial interpolation of water-level surfaces using kriging with specified drift, supporting four variogram models (spherical, exponential, Gaussian, linear), polynomial drift terms up to second order, and Analytic Element Method (AEM) linesink drift for incorporating river-boundary influence.
+
+Ten independent V&V scripts were executed. Each script isolates a specific computational module and verifies its output against analytical solutions, hand-calculated reference values, or the reference implementation in PyKrige. The table below summarizes the outcome of every script.
+
+```{python}
+#| label: executive-summary
+#| output: asis
+
+# Build a proper Markdown table for Quarto to render via LaTeX
+lines = []
+lines.append("| # | V&V Module | Result |")
+lines.append("|--:|------------|:------:|")
+for i, (sf, desc, status, elapsed) in enumerate(exec_results, 1):
+    icon = "**PASS**" if status == "PASS" else "**FAIL**"
+    lines.append(f"| {i} | {desc} | {icon} |")
+
+n_pass = sum(1 for r in exec_results if r[2] == "PASS")
+n_fail = sum(1 for r in exec_results if r[2] == "FAIL")
+lines.append("")
+if n_fail == 0:
+    lines.append(f"**Result: {n_pass}/{len(exec_results)} scripts passed. All tests passed.**")
+else:
+    lines.append(f"**Result: {n_pass} PASS, {n_fail} FAIL out of {len(exec_results)} scripts.**")
+
+print("\n".join(lines))
+```
+
+# Test Environment
+
+```{python}
+#| label: test-environment
+#| output: asis
+import platform, importlib
+
+lines = []
+lines.append(f"- **Date:** {time.strftime('%Y-%m-%d %H:%M:%S')}")
+lines.append(f"- **Platform:** {platform.platform()}")
+lines.append(f"- **Python:** {sys.version.split(chr(10))[0]}")
+lines.append("")
+lines.append("| Package | Version |")
+lines.append("|---------|---------|")
+
+deps = ["numpy", "scipy", "pandas", "geopandas", "shapely", "matplotlib", "pykrige"]
+for pkg in deps:
+    try:
+        mod = importlib.import_module(pkg)
+        ver = getattr(mod, "__version__", "unknown")
+    except ImportError:
+        ver = "NOT INSTALLED"
+    lines.append(f"| {pkg} | {ver} |")
+
+print("\n".join(lines))
+```
+
+# Variogram Model Equations
+
+**Script:** `docs/validation/vv_variogram_models.py`
+
+## Purpose
+
+This test verifies that the four variogram model functions implemented in [`variogram.py`](../../variogram.py) produce numerically exact semivariance values at critical lag distances. Variogram models are the spatial-correlation engine of kriging: an error in the semivariance function propagates directly into every kriging weight and, consequently, every interpolated water level. Verifying these functions against closed-form analytical values is therefore a foundational V&V requirement.
+
+## Test Design
+
+Each model (spherical, exponential, Gaussian, linear) is evaluated at five canonical lag distances — $h = 0$ (must return the nugget), $h = a$ (the range), $h = a/2$ (mid-range analytical value), $h = 2a$ (beyond-range, must equal the sill for bounded models), and the asymptotic formula check for unbounded models. Two additional tests confirm that invalid parameter combinations raise `ValueError`.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| 1 | $h = 0 \rightarrow$ nugget | $10^{-10}$ |
+| 2 | $h = a \rightarrow$ sill (exact for bounded models) | $10^{-10}$ |
+| 3 | $h = a$ (asymptotic formula for exponential/Gaussian) | $10^{-10}$ |
+| 4 | $h = 2a \rightarrow$ sill (bounded models saturate) | $10^{-10}$ |
+| 5 | $h = a/2$ (analytical mid-range value) | $10^{-10}$ |
+| 6 | `nugget >= sill` raises `ValueError` | N/A |
+| 7 | `range < 0` raises `ValueError` | N/A |
+
+## Results
+
+```{python}
+#| label: vv-variogram-models
+print_filtered(_cache["vv_variogram_models.py"])
+```
+
+![Variogram model curves for sill = 10.0, range = 100.0, nugget = 1.0. All four models converge to the sill; spherical and linear reach it exactly at the range.](../output/vv_variogram_models.png){width=90%}
+
+# Coordinate Transform Roundtrip
+
+**Script:** `docs/validation/vv_transform_roundtrip.py`
+
+## Purpose
+
+The anisotropy pre-transformation rotates and scales observation coordinates before kriging so that the variogram range ellipse becomes isotropic. If the forward transform or its inverse introduces numerical drift, the back-transformed prediction grid will be spatially misaligned with the original data. This test confirms that `apply_transform()` followed by `invert_transform_coords()` recovers the original coordinates to machine precision ($< 10^{-12}$), ensuring the coordinate pipeline is lossless.
+
+## Test Design
+
+Six primary cases exercise random point clouds, edge cases (single point at origin, collinear points), and a sweep of ten azimuth angles from 0° to 270°. The azimuth convention (clockwise from North) is explicitly tested against the arithmetic convention used internally.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| 1 | Random $N{=}50$, azimuth 90° (East), ratio 1.0 (identity) | $10^{-12}$ |
+| 2 | Random $N{=}50$, azimuth 45° (NE), ratio 0.5 | $10^{-12}$ |
+| 3 | Random $N{=}50$, azimuth 90° (East), ratio 0.3 | $10^{-12}$ |
+| 4 | Random $N{=}50$, azimuth 0° (North), ratio 0.5 | $10^{-12}$ |
+| 5 | Single point at origin | $10^{-12}$ |
+| 6 | Collinear points along $y = 2x + 5$ | $10^{-12}$ |
+| A | Azimuth 0° forward-transform coordinate check | $10^{-12}$ |
+| B | Azimuth 90° identity (no rotation) check | $10^{-12}$ |
+| C | Multi-angle sweep: 0°, 15°, 30°, …, 270° | $10^{-12}$ |
+
+## Results
+
+```{python}
+#| label: vv-transform-roundtrip
+print_filtered(_cache["vv_transform_roundtrip.py"])
+```
+
+![Forward and inverse coordinate transforms for six test configurations. Residual errors are at or below $10^{-13}$.](../output/vv_transform_roundtrip.png){width=90%}
+
+# Polynomial Drift Computation
+
+**Script:** `docs/validation/vv_polynomial_drift.py`
+
+## Purpose
+
+Universal kriging requires external drift columns that capture large-scale spatial trends. `compute_polynomial_drift()` constructs these columns as rescaled powers of the coordinates ($\text{resc} \cdot x$, $\text{resc} \cdot y$, $\text{resc} \cdot x^2$, $\text{resc} \cdot y^2$). The rescaling factor `resc` prevents numerical ill-conditioning in the kriging matrix. This test verifies (a) that each drift column matches its analytical formula exactly, (b) that column ordering and naming are correct, and (c) that the `compute_resc()` safety-floor logic activates when the centroid radius is smaller than the variogram range.
+
+## Test Design
+
+Nineteen sub-cases cover every drift term individually, the full four-column configuration, the rescaling factor under normal and floor-triggered conditions, and the empty-configuration edge case.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC-1 | Linear X: $\text{drift}_{:,0} = \text{resc} \cdot x$ | $10^{-14}$ |
+| TC-1b | Linear X: exactly 1 column produced | exact |
+| TC-1c | Linear X: `term_names[0] == 'linear_x'` | exact |
+| TC-2 | Linear Y: $\text{drift}_{:,0} = \text{resc} \cdot y$ | $10^{-14}$ |
+| TC-2b | Linear Y: `term_names[0] == 'linear_y'` | exact |
+| TC-3 | Quadratic X: $\text{drift}_{:,0} = \text{resc} \cdot x^2$ | $10^{-14}$ |
+| TC-3b | Quadratic X: `term_names[0] == 'quadratic_x'` | exact |
+| TC-4 | Quadratic Y: $\text{drift}_{:,0} = \text{resc} \cdot y^2$ | $10^{-14}$ |
+| TC-4b | Quadratic Y: `term_names[0] == 'quadratic_y'` | exact |
+| TC-5a–f | Full 4-column ordering and values | $10^{-14}$ |
+| TC-6a | `compute_resc` normal: $\text{resc} = \sqrt{\text{sill}/r^2_{\text{centroid}}}$ | $10^{-14}$ |
+| TC-6b | `compute_resc` safety floor triggered | $10^{-14}$ |
+| TC-7a–b | Empty config: 0 columns, 0 names | exact |
+
+## Results
+
+```{python}
+#| label: vv-polynomial-drift
+print_filtered(_cache["vv_polynomial_drift.py"])
+```
+
+![Polynomial drift columns for a three-point test configuration.](../output/vv_polynomial_drift.png){width=90%}
+
+![`compute_resc()` safety-floor behavior: the rescaling factor is clamped when the centroid radius falls below the variogram range.](../output/vv_polynomial_drift_resc.png){width=90%}
+
+# Drift Physics Verification
+
+**Script:** `docs/validation/vv_drift_physics.py`
+
+## Purpose
+
+`verify_drift_physics()` is a runtime diagnostic that checks whether each polynomial drift column is physically consistent with its declared term name — i.e., that a column labeled `linear_x` actually varies linearly with $x$. This test verifies the diagnostic itself by feeding it known-good columns (which must return PASS), deliberately corrupted columns (which must return FAIL), and an AEM term (which must return SKIP, since AEM drift has no simple polynomial form to check).
+
+## Test Design
+
+Five cases cover the three possible outcomes of the diagnostic function. The corruption in TC-3 adds 10% Gaussian noise to break the $R^2 > 0.999$ threshold; TC-4 doubles the rescaling factor to produce a 100% slope error.
+
+| ID | Description | Expected |
+|----|-------------|----------|
+| TC-1 | Valid `linear_x` ($\text{drift} = \text{resc} \cdot x$) | PASS |
+| TC-2 | Valid `quadratic_y` ($\text{drift} = \text{resc} \cdot y^2$) | PASS |
+| TC-3 | Corrupted `linear_x` (10% noise → $R^2 < 0.999$) | FAIL |
+| TC-4 | Wrong scaling ($2 \cdot \text{resc} \cdot x$ → 100% slope error) | FAIL |
+| TC-5 | AEM term (no `_x`/`_y` suffix) → SKIP | SKIP |
+
+## Results
+
+```{python}
+#| label: vv-drift-physics
+print_filtered(_cache["vv_drift_physics.py"])
+```
+
+![Drift physics diagnostic: valid columns produce tight regression fits (PASS), corrupted columns scatter (FAIL), and AEM terms are correctly skipped.](../output/vv_drift_physics.png){width=90%}
+
+# AEM Linesink — Single Segment
+
+**Script:** `docs/validation/vv_aem_single_segment.py`
+
+## Purpose
+
+The Analytic Element Method (AEM) linesink potential models the hydraulic influence of a river segment on the surrounding water table. `compute_linesink_potential()` evaluates the complex-variable potential integral for a single line segment. This test verifies the implementation against hand-calculated reference values at four specific field points, confirms the expected symmetry about the segment axis, validates the superposition principle (two collinear half-segments must equal one full segment), and checks boundary conditions (zero-length segment, strength linearity).
+
+## Test Design
+
+Eight checks cover point-value accuracy, physical symmetry, superposition, and edge cases. The hand-calculated reference values use the closed-form linesink integral $\phi = \frac{\sigma}{4\pi} \left[(z - z_2)\ln(z - z_2) - (z - z_1)\ln(z - z_1)\right]$ evaluated in the complex plane.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1a | $\phi(50, 50)$ matches hand-calc | $10^{-10}$ |
+| TC1b | $\phi(50, -50)$ matches hand-calc | $10^{-10}$ |
+| TC1c | $\phi(200, 0)$ matches hand-calc | $10^{-10}$ |
+| TC1d | $\phi(50, 0.001)$ near centerline | $10^{-10}$ |
+| TC2 | Symmetry: $\phi(x,y) = \phi(x,-y)$ | $10^{-10}$ |
+| TC3 | Superposition: $[0,50] + [50,100] = [0,100]$ | $10^{-6}$ |
+| TC4 | Zero-length segment returns zeros | exact |
+| TC5 | $\phi(\sigma{=}2) = 2 \cdot \phi(\sigma{=}1)$ | $10^{-14}$ |
+
+## Results
+
+```{python}
+#| label: vv-aem-single-segment
+print_filtered(_cache["vv_aem_single_segment.py"])
+```
+
+![AEM linesink potential field for a single segment along the $x$-axis, with test-point locations and reference values annotated.](../output/vv_aem_single_segment.png){width=90%}
+
+# AEM Drift Scaling Consistency
+
+**Script:** `docs/validation/vv_aem_scaling_consistency.py`
+
+## Purpose
+
+When AEM linesink drift is used in kriging, the raw potential values are rescaled by a factor that normalizes them relative to the variogram sill. These scaling factors are computed during model training and must be identically reused during prediction — otherwise the drift columns at prediction points would be on a different numerical scale than those used to fit the kriging weights, producing silently incorrect interpolations. This test verifies that `compute_linesink_drift_matrix()` preserves scaling factors across the training-to-prediction pipeline.
+
+## Test Design
+
+Five cases verify dictionary structure, factor persistence, independence of free-vs-fixed computation, the fixed-method formula, and column-level numerical equality.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1 | Training returns `sf` dict with keys $\{A, B\}$ and matrix shape $(10, 2)$ | exact |
+| TC2 | Prediction scaling factors match training factors exactly | $10^{-15}$ |
+| TC3 | Free prediction (no `input_sf`) produces different factors | exact |
+| TC4 | Fixed method: $\text{sf}[A] = \text{sill} / 0.0001$ | $10^{-10}$ |
+| TC5 | Drift column $A$ at prediction points $= \phi_A \cdot \text{sf}_{\text{train}}[A]$ | $10^{-12}$ |
+
+## Results
+
+```{python}
+#| label: vv-aem-scaling-consistency
+print_filtered(_cache["vv_aem_scaling_consistency.py"])
+```
+
+![AEM drift scaling consistency: training and prediction drift columns are compared to confirm identical scaling factors.](../output/vv_aem_scaling_consistency.png){width=90%}
+
+# Wrapper Equivalence — No Drift
+
+**Script:** `docs/validation/vv_wrapper_no_drift.py`
+
+## Purpose
+
+`build_uk_model()` is the project's high-level wrapper around PyKrige's `UniversalKriging`. When no external drift is specified, the wrapper must produce predictions and variances that are numerically identical to a direct PyKrige call — any discrepancy would indicate that the wrapper introduces unintended side effects (e.g., default parameter differences, coordinate reordering, or drift-column injection). This test establishes the wrapper's baseline correctness by confirming bit-level equivalence in the zero-drift case.
+
+## Test Design
+
+Four cases compare wrapper output against direct PyKrige for point predictions, point variances, the `None`-drift code path, and a full 10×10 grid prediction.
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1 | Point predictions: wrapper (`drift_matrix=zeros`) vs. direct PyKrige | $10^{-10}$ |
+| TC2 | Point variances: wrapper vs. direct PyKrige | $10^{-10}$ |
+| TC3 | Point predictions: wrapper (`drift_matrix=None`) vs. direct PyKrige | $10^{-10}$ |
+| TC4 | Grid predictions (10×10): wrapper vs. direct PyKrige | $10^{-10}$ |
+
+## Results
+
+```{python}
+#| label: vv-wrapper-no-drift
+print_filtered(_cache["vv_wrapper_no_drift.py"])
+```
+
+![Wrapper vs. direct PyKrige predictions on a 10×10 grid with no drift. Residuals are identically zero.](../output/vv_wrapper_no_drift.png){width=90%}
+
+# Polynomial Drift Recovery
+
+**Script:** `docs/validation/vv_polynomial_drift_recovery.py`
+
+## Purpose
+
+This is an end-to-end integration test: synthetic water-level data are generated from a known linear trend ($0.5x + 0.3y$) plus spatially correlated noise, then kriged with polynomial drift enabled. The test verifies that (a) the wrapper and direct PyKrige produce identical results when given the same drift columns, and (b) both recover the underlying trend with an RMSE well below the noise floor. This confirms that the full pipeline — drift computation, rescaling, kriging-system assembly, and prediction — functions correctly as an integrated system.
+
+## Test Design
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1 | Wrapper predictions match direct PyKrige specified-drift | $10^{-8}$ |
+| TC2 | Wrapper variances match direct PyKrige specified-drift | $10^{-8}$ |
+| TC3 | Wrapper trend-recovery RMSE $< 0.5$ (noise-limited) | 0.5 |
+| TC4 | Direct PyKrige trend-recovery RMSE $< 0.5$ | 0.5 |
+
+## Results
+
+```{python}
+#| label: vv-polynomial-drift-recovery
+print_filtered(_cache["vv_polynomial_drift_recovery.py"])
+```
+
+![Polynomial drift recovery: synthetic truth surface ($0.5x + 0.3y$), kriged prediction, and residual map.](../output/vv_polynomial_drift_recovery.png){width=90%}
+
+# Anisotropy Pre-Transform Consistency
+
+**Script:** `docs/validation/vv_anisotropy_consistency.py`
+
+## Purpose
+
+UK_SSPA v2 handles geometric anisotropy by pre-transforming coordinates before passing them to PyKrige (which then operates isotropically). PyKrige also has its own internal anisotropy handling. This test verifies that the pre-transformation approach produces predictions and variances that are numerically equivalent to PyKrige's internal method — confirming that the coordinate transformation correctly replicates the anisotropy ellipse stretching. Three azimuth angles (0°, 45°, 90°) are tested to exercise rotation in all quadrants.
+
+## Test Design
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1 | Pre-transform vs. PyKrige internal: max prediction difference | $10^{-6}$ |
+| TC2 | Pre-transform vs. PyKrige internal: max variance difference | $10^{-6}$ |
+| TC3a | Our transform at azimuth 90°, ratio 0.5: $x$ unchanged | $10^{-12}$ |
+| TC3b | Our transform at azimuth 90°, ratio 0.5: $y$ scaled by $2\times$ | $10^{-12}$ |
+| TC4 | Azimuth 90°, ratio 0.5: pre-transform vs. PyKrige internal | $10^{-6}$ |
+| TC5 | Azimuth 45°, ratio 0.5: pre-transform vs. PyKrige internal | $10^{-6}$ |
+| TC6 | Azimuth 0°, ratio 0.5: pre-transform vs. PyKrige internal | $10^{-6}$ |
+
+## Results
+
+```{python}
+#| label: vv-anisotropy-consistency
+print_filtered(_cache["vv_anisotropy_consistency.py"])
+```
+
+![Anisotropy pre-transform consistency: prediction surfaces from the pre-transform approach and PyKrige's internal method are visually indistinguishable; residuals are at machine precision.](../output/vv_anisotropy_consistency.png){width=90%}
+
+# LOOCV Diagnostic Metrics
+
+**Script:** `docs/validation/vv_loocv.py`
+
+## Purpose
+
+Leave-one-out cross-validation (LOOCV) is the primary diagnostic for assessing kriging model quality in production. `cross_validate()` removes each observation in turn, re-fits the model, predicts the held-out value, and computes summary statistics (RMSE, MAE, Q1, Q2). This test verifies that the reported metrics match independently computed reference values to machine precision, and that the function degrades gracefully (returning `NaN`) when given fewer than three data points.
+
+## Test Design
+
+| ID | Description | Tolerance |
+|----|-------------|-----------|
+| TC1 | $n$ predictions produced for $n$ input points | exact |
+| TC2 | Predictions differ from observations (nugget $> 0$) | exact |
+| TC3 | RMSE $= \sqrt{\text{mean}((\hat{z} - z)^2)}$ | $10^{-12}$ |
+| TC4 | MAE $= \text{mean}(|\hat{z} - z|)$ | $10^{-12}$ |
+| TC5 | Q1 and Q2 are finite | exact |
+| TC5b | Q1 matches `nanmean(standardized errors)` | $10^{-12}$ |
+| TC5c | Q2 matches `nanvar(standardized errors)` | $10^{-12}$ |
+| TC6 | $< 3$ points → `NaN` metrics (graceful degradation) | exact |
+
+## Results
+
+```{python}
+#| label: vv-loocv
+print_filtered(_cache["vv_loocv.py"])
+```
+
+![LOOCV diagnostic metrics: observed vs. predicted values, residual distribution, and standardized-error statistics.](../output/vv_loocv.png){width=90%}
+
+\appendix
+
+# Coverage Gap Analysis {.unnumbered}
+
+The following table identifies behaviors that are verified by V&V scripts but do not yet have corresponding unit tests in the project's `pytest` suite. These V&V scripts serve as the primary verification for these behaviors; adding unit tests is recommended for CI regression coverage but is not blocking for release.
+
+See [`docs/validation/tested-behaviors.md`](../tested-behaviors.md) for the full claim-to-test traceability matrix.
+
+| Behavior | V&V Script | Unit Test |
+|----------|-----------|:---------:|
+| Variogram model equations match analytical values | `vv_variogram_models.py` | — |
+| Coordinate transform roundtrip $< 10^{-12}$ | `vv_transform_roundtrip.py` | — |
+| AEM linesink potential symmetry and superposition | `vv_aem_single_segment.py` | — |
+| AEM scaling factor persistence across train → predict | `vv_aem_scaling_consistency.py` | — |
+| Wrapper equivalence to direct PyKrige $< 10^{-10}$ | `vv_wrapper_no_drift.py` | — |
+| Polynomial drift recovery RMSE | `vv_polynomial_drift_recovery.py` | — |
+| Anisotropy pre-transform matches PyKrige internal $< 10^{-6}$ | `vv_anisotropy_consistency.py` | — |
+| LOOCV metric formulas: RMSE, MAE, Q1, Q2 | `vv_loocv.py` | — |
+
+# How to Re-Run {.unnumbered}
+
+**Run individual V&V scripts** from the project root:
+
+```bash
+python docs/validation/vv_variogram_models.py
+python docs/validation/vv_transform_roundtrip.py
+python docs/validation/vv_polynomial_drift.py
+python docs/validation/vv_drift_physics.py
+python docs/validation/vv_aem_single_segment.py
+python docs/validation/vv_aem_scaling_consistency.py
+python docs/validation/vv_wrapper_no_drift.py
+python docs/validation/vv_polynomial_drift_recovery.py
+python docs/validation/vv_anisotropy_consistency.py
+python docs/validation/vv_loocv.py
+```
+
+**Run all scripts with summary:**
+
+```bash
+python docs/validation/vv_report/run_all_vv.py
+```
+
+**Regenerate this PDF report** (requires Quarto CLI and TinyTeX):
+
+```bash
+cd docs/validation/vv_report
+quarto render vv_report.qmd --to pdf
+```
+
+The output PDF will be at `docs/validation/vv_report/_output/vv_report.pdf`.
