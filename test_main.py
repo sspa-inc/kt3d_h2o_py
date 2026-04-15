@@ -1,11 +1,13 @@
 import pytest
 import numpy as np
 import os
+import sys
 import geopandas as gpd
 from pathlib import Path
 import importlib.util
 from unittest import mock
 import json
+import types
 
 # Load the target module (v2_Code/main.py) by path
 SPEC_PATH = Path(__file__).parent / "main.py"
@@ -169,6 +171,123 @@ def test_generate_map_save(mock_close, mock_tight_layout, mock_subplots, mock_sh
     # Verify savefig was called with the correct path
     mock_savefig.assert_called_with(str(plot_path))
 
+def test_export_water_level_ascii_grid_valid(tmp_path):
+    x = np.array([0.0, 10.0, 20.0])
+    y = np.array([0.0, 10.0, 20.0])
+    GX, GY = np.meshgrid(x, y)
+    Z_grid = np.array([
+        [1.0, 2.0, 3.0],
+        [4.0, np.nan, 6.0],
+        [7.0, 8.0, 9.0],
+    ])
+
+    out_path = tmp_path / "water_levels.asc"
+    main_mod.export_water_level_ascii_grid(GX, GY, Z_grid, str(out_path))
+
+    assert out_path.exists()
+    content = out_path.read_text(encoding="utf-8").splitlines()
+    assert content[0] == "ncols         3"
+    assert content[1] == "nrows         3"
+    assert content[2] == "xllcorner     -5"
+    assert content[3] == "yllcorner     -5"
+    assert content[4] == "cellsize      10"
+    assert content[5] == "NODATA_value  -9999"
+    assert content[6].split() == ["7", "8", "9"]
+    assert content[7].split() == ["4", "-9999", "6"]
+    assert content[8].split() == ["1", "2", "3"]
+
+
+def test_export_water_level_ascii_grid_requires_square_cells(tmp_path):
+    GX, GY = np.meshgrid([0.0, 10.0, 20.0], [0.0, 20.0, 40.0])
+    Z_grid = np.arange(9, dtype=float).reshape(3, 3)
+
+    with pytest.raises(ValueError, match="square cells"):
+        main_mod.export_water_level_ascii_grid(GX, GY, Z_grid, str(tmp_path / "bad.asc"))
+
+
+def test_export_water_level_tif_valid(tmp_path, monkeypatch):
+    x = np.array([0.0, 10.0, 20.0])
+    y = np.array([0.0, 10.0, 20.0])
+    GX, GY = np.meshgrid(x, y)
+    Z_grid = np.array([
+        [1.0, 2.0, 3.0],
+        [4.0, np.nan, 6.0],
+        [7.0, 8.0, 9.0],
+    ])
+    out_path = tmp_path / "water_levels.tif"
+
+    captured = {}
+
+    class DummyDataset:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+        def write(self, data, band):
+            captured["data"] = data.copy()
+            captured["band"] = band
+
+    def fake_open(path, mode, driver, height, width, count, dtype, nodata, transform):
+        captured["path"] = path
+        captured["mode"] = mode
+        captured["driver"] = driver
+        captured["height"] = height
+        captured["width"] = width
+        captured["count"] = count
+        captured["dtype"] = dtype
+        captured["nodata"] = nodata
+        captured["transform"] = transform
+        Path(path).write_bytes(b"FAKE_TIF")
+        return DummyDataset()
+
+    fake_rasterio = types.SimpleNamespace(open=fake_open)
+    fake_transform_module = types.SimpleNamespace(from_origin=lambda x0, y0, dx, dy: (x0, y0, dx, dy))
+
+    monkeypatch.setitem(sys.modules, "rasterio", fake_rasterio)
+    monkeypatch.setitem(sys.modules, "rasterio.transform", fake_transform_module)
+
+    main_mod.export_water_level_tif(GX, GY, Z_grid, str(out_path))
+
+    assert out_path.exists()
+    assert captured["driver"] == "GTiff"
+    assert captured["height"] == 3
+    assert captured["width"] == 3
+    assert captured["count"] == 1
+    assert captured["band"] == 1
+    assert captured["transform"] == (-5.0, 25.0, 10.0, 10.0)
+    np.testing.assert_allclose(
+        captured["data"],
+        np.array([
+            [7.0, 8.0, 9.0],
+            [4.0, -9999.0, 6.0],
+            [1.0, 2.0, 3.0],
+        ], dtype=np.float32),
+    )
+
+
+def test_export_water_level_tif_requires_rasterio(tmp_path, monkeypatch):
+    monkeypatch.delitem(sys.modules, "rasterio", raising=False)
+    monkeypatch.delitem(sys.modules, "rasterio.transform", raising=False)
+
+    real_import = __import__
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "rasterio" or name.startswith("rasterio"):
+            raise ImportError("No module named 'rasterio'")
+        return real_import(name, globals, locals, fromlist, level)
+
+    with mock.patch("builtins.__import__", side_effect=fake_import):
+        with pytest.raises(ImportError, match="rasterio"):
+            main_mod.export_water_level_tif(
+                np.array([[0.0, 1.0], [0.0, 1.0]]),
+                np.array([[0.0, 0.0], [1.0, 1.0]]),
+                np.array([[1.0, 2.0], [3.0, 4.0]]),
+                str(tmp_path / "missing.tif"),
+            )
+
+
 def test_main_pipeline_execution(tmp_path):
     # Since imports happen inside main(), we need to patch sys.modules or the source modules directly.
     # However, since we are running tests where v2_Code is in path, we can patch the source modules.
@@ -188,11 +307,19 @@ def test_main_pipeline_execution(tmp_path):
          mock.patch("v2_Code.kriging.build_uk_model") as mock_build, \
          mock.patch("v2_Code.kriging.predict_on_grid") as mock_predict, \
          mock.patch("v2_Code.variogram.variogram") as mock_v_class, \
+         mock.patch.object(main_mod, "export_water_level_tif") as mock_export_tif, \
+         mock.patch.object(main_mod, "export_water_level_ascii_grid") as mock_export_asc, \
          mock.patch("os.path.exists", return_value=True):
         
         mock_load_config.return_value = {
             "data_sources": {"observation_wells": {}},
-            "output": {"generate_map": False}
+            "output": {
+                "generate_map": False,
+                "export_water_level_tif": True,
+                "water_level_tif_output_path": str(tmp_path / "out.tif"),
+                "export_water_level_asc": True,
+                "water_level_asc_output_path": str(tmp_path / "out.asc"),
+            }
         }
         mock_wells.return_value = (np.array([0]), np.array([0]), np.array([10]))
         mock_prepare.return_value = (np.array([0]), np.array([0]), np.array([10]))
@@ -232,3 +359,5 @@ def test_main_pipeline_execution(tmp_path):
         mock_prepare.assert_called()
         mock_build.assert_called()
         mock_predict.assert_called()
+        mock_export_tif.assert_called_once()
+        mock_export_asc.assert_called_once()

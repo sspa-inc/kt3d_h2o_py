@@ -142,6 +142,10 @@ Controls what outputs are generated after prediction. All keys are optional.
 | `output.contour_output_path` | string | Conditional | `"contours.shp"` | Any valid file path | Output path for the contour shapefile. Parent directory must exist. | Used only when `export_contours` is `true`. Output is a LineString shapefile. |
 | `output.export_points` | boolean | No | `false` | `true`, `false` | Whether to export the merged observation + control point dataset as a shapefile. | When `true`, `points_output_path` must be set. |
 | `output.points_output_path` | string | Conditional | `"observation_points.shp"` | Any valid file path | Output path for the auxiliary points shapefile. | Used only when `export_points` is `true`. Output is a Point shapefile with columns `x`, `y`, `h`. |
+| `output.export_water_level_tif` | boolean | No | `false` | `true`, `false` | Whether to export the gridded water levels as a GeoTIFF `.tif` raster. | Requires `rasterio`; uses the prediction grid in raw coordinates and writes `NODATA_value = -9999` for NaNs. |
+| `output.water_level_tif_output_path` | string | Conditional | `"output/water_levels.tif"` | Any valid file path | Output path for the water-level GeoTIFF raster. | Used only when `export_water_level_tif` is `true`. Parent directory is created automatically. |
+| `output.export_water_level_asc` | boolean | No | `false` | `true`, `false` | Whether to export the gridded water levels as an Arc/Info ASCII Grid `.asc` raster. | Requires a regular square-cell grid; writes `NODATA_value = -9999` for NaNs. |
+| `output.water_level_asc_output_path` | string | Conditional | `"output/water_levels.asc"` | Any valid file path | Output path for the water-level ASCII grid raster. | Used only when `export_water_level_asc` is `true`. Parent directory is created automatically. |
 
 ---
 
@@ -260,7 +264,11 @@ Anisotropic Universal Kriging with polynomial drift, AEM linesink drift, control
     "contour_interval": 10.0,
     "contour_output_path": "output/contours.shp",
     "export_points": true,
-    "points_output_path": "output/points.shp"
+    "points_output_path": "output/points.shp",
+    "export_water_level_tif": true,
+    "water_level_tif_output_path": "output/water_levels.tif",
+    "export_water_level_asc": true,
+    "water_level_asc_output_path": "output/water_levels.asc"
   },
   "cross_validation": {
     "enabled": true

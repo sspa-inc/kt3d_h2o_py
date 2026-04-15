@@ -254,6 +254,8 @@ Three optional outputs, each controlled by `config.output`:
 | Prediction map | `generate_map: true` | [`generate_map()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/main.py) | Matplotlib figure (displayed or saved as PNG) |
 | Contour lines | `export_contours: true` | [`export_contours()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/main.py) | Shapefile (LineString, 3D with elevation attribute) |
 | Observation points | `export_points: true` | [`export_aux_points()`](https://github.com/sspa-inc/kt3d_h2o_py/blob/main/main.py) | Shapefile (Point with `head` attribute) |
+| Water-level GeoTIFF | `export_water_level_tif: true` | [`export_water_level_tif()`](main.py) | Raster `.tif` |
+| Water-level ASCII grid | `export_water_level_asc: true` | [`export_water_level_ascii_grid()`](main.py) | Raster `.asc` |
 
 Output directories are created automatically if they do not exist.
 

@@ -58,6 +58,10 @@
     "generate_map": false,
     "export_contours": true,
     "contour_interval": 10.0,
-    "contour_output_path": "output/contours.shp"
+    "contour_output_path": "output/contours.shp",
+    "export_water_level_tif": false,
+    "water_level_tif_output_path": "output/water_levels.tif",
+    "export_water_level_asc": false,
+    "water_level_asc_output_path": "output/water_levels.asc"
   }
 }

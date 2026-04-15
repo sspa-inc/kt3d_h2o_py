@@ -42,5 +42,10 @@ site/
 docs/validation/vv_report/_output/
 docs/validation/vv_report/.quarto/
 
+# Local/generated runtime outputs
+activeContext.md
+config_base.json
+output/
+
 # Plans
 plans/

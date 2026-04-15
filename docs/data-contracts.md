@@ -183,6 +183,39 @@ Observation well arrays `(wx, wy, wh)` are concatenated with all control point s
 | Control points | Plotted as scatter points (distinct marker) if present |
 | Display/save | Displayed interactively (no save path is configurable in the current implementation) |
 
+### 4.4 Water-Level GeoTIFF Raster
+
+**Triggered by:** `output.export_water_level_tif = true`
+
+**Written by:** [`export_water_level_tif()`](main.py)
+
+| Property | Value |
+|---|---|
+| Format | GeoTIFF-compatible raster (`.tif`) |
+| Output path | `output.water_level_tif_output_path` (default: `"output/water_levels.tif"`) |
+| Cell values | Kriged water levels from `Z_grid` |
+| Grid orientation | Uses raw-space prediction grid; rows are written north-to-south |
+| NoData handling | `NaN` values are written as `-9999` |
+| Dependencies | Requires `rasterio` |
+| Directory creation | Output directory is created automatically if it does not exist |
+
+### 4.5 Water-Level ASCII Grid Raster
+
+**Triggered by:** `output.export_water_level_asc = true`
+
+**Written by:** [`export_water_level_ascii_grid()`](main.py)
+
+| Property | Value |
+|---|---|
+| Format | Arc/Info ASCII Grid (`.asc`) |
+| Output path | `output.water_level_asc_output_path` (default: `"output/water_levels.asc"`) |
+| Cell values | Kriged water levels from `Z_grid` |
+| Header fields | `ncols`, `nrows`, `xllcorner`, `yllcorner`, `cellsize`, `NODATA_value` |
+| Grid orientation | Uses raw-space prediction grid; rows are written north-to-south |
+| NoData handling | `NaN` values are written as `-9999` |
+| Grid requirement | Grid must be regular and have square cells |
+| Directory creation | Output directory is created automatically if it does not exist |
+
 ---
 
 ## 5. Grid Definition

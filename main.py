@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import logging
 import os
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -179,6 +180,130 @@ def export_contours(GX: np.ndarray, GY: np.ndarray, Z_grid: np.ndarray, interval
         
     gdf.to_file(out_path)
     
+
+def _validate_regular_grid(GX: np.ndarray, GY: np.ndarray, Z_grid: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """
+    Validate that GX/GY/Z_grid define a regular rectilinear grid.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        The 1D x and y coordinate axes extracted from the meshgrid.
+    """
+    if GX.shape != GY.shape or GX.shape != Z_grid.shape:
+        raise ValueError("GX, GY, and Z_grid must have identical shapes")
+
+    if GX.ndim != 2 or GY.ndim != 2 or Z_grid.ndim != 2:
+        raise ValueError("GX, GY, and Z_grid must be 2D arrays")
+
+    x_coords = np.asarray(GX[0, :], dtype=float)
+    y_coords = np.asarray(GY[:, 0], dtype=float)
+
+    if x_coords.size < 2 or y_coords.size < 2:
+        raise ValueError("Grid must contain at least 2 cells in both x and y directions")
+
+    if not np.allclose(GX, np.tile(x_coords, (GY.shape[0], 1))):
+        raise ValueError("GX must represent a regular rectilinear meshgrid")
+
+    if not np.allclose(GY, np.tile(y_coords.reshape(-1, 1), (1, GX.shape[1]))):
+        raise ValueError("GY must represent a regular rectilinear meshgrid")
+
+    return x_coords, y_coords
+
+
+
+def export_water_level_ascii_grid(GX: np.ndarray, GY: np.ndarray, Z_grid: np.ndarray, out_path: str, nodata_value: float = -9999.0) -> None:
+    """
+    Export gridded water levels to an Arc/Info ASCII Grid (.asc) file.
+    """
+    logger.info("Exporting water-level ASCII grid to %s...", out_path)
+
+    x_coords, y_coords = _validate_regular_grid(GX, GY, Z_grid)
+    dx = float(np.diff(x_coords)[0])
+    dy = float(np.diff(y_coords)[0])
+
+    if not np.allclose(np.diff(x_coords), dx):
+        raise ValueError("Grid x spacing must be uniform for ASCII grid export")
+    if not np.allclose(np.diff(y_coords), dy):
+        raise ValueError("Grid y spacing must be uniform for ASCII grid export")
+    if not np.isclose(abs(dx), abs(dy)):
+        raise ValueError("Arc ASCII grid export requires square cells (dx == dy)")
+
+    cellsize = abs(dx)
+    xllcorner = float(np.min(x_coords) - cellsize / 2.0)
+    yllcorner = float(np.min(y_coords) - cellsize / 2.0)
+
+    output_dir = os.path.dirname(out_path)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    z_to_write = np.flipud(np.asarray(Z_grid, dtype=float))
+    z_to_write = np.where(np.isnan(z_to_write), nodata_value, z_to_write)
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        f.write(f"ncols         {Z_grid.shape[1]}\n")
+        f.write(f"nrows         {Z_grid.shape[0]}\n")
+        f.write(f"xllcorner     {xllcorner:.12g}\n")
+        f.write(f"yllcorner     {yllcorner:.12g}\n")
+        f.write(f"cellsize      {cellsize:.12g}\n")
+        f.write(f"NODATA_value  {nodata_value:.12g}\n")
+        np.savetxt(f, z_to_write, fmt="%.12g")
+
+    logger.info("Successfully exported water-level ASCII grid to %s", out_path)
+
+
+
+def export_water_level_tif(GX: np.ndarray, GY: np.ndarray, Z_grid: np.ndarray, out_path: str, nodata_value: float = -9999.0) -> None:
+    """
+    Export gridded water levels to a GeoTIFF-compatible raster file.
+    """
+    logger.info("Exporting water-level TIF raster to %s...", out_path)
+
+    x_coords, y_coords = _validate_regular_grid(GX, GY, Z_grid)
+    dx = float(np.diff(x_coords)[0])
+    dy = float(np.diff(y_coords)[0])
+
+    if not np.allclose(np.diff(x_coords), dx):
+        raise ValueError("Grid x spacing must be uniform for TIF export")
+    if not np.allclose(np.diff(y_coords), dy):
+        raise ValueError("Grid y spacing must be uniform for TIF export")
+
+    output_dir = os.path.dirname(out_path)
+    if output_dir and not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    z_to_write = np.flipud(np.asarray(Z_grid, dtype=np.float32))
+    z_to_write = np.where(np.isnan(z_to_write), np.float32(nodata_value), z_to_write)
+
+    try:
+        import rasterio
+        from rasterio.transform import from_origin
+    except ImportError as exc:
+        raise ImportError("GeoTIFF export requires rasterio to be installed") from exc
+
+    transform = from_origin(
+        float(np.min(x_coords) - abs(dx) / 2.0),
+        float(np.max(y_coords) + abs(dy) / 2.0),
+        abs(dx),
+        abs(dy),
+    )
+
+    with rasterio.open(
+        out_path,
+        "w",
+        driver="GTiff",
+        height=Z_grid.shape[0],
+        width=Z_grid.shape[1],
+        count=1,
+        dtype=z_to_write.dtype,
+        nodata=np.float32(nodata_value),
+        transform=transform,
+    ) as dst:
+        dst.write(z_to_write, 1)
+
+    logger.info("Successfully exported water-level TIF raster to %s", out_path)
+
+
 
 def generate_map(GX: np.ndarray, GY: np.ndarray, Z_grid: np.ndarray, SS_grid: np.ndarray, wx: np.ndarray, wy: np.ndarray, ctrl_points_list: list[tuple[np.ndarray, np.ndarray, np.ndarray]] | None, config: dict) -> None:
     """
@@ -516,6 +641,15 @@ def main() -> None:
             out_path = output_config.get("points_output_path", "observation_points.shp")
             export_aux_points(all_x, all_y, all_h, out_path)
 
+        # Water-level raster exports
+        if output_config.get("export_water_level_tif", False):
+            out_path = output_config.get("water_level_tif_output_path", "output/water_levels.tif")
+            export_water_level_tif(GX, GY, Z_grid, out_path)
+
+        if output_config.get("export_water_level_asc", False):
+            out_path = output_config.get("water_level_asc_output_path", "output/water_levels.asc")
+            export_water_level_ascii_grid(GX, GY, Z_grid, out_path)
+
         logger.info("Universal Kriging workflow completed successfully.")
 
     except Exception as exc:
@@ -527,4 +661,13 @@ if __name__ == "__main__":
     main()
 
 
-__all__ = ["diagnose_kriging_system", "generate_map", "export_contours", "export_aux_points", "main", "verify_drift_physics"]
+__all__ = [
+    "diagnose_kriging_system",
+    "generate_map",
+    "export_contours",
+    "export_aux_points",
+    "export_water_level_ascii_grid",
+    "export_water_level_tif",
+    "main",
+    "verify_drift_physics",
+]

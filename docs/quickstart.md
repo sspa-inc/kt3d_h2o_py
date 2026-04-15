@@ -75,7 +75,11 @@ Place this file in the same directory as `main.py`:
     "contour_interval": 1.0,
     "contour_output_path": "output/contours.shp",
     "export_points": false,
-    "points_output_path": "output/points.shp"
+    "points_output_path": "output/points.shp",
+    "export_water_level_tif": false,
+    "water_level_tif_output_path": "output/water_levels.tif",
+    "export_water_level_asc": false,
+    "water_level_asc_output_path": "output/water_levels.asc"
   },
   "cross_validation": {
     "enabled": false
@@ -138,6 +142,8 @@ Depending on your `output` configuration:
 | Map (displayed) | `generate_map: true` | Matplotlib figure showing the predicted water level surface |
 | Contour shapefile | `export_contours: true` | LineString shapefile at `contour_output_path` |
 | Auxiliary points | `export_points: true` | Point shapefile with x, y, predicted h at `points_output_path` |
+| Water-level GeoTIFF | `export_water_level_tif: true` | Raster `.tif` at `water_level_tif_output_path` |
+| Water-level ASCII grid | `export_water_level_asc: true` | Arc/Info ASCII Grid `.asc` at `water_level_asc_output_path` |
 
 ---
 

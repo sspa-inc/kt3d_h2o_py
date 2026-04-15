@@ -87,7 +87,11 @@ Place this file in the same directory as `main.py`:
     "contour_interval": 1.0,
     "contour_output_path": "output/contours.shp",
     "export_points": false,
-    "points_output_path": "output/points.shp"
+    "points_output_path": "output/points.shp",
+    "export_water_level_tif": false,
+    "water_level_tif_output_path": "output/water_levels.tif",
+    "export_water_level_asc": false,
+    "water_level_asc_output_path": "output/water_levels.asc"
   },
   "cross_validation": {
     "enabled": false
