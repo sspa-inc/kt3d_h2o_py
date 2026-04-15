@@ -47,5 +47,10 @@ activeContext.md
 config_base.json
 output/
 
+# Local-only planning/diagnostic scripts
+anisotropy_check.py
+documentation_plan.md
+generate_vv_markdown.py
+
 # Plans
 plans/
